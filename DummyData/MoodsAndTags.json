@@ -1,0 +1,95 @@
+{
+    "Music": [
+      {
+        "id": 1,
+        "name": "Feeling it",
+        "list": [
+          { "id": 1, "name": "Nostalgic", "isSelected": false },
+          { "id": 2, "name": "Sad", "isSelected": false },
+          { "id": 3, "name": "Heart Broken", "isSelected": false },
+          { "id": 4, "name": "Inspired", "isSelected": false },
+          { "id": 5, "name": "Purposeful", "isSelected": false },
+          { "id": 6, "name": "Lonely", "isSelected": false },
+          { "id": 7, "name": "Tired", "isSelected": false },
+          { "id": 8, "name": "In Love", "isSelected": false },
+          { "id": 9, "name": "Homesick", "isSelected": false },
+          { "id": 10, "name": "Missing", "isSelected": false }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Hyped",
+        "list": [
+          { "id": 11, "name": "Hard Beat", "isSelected": false },
+          { "id": 12, "name": "On Fire", "isSelected": false },
+          { "id": 13, "name": "Dancy", "isSelected": false },
+          { "id": 14, "name": "Party Monster", "isSelected": false },
+          { "id": 15, "name": "Speeding Up", "isSelected": false },
+          { "id": 16, "name": "Beast Mode", "isSelected": false },
+          { "id": 17, "name": "Nonstop", "isSelected": false },
+          { "id": 18, "name": "Expensive", "isSelected": false },
+          { "id": 19, "name": "Luxus", "isSelected": false },
+          { "id": 20, "name": "Beat on my Feet", "isSelected": false },
+          { "id": 21, "name": "Unleashed", "isSelected": false },
+          { "id": 22, "name": "Out of my Way", "isSelected": false },
+          { "id": 23, "name": "God Complex", "isSelected": false },
+          { "id": 24, "name": "Turn it Up", "isSelected": false },
+          { "id": 25, "name": "Heart On Fire", "isSelected": false }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Chilled",
+        "list": [
+          { "id": 26, "name": "Hugging Trees", "isSelected": false },
+          { "id": 27, "name": "Everything is Fine", "isSelected": false },
+          { "id": 28, "name": "Flowing", "isSelected": false }
+        ]
+      }
+    ],
+    "FilmsAndTVShows": [
+      {
+        "id": 1,
+        "name": "Emotional Journey",
+        "list": [
+          { "id": 29, "name": "Nostalgic", "isSelected": false },
+          { "id": 30, "name": "Emotional Roller Coaster", "isSelected": false },
+          { "id": 31, "name": "Heartstrings Pulled", "isSelected": false },
+          { "id": 32, "name": "Inspired", "isSelected": false },
+          { "id": 33, "name": "Wanderlust Filled", "isSelected": false },
+          { "id": 34, "name": "Lonely", "isSelected": false },
+          { "id": 35, "name": "Giddy", "isSelected": false },
+          { "id": 36, "name": "Petrified", "isSelected": false },
+          { "id": 37, "name": "On the Edge", "isSelected": false },
+          { "id": 38, "name": "Mind Blown", "isSelected": false }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Adrenaline Rush",
+        "list": [
+          { "id": 39, "name": "Laugh Riot", "isSelected": false },
+          { "id": 40, "name": "Adrenaline Rush", "isSelected": false },
+          { "id": 41, "name": "Epic Saga", "isSelected": false },
+          { "id": 42, "name": "Whodunit", "isSelected": false },
+          { "id": 43, "name": "Blast from the Past", "isSelected": false },
+          { "id": 44, "name": "Future Glimpse", "isSelected": false },
+          { "id": 45, "name": "Romantic Tale", "isSelected": false },
+          { "id": 46, "name": "Tear Jerker", "isSelected": false },
+          { "id": 47, "name": "Real World", "isSelected": false },
+          { "id": 48, "name": "Family Bonding", "isSelected": false }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Slice of Life",
+        "list": [
+          { "id": 49, "name": "Life Moments", "isSelected": false },
+          { "id": 50, "name": "Moments of Love", "isSelected": false },
+          { "id": 51, "name": "Hopeful", "isSelected": false }
+        ]
+      }
+    ]
+  }
+  
+  
