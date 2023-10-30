@@ -1,0 +1,30 @@
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import Auth from "../screens/AuthScreen";
+import SignUpPersonalInfo from "../screens/SignUpPersonalInfoScreen";
+import SignUpEnd from "../screens/SignUpEndScreen";
+import AuthEmailPassword from "../screens/AuthEmailPasswordScreen";
+
+const Stack = createStackNavigator();
+
+const AuthNavigator = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="AuthScreen"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="AuthScreen" component={Auth} />
+      <Stack.Screen
+        name="AuthEmailPasswordScreen"
+        component={AuthEmailPassword}
+      />
+      <Stack.Screen
+        name="SignUpPersonalInfoScreen"
+        component={SignUpPersonalInfo}
+      />
+      <Stack.Screen name="SignUpEndScreen" component={SignUpEnd} />
+    </Stack.Navigator>
+  );
+};
+
+export default AuthNavigator;

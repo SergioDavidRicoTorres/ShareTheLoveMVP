@@ -1,0 +1,216 @@
+{
+    "profileName": "@abel",
+    "id": 0, 
+    "name": "Abel Tesfaye",
+    "profilePicture": "https://e0.pxfuel.com/wallpapers/331/1007/desktop-wallpaper-the-weeknd-releases-dawn-fm-see-the-fan-reactions-billboard.jpg",
+    "profileDescription": "Welcome to the coolest part of me : )",
+    "domainsOfTaste": [{"id": 0, "name": "Music", "score": 8.5, "playlists": 
+    [{
+        "id": 1,
+        "name": "Favourites", 
+        "image": "https://images.hdqwalls.com/wallpapers/delorean-and-chill-0d.jpg",
+        "moods": [
+        { "id": 1, "name": "Home-sick"},
+        { "id": 2, "name": "Long Day"  },
+        { "id": 3, "name": "Boogie On"  },
+        { "id": 4, "name": "On My Way"  },
+        { "id": 5, "name": "Good Mood"  },
+        { "id": 6, "name": "Chilled"  },
+        { "id": 7, "name": "Nostalgic"  }
+        ], 
+        "score": 7.8, 
+        "posts": [
+            {
+              "mediaItem": {"name": "Starboy",
+              "mediaType": "Song",
+              "album": "Starboy",
+              "artists": ["The Weeknd"],
+              "image": "https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452"},
+              "moods": ["Party Monster", "Dancy", "Turn it up", "Speeding Up"],
+              "caption": "Just feel that nasty beat in your bones!! sdlfkjalsd fjsadlfk asdlfj alsdkfj dsalfjk sldafjsljdkfj slkjf lskfj lsk"
+            },
+            {
+              "mediaItem": {"name": "Clouded",
+              "mediaType": "Song",
+              "album": "Fuck The World",
+              "artists": ["Brent Faiyaz"],
+              "image": "https://i.scdn.co/image/ab67616d0000b2736a463f436bbf07f3c9e8c62a"},
+              "moods": ["Mellow", "Soulful", "Chill Vibes"],
+              "caption": "Embrace the soulful rhythm and let your worries fade away."
+            },
+            {
+              "mediaItem": {"name": "Baby Boy",
+              "mediaType": "Song",
+              "album": "Awaken, My Love",
+              "artists": ["Childish Gambino"],
+              "image": "https://i.scdn.co/image/ab67616d00001e027582716b3666a5235d5af4ea"},
+              "moods": ["Groovy", "Funky", "Feel Good"],
+              "caption": "Get your groove on and dance like nobody's watching!"
+            },
+            {
+              "mediaItem": {"name": "Around The World",
+              "mediaType": "Song",
+              "album": "Homework",
+              "artists": ["Daft Punk"],
+              "image": "https://i.scdn.co/image/ab67616d0000b2739b9b36b0e22870b9f542d937"},
+              "moods": ["Electronic", "Energetic", "Hypnotic"],
+              "caption": "Take a musical journey around the world with electrifying beats."
+            }
+          ]    },
+    {
+        "id": 2, 
+        "name": "We Going Out", 
+        "image": "https://www.billboard.com/wp-content/uploads/media/01-bruno-mars-gucci-mane-kodak-black-wake-up-in-the-sky-MV-vid-2018-billboard-1548.jpg",
+        "moods": [
+        { "id": 1, "name": "Expensive"},
+        { "id": 2, "name": "Speeding Up"  },
+        { "id": 3, "name": "Iconic"  },
+        { "id": 4, "name": "Party Monster"  },
+        { "id": 5, "name": "Pop em bottles"  }
+    
+        ] , 
+        "score": 7.8,
+        "posts": [{"moods": ["Party Monster", "Beast-mode", "Nonstop", "Unleashed", "God Complex"], "caption": "Open in case of having to embrace chaos!!!!","mediaItem":{"name": "Nightcrawler", "mediaType": "Song", "album": "Rodeo", "artists": ["Travis Scott", "Swae Lee", "Chief Keef"], "image": "https://i.scdn.co/image/ab67616d0000b273715973050587fe3c93033aad"}},{"moods": ["Luxus", "Turn it up", "Unleashed"], "caption": "This is the kind of stuff that feeds the egomaniac inside me", "mediaItem":{"name": "Wake Up In The Sky", "mediaType": "Song", "album": "Evil Genius", "artists": [" Bruno Mars", "Kodak Black", "Gucci Mane"], "image": "https://i.scdn.co/image/ab67616d0000b273b64fc7036d0fccef26f9f7e8"}},{"moods": ["Beast-mode", "Dancy", "Turn it up", "Speeding Up" ], "caption": "I guess i'm letting it out tonight!", "mediaItem": {"name": "Party Monster", "mediaType": "Song", "album": "Starboy", "artists": ["The Weeknd"], "image": "https://i.scdn.co/image/ab67616d0000b273df1cfe1218748681e348e763"}},{"moods": ["Hard Beat", "Dancy", "My body knows it"], "caption": "Just feel that nasty beat in your bones!!", "mediaItem":{"name": "Safaera", "mediaType": "Song", "album": "YHLQMDLG", "artists": ["Bad Bunny", "Ñengo Flow", "Jowell & Randy"], "image": "https://i.scdn.co/image/ab67616d0000b273548f7ec52da7313de0c5e4a0"}}]
+
+    }]}, {"id": 1, "name": "Films and TV Shows", "score": 7.0, "playlists": 
+    [{
+        "id": 1,
+        "name": "Just For a Laugh", 
+        "image": "https://img.zeit.de/news/2021-04/19/borat-fortsetzung-fuer-drei-preise-nominiert-image.jpg/wide__1300x731",
+        "moods": [
+        { "id": 1, "name": "Hilarious"},
+        { "id": 2, "name": "After a Long Day"  },
+        { "id": 3, "name": "Not for Everyone"  },
+        { "id": 4, "name": "Good Mood"  },
+        { "id": 5, "name": "In Good Company"  }
+        ], 
+        "score": 7.8,
+        "posts": [
+            {
+              "mediaItem": {"name": "Borat Subsequent Moviefilm",
+              "overview": "14 years after making a film about his journey across the USA, Borat risks life and limb when he returns to the United States with his young daughter, and reveals more about the culture, the COVID-19 pandemic, and the political elections.",
+              "mediaType": "Film",
+              "image": "https://flxt.tmsimg.com/assets/p18898617_v_v12_ae.jpg"},
+              "moods": ["Satirical", "Hilarious", "Controversial"],
+              "caption": "Prepare for belly laughs! Borat is back to mock the world in this uproarious film."
+            },
+            {
+              "mediaItem": {"name": "Silicon Valley",
+              "overview": "In the high-tech gold rush of modern Silicon Valley, the people most qualified to succeed are the least capable of handling success. Partially inspired by Mike Judge’s own experiences as a Silicon Valley engineer in the late ‘80s, Silicon Valley is an American sitcom that centers around six programmers who are living together and trying to make it big in the Silicon Valley.",
+              "mediaType": "TV Show",
+              "image": "https://m.media-amazon.com/images/M/MV5BM2Q5YjNjZWMtYThmYy00N2ZjLWE2NDctNmZjMmZjYWE2NjEwXkEyXkFqcGdeQXVyMTAzMDM4MjM0._V1_.jpg"},
+              "moods": ["Techy", "Comedic", "Entrepreneurial"],
+              "caption": "Welcome to the wild world of tech startups! Silicon Valley is a riotous TV show filled with coding, comedy, and chaos."
+            },
+            {
+              "mediaItem": {"name": "Don't Look Up",
+              "overview": "Two American astronomers attempt to warn humankind about an approaching comet that will wipe out life on planet Earth.",
+              "mediaType": "Film",
+              "image": "https://m.media-amazon.com/images/M/MV5BZjcwZjY3NjAtNzkxZS00NmFjLTg1OGYtODJmMThhY2UwMTc5XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg"},
+              "moods": ["Satirical", "Dystopian", "Environmental"],
+              "caption": "This film is a cosmic comedy with a serious message. Get ready for a hilarious and thought-provoking ride!"
+            }
+          ]    },
+    {
+        "id": 2, 
+        "name": "Classics", 
+        "image": "https://www.piratesandprincesses.net/wp-content/uploads/2022/12/Harry-and-Marv.jpg",
+        "moods": [
+        { "id": 1, "name": "In Family"},
+        { "id": 2, "name": "Therapeutic"  },
+        { "id": 3, "name": "Iconic"  },
+        { "id": 4, "name": "Ol' Reliable"  }
+        ] , 
+        "score": 7.8,
+        "posts": [
+            {
+              "mediaItem" :{"name": "Shrek",
+              "overview": "It ain't easy bein' green -- especially if you're a likable (albeit smelly) ogre named Shrek. On a mission to retrieve a gorgeous princess from the clutches of a fire-breathing dragon, Shrek teams up with an unlikely compatriot -- a wisecracking donkey.",
+              "mediaType": "Film",
+              "image": "https://m.media-amazon.com/images/M/MV5BOGZhM2FhNTItODAzNi00YjA0LWEyN2UtNjJlYWQzYzU1MDg5L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg"}, 
+              "moods": ["Hilarious", "Fantasy", "Fairytale"],
+              "caption": "Get ready for an ogre-sized adventure! Shrek is a hilarious fairy tale with a twist."
+            },
+            {
+              "mediaItem": {"name": "The Iron Giant",
+              "overview": "In the small town of Rockwell, Maine in October 1957, a giant metal machine befriends a nine-year-old boy and ultimately finds its humanity by unselfishly saving people from their own fears and prejudices.",
+              "mediaType": "Film",
+              "image": "https://static.wikia.nocookie.net/irongiant/images/f/f6/The_Iron_Giant_2015_Re-Release_Poster.jpg/revision/latest/scale-to-width-down/1200?cb=20150917213143"},
+              "moods": ["Heartwarming", "Sci-Fi", "Friendship"],
+              "caption": "Befriend a giant robot from space in this heartwarming tale of unlikely friendship."
+            },
+            {
+              "mediaItem": {"name": "Home Alone",
+              "overview": "Eight-year-old Kevin McCallister makes the most of the situation after his family unwittingly leaves him behind when they go on Christmas vacation. But when a pair of bungling burglars set their sights on Kevin's house, the plucky kid stands ready to defend his territory. By planting booby traps galore, adorably mischievous Kevin stands his ground as his frantic mother attempts to race home before Christmas Day.",
+              "mediaType": "Film",
+              "image": "https://m.media-amazon.com/images/M/MV5BMzFkM2YwOTQtYzk2Mi00N2VlLWE3NTItN2YwNDg1YmY0ZDNmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg"},
+              "moods": ["Comedic", "Holiday", "Mischief"],
+              "caption": "When the parents are away, the pranks will play! Home Alone is a hilarious holiday classic."
+            }
+          ]
+          
+    }]}, {"id": 2, "name": "Episodes", "score": 9.2, "playlists": 
+    [{
+        "id": 1,
+        "name": "Beautiful Science", 
+        "image": "https://images.ctfassets.net/k3n74unfin40/74p5R8EwRhs2Mu0XBHIcUB/bb5cfe92a57fa4bb08d68e97ebcea89d/cosmos3.jpg",
+        "moods": [
+        { "id": 1, "name": "Adventure is out there!"},
+        { "id": 2, "name": "Mind Blowing"  },
+        { "id": 3, "name": "Food for Thought"  },
+        { "id": 4, "name": "The Sky is the limit"  },
+        { "id": 5, "name": "Hopeful"  },
+        { "id": 6, "name": "Exciting"  },
+        { "id": 7, "name": "Pondering"  }
+        ],         
+        "score": 7.8,
+        "posts": [
+            {
+              "mediaItem": {"name": "#325 – Michael Levin: Biology, Life, Aliens, Evolution, Embryogenesis & Xenobots",
+              "mediaType": "Episodes",
+              "description": "Michael Levin is a biologist at Tufts University working on novel ways to understand and control complex pattern formation in biological systems. Please support this podcast by checking out our sponsors:  - Henson Shaving: https://hensonshaving.com/lex and use code LEX to get 100 free blades with your razor.",
+              "image": "https://i.scdn.co/image/ab6765630000ba8a563ebb538d297875b10114b7"},
+              "moods": ["Scientific Marvel", "Alien Adventures", "Bizarre Biology"],
+              "caption": "Tune in to unravel the secrets of biology and discover the truth about aliens with Michael Levin!"
+            },
+            {
+              "mediaItem": {"name": "Meditation",
+              "mediaType": "Episodes",
+              "description": "Silicon Valley CEOs, Tibetan monks, and crunchy hippies alike describe meditation as blissful and life-changing, but what does the science say? Can it reduce stress, increase your attention, and improve mental health -- or is all this focus on breathing just a bunch of hot air? Sit back, get comfortable, and focus your mind as we talk to Tim Ferriss, Professor Gaelle Desbordes, Dr. Clifford Saron, and Dr. Britta Hölzel.",
+              "image": "https://megaphone.imgix.net/podcasts/f521b120-2c30-11e6-b5f3-63ee984ee1a4/image/Spotify_Gimlet_Science-VS_Key-Art_3000x3000-Brooks.jpg?ixlib=rails-4.3.1&max-w=3000&max-h=3000&fit=crop&auto=format,compress"},
+              "moods": ["Inner Peace", "Mindfulness Magic", "Mystical Insights"],
+              "caption": "Join us on a journey of self-discovery through meditation, where we'll explore inner peace and mindfulness. Is it life-changing or just hot air?"
+            }
+          ]
+              },
+    {
+        "id": 2, 
+        "name": "Mundanities", 
+        "moods": [
+        { "id": 1, "name": "On My Way Home"},
+        { "id": 2, "name": "Indulging in my emotions"  },
+        { "id": 3, "name": "Easy to Digest"  },
+        { "id": 4, "name": "Social"  }    
+        ], 
+        "score": 7.8,
+        "posts": [
+            {
+              "mediaItem": {"name": "Listen Again: Work, Play, Rest - Part 1",
+              "mediaType": "Episodes",
+              "description": "Original broadcast date: February 4, 2022. The past few years have shaken the fundamental ways we live. It's... disorienting. But it's also an opportunity to reexamine how we spend our time. Over the next three episodes, TED speakers will investigate evolving notions of what it means to pay our bills, feel joy in play, and rest our minds and bodies. This hour: Work. Guests include labor organizer Jess Kutch, social entrepreneur Irma Olguin, and tech reporter Kevin Roose.",
+              "image": "https://i.scdn.co/image/ab6765630000ba8af83cfe9570897876407e5dcf"},
+              "moods": ["Life Redefined", "Reimagining Work", "Joyful Play", "Mindful Rest"],
+              "caption": "Reexamine life's fundamental aspects - work, play, and rest - with TED speakers. It's disorienting yet enlightening!"
+            },
+            {
+              "mediaItem": {"name": "OceanGate",
+              "mediaType": "Episodes",
+              "description": "Deep-sea explorer G. Michael Harris has been down to the wreck of the Titanic 14 times. He begged his friend PH Nargeolet not to get on the OceanGate Titan submersible before it imploded in the sea earlier this week. He explains why he saw this coming. This episode was produced by Amanda Lewellyn and edited by Amina Al-Sadi. It was engineered by Michael Raphael and fact-checked by Laura Bullard and hosted by Noel King. Transcript at vox.com/todayexplained Support Today, Explained by making a financial contribution to Vox! bit.ly/givepodcasts Learn more about your ad choices. Visit podcastchoices.com/adchoices",
+              "image": "https://i.scdn.co/image/ab6765630000ba8adfc0a3d7959906e9ae5c3fc9"},
+              "moods": ["Deep-Sea Adventure", "Titanic Expedition", "Underwater Mysteries"],
+              "caption": "Join deep-sea explorer G. Michael Harris as he ventures down to the Titanic wreckage. Will it end in disaster or discovery?"
+            }
+          ]
+          
+    }]}]
+}

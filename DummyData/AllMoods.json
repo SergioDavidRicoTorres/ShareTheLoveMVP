@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1, 
+    "name": "AllMoods",
+    "list": [
+        { "id": 1, "name": "Nostalgic", "isSelected": false },
+        { "id": 2, "name": "Sad", "isSelected": false  },
+        { "id": 3, "name": "Heart Broken", "isSelected": false  },
+        { "id": 4, "name": "Inspired", "isSelected": false  },
+        { "id": 5, "name": "Purposefull", "isSelected": false  },
+        { "id": 6, "name": "Lonely", "isSelected": false  },
+        { "id": 7, "name": "Tired", "isSelected": false  },
+        { "id": 8, "name": "In Love", "isSelected": false  },
+        { "id": 9, "name": "Home-sick", "isSelected": false  },
+        { "id": 10, "name": "Missing", "isSelected": false  },
+        { "id": 11, "name": "Hard Beat", "isSelected": false  },
+        { "id": 12, "name": "On Fire", "isSelected": false  },
+        { "id": 13, "name": "Dancy", "isSelected": false  },
+        { "id": 14, "name": "Party Monster", "isSelected": false  },
+        { "id": 15, "name": "Speeding Up", "isSelected": false  },
+        { "id": 16, "name": "Beast-mode", "isSelected": false  },
+        { "id": 17, "name": "Nonstop", "isSelected": false  },
+        { "id": 18, "name": "Expensive", "isSelected": false  },
+        { "id": 19, "name": "Luxus", "isSelected": false  },
+        { "id": 20, "name": "Beat on my feet", "isSelected": false  },
+        { "id": 21, "name": "Unleashed", "isSelected": false  },
+        { "id": 22, "name": "Out of my way", "isSelected": false  },
+        { "id": 23, "name": "God Complex", "isSelected": false  },
+        { "id": 24, "name": "Turn it up", "isSelected": false  },
+        { "id": 25, "name": "Heart On Fire", "isSelected": false  },
+        { "id": 26, "name": "Hugging trees", "isSelected": false  },
+        { "id": 27, "name": "Everything is fine", "isSelected": false  },
+        { "id": 28, "name": "Flowing", "isSelected": false  }
+      ]
+}
+]
