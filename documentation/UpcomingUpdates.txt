@@ -1,0 +1,55 @@
+TO IMPLEMENT: 
+    UPCOMING UPDATES VERSION (2.0):
+    {
+        -Import Playlists From Spotify account.
+        -Add Categories: {
+            -Books
+            -Podcasts
+            -Sports (not sure)
+            -Youtube (content creators)
+            -...
+        }
+        -Content Preview: {
+            -Music: short fragment of the song when pressing play icon on the cover picture
+            -Movies: short clip of the movie or tv show (trailer?) when pressing the play icon on the cover picture
+            -Books: short fragment of the book when pressing play icon on the cover picture
+            -Podcasts: short fragment of the podcast episode when pressing play on the icon
+            -Youtube: short clip of a Video when pressing play on the icon
+        }
+        -Favourites section on each category: {
+            -Music: Favourite Artist and Genres
+            -Movies: Favourite actors and Directors
+            -Books: Favourite authors and Genres
+            -Podcast: Favourite Podcasts
+            -Youtube: Favourite Content Creators
+        }
+    }
+        -Tentative ones: {
+            -user groups (based on similar Taste or group of friends)
+        }
+        -DEFINING CHANGES: {
+            - Ground up redesign: more of an organic (genuine) experience when exploring the users taste (posts), by capturing the essense of each category of taste:{
+                -Main Challenges: {
+                    -limited environment (phone: visual, audial, maybe tactil medium)
+                    -break from current consception of media consumption 
+                    -percieving the sharing of taste bits as more than just an artificial reproduction of something, as an organic living piece of human creativity.
+                    -"link long and short content in a seamless way"
+                    -"algorithm optimizes for the right suggestions not quickest ones"
+                    -outsorcing to cuality content providers
+                    -BE THE MISSING LINK BETWEEN QUICK DOPAMINE ADDICTED USERS TO GOOD AND NOURISHING Content
+
+                }
+                -Design Brainstorm: {
+                    -interactive posts
+                    -animated background behing each post
+                    -post essense represented with color
+                    -...
+                }
+
+            } 
+        }
+    {
+        TO IMPROVE FROM VERSION 0.1: 
+        
+        Episode Information: *GET AND PROVIDE THE SHOWS NAME
+    }

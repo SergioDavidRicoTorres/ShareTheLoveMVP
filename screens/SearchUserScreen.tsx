@@ -13,43 +13,19 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { getCurrentUserData } from "../UserData";
 import sampleUsers from "../DummyData/sampleUsers.json";
+import { normalize } from "../utils";
+import { Profile } from "../types";
 
-const { width } = Dimensions.get("window"); // screen width constant
-
-const user = getCurrentUserData();
-const normalize = (value) => width * (value / 390);
-
-// moodText
-const moodTextFontSize = width * 0.046;
-// backButtonImage
-const backButtonImageWidth = width * 0.036;
-const backButtonImageHeight = width * 0.059;
-// searchContainer
-const searchContainerWidth = width * 0.865;
-const searchContainerHeight = width * 0.079;
-const searchContainerBorderRadius = width * 0.051;
-const searchContainerPaddingHorizontal = width * 0.026;
-const searchContainermarginTop = width * 0.03;
-// searchIcon
-const searchIconWidth = width * 0.05;
-const searchIconheight = width * 0.05;
-const searchIconTop = width * 0.013;
-const searchIconMarginRight = width * 0.013;
-// searchInput
-const searchInputMarginRight = width * 0.064;
-const searchInputWidth = width * 0.7;
-const searchInputFontSize = width * 0.044;
 
 export default function SearchUser() {
-  const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchResults, setSearchResults] = useState <Profile[]> ([]);
 
-  const handleSearch = (text) => {
+  const handleSearch = (text: string) => {
     setSearchInput(text);
 
-    const filteredData = sampleUsers.filter((item) =>
+    const filteredData: Profile[] = sampleUsers.filter((item) =>
       item.profileName.toLowerCase().includes(text.toLowerCase())
     );
 
@@ -153,7 +129,7 @@ export default function SearchUser() {
                         height: normalize(50),
                         borderRadius: normalize(100),
                       }}
-                      source={{ uri: item.image }}
+                      source={{ uri: item.profilePicture }}
                     />
                     <View
                       style={{
@@ -165,7 +141,7 @@ export default function SearchUser() {
                         style={{
                           color: "white",
                           fontSize: normalize(19),
-                          fontWeight: 400,
+                          fontWeight: "400",
                         }}
                       >
                         {item.profileName}
@@ -174,7 +150,7 @@ export default function SearchUser() {
                         style={{
                           color: "white",
                           fontSize: normalize(17),
-                          fontWeight: 300,
+                          fontWeight: "300",
                         }}
                       >
                         {item.name}
@@ -197,31 +173,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   backButtonImage: {
-    width: backButtonImageWidth,
-    height: backButtonImageHeight,
+    width: normalize(14),
+    height: normalize(23),
   },
   searchContainer: {
     flexDirection: "row",
-    // width: searchContainerWidth,
     marginHorizontal: normalize(16),
-    height: searchContainerHeight,
-    borderRadius: searchContainerBorderRadius,
-    // backgroundColor: "rgba(20, 169, 115, 0.75)",
-    paddingHorizontal: searchContainerPaddingHorizontal,
+    height: normalize(31),
+    borderRadius: normalize(20),
+    paddingHorizontal: normalize(10),
     marginTop: normalize(20),
   },
   searchIcon: {
-    width: searchIconWidth,
-    height: searchIconheight,
-    top: searchIconTop,
-    marginRight: searchIconMarginRight,
+    width: normalize(20),
+    height: normalize(20),
+    top: normalize(5),
+    marginRight: normalize(5),
   },
   searchInput: {
     color: "white",
-    marginRight: searchInputMarginRight,
-    width: searchInputWidth,
-    fontSize: searchInputFontSize,
+    marginRight: normalize(25),
+    width: normalize(273),
+    fontSize: normalize(17),
   },
 });

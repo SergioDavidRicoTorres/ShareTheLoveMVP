@@ -12,6 +12,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import PostCard from "../components/PostCard";
+import { normalize } from "../utils";
+import { HomeNavigationProp } from "../types";
 // EXAMPLES OF POSTS ARRAY
 const postCardsExamples = [
   {
@@ -81,18 +83,15 @@ const postCardsExamples = [
   },
 ];
 
-const { width } = Dimensions.get("window"); // Window Dimensions
-const normalize = (value) => width * (value / 390);
-
 // ELEMENT DIMENSIONS:
 
 // feedContainer
-const feedContainerPaddingTop = width * 0.02;
-const feedContainerPaddingBottom = width * 0.2;
+// const feedContainerPaddingTop = width * 0.02;
+// const feedContainerPaddingBottom = width * 0.2;
 // feedItemSeparator
-const feedItemSeparatorHeight = width * 0.089;
+// const feedItemSeparatorHeight = width * 0.089;
 export default function HomeScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<HomeNavigationProp>();
   // console.log(AuthSession.getRedirectUrl());  //outputs the redirect uri link for the spotify API
   return (
     <LinearGradient // Background Color
@@ -173,13 +172,13 @@ const styles = StyleSheet.create({
     right: normalize(20),
   },
   feedContainer: {
-    paddingTop: feedContainerPaddingTop,
-    paddingBottom: feedContainerPaddingBottom,
+    paddingTop: normalize(8),
+    paddingBottom: normalize(78),
     alignItems: "center",
     // flex: 1,
     // backgroundColor: "green",
   },
   feedItemSeparator: {
-    height: feedItemSeparatorHeight,
+    height: normalize(35),
   },
 });

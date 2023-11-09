@@ -4,10 +4,10 @@ import AddButtons from "../components/AddPostComponents/AddButtons";
 import { getCurrentUserData } from "../UserData";
 import { ProfileNavigator } from "./ProfileStack";
 import { HomeNavigator } from "./HomeNavigator";
+import { normalize } from "../utils";
 
 const Tab = createBottomTabNavigator();
-const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+
 
 function Tabs() {
   return (

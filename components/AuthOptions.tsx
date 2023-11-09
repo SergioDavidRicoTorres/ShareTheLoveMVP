@@ -10,14 +10,15 @@ import {
 } from "react-native";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+import { normalize } from "../utils";
+import { AuthOptionsProps } from "../types";
 
 export default function AuthOptions({
   visible,
   onClose,
   navigation,
   authType,
-}) {
+}: AuthOptionsProps) {
   return (
     <View style={{ flex: 0.2 }}>
       <Modal visible={visible} animationType="slide" transparent>
@@ -98,7 +99,7 @@ export default function AuthOptions({
                 style={{
                   color: "white",
                   fontSize: normalize(25),
-                  fontWeight: 500,
+                  fontWeight: "500",
                   letterSpacing: -1,
                 }}
               >
@@ -131,7 +132,7 @@ export default function AuthOptions({
                 style={{
                   color: "white",
                   fontSize: normalize(25),
-                  fontWeight: 500,
+                  fontWeight: "500",
                   letterSpacing: -1,
                 }}
               >
@@ -158,7 +159,7 @@ export default function AuthOptions({
                 style={{
                   color: "white",
                   fontSize: normalize(25),
-                  fontWeight: 500,
+                  fontWeight: "500",
                   letterSpacing: -1,
                 }}
               >
@@ -185,7 +186,7 @@ export default function AuthOptions({
                 style={{
                   color: "white",
                   fontSize: normalize(25),
-                  fontWeight: 500,
+                  fontWeight: "500",
                   letterSpacing: -1,
                 }}
               >
@@ -212,7 +213,7 @@ export default function AuthOptions({
                 style={{
                   color: "white",
                   fontSize: normalize(25),
-                  fontWeight: 500,
+                  fontWeight: "500",
                   letterSpacing: -1,
                 }}
               >
@@ -241,7 +242,7 @@ export default function AuthOptions({
                 style={{
                   color: "white",
                   fontSize: normalize(16),
-                  fontWeight: 400,
+                  fontWeight: "400",
                   letterSpacing: -0.64,
                 }}
               >

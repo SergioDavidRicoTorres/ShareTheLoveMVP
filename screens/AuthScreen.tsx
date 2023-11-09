@@ -9,14 +9,16 @@ import {
   Text,
 } from "react-native";
 import { useState } from "react";
-
+import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import AuthOptions from "../components/AuthOptions";
+import { AuthNavigationProp } from "../types";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
-const normalize = (value) => width * (value / 390);
+const normalize = (value: number) => width * (value / 390);
 
-export default function Auth({ navigation }) {
+export default function Auth() {
+  const navigation = useNavigation<AuthNavigationProp>();
   const [authType, setAuthType] = useState("");
   const [isAuthOptionsModalVisible, setIsAuthOptionsModalVisible] =
     useState(false);
@@ -37,7 +39,7 @@ export default function Auth({ navigation }) {
               color: "rgba(156, 75, 255, 1)",
               fontFamily: "Helvetica",
               fontSize: normalize(60),
-              fontWeight: 400,
+              fontWeight: "400",
               letterSpacing: -1.2,
             }}
           >
@@ -67,7 +69,7 @@ export default function Auth({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(30),
-              fontWeight: 700,
+              fontWeight: "700",
               letterSpacing: -1.2,
             }}
           >
@@ -93,7 +95,7 @@ export default function Auth({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(30),
-              fontWeight: 700,
+              fontWeight: "700",
               letterSpacing: -1.2,
             }}
           >
@@ -112,7 +114,7 @@ export default function Auth({ navigation }) {
               alignItems: "center",
               color: "white",
               fontSize: normalize(18),
-              fontWeight: 400,
+              fontWeight: "400",
               letterSpacing: -0.72,
               textAlign: "center",
             }}

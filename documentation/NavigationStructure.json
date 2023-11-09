@@ -1,0 +1,81 @@
+{
+    "MainNavigator": [
+        {
+            "name":"AuthNavigator", 
+            "type": "Navigator",
+            "component":{
+                "AuthNavigator":[
+                    {
+                        "name":"AuthScreen", 
+                        "type":"Screen",
+                        "component":"Auth"
+                    },
+                    {
+                        "name":"SignUpPersonalInfoScreen", 
+                        "type":"Screen",
+                        "component":"SignUpPersonalInfo"
+                    },
+                    {
+                        "name":"SignUpEndScreen", 
+                        "type":"Screen",
+                        "component":"SignUpEnd"
+                    }
+                ]
+            }
+        }, 
+        {
+            "name":"Tabs", 
+            "component":{
+                "Tabs": [
+                    {
+                        "name":"HomeNavigator", 
+                        "type":"Navigator",
+                        "component":{
+                            "HomeNavigator":[
+                                {
+                                    "name":"HomeScreen", 
+                                    "type":"Screen",
+                                    "component":"HomeScreen"
+                                },
+                                {
+                                    "name":"SearchUserScreen", 
+                                    "type":"Screen",
+                                    "component":"SearchUser"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Add", 
+                        "type": "Screen", 
+                        "component": "AddButtonsScreen"
+                    }, 
+                    {
+                        "name":"ProfileNavigator", 
+                        "type":"Navigator",
+                        "component":{
+                            "ProfileNavigator":[
+                                {
+                                    "name":"ProfileScreen", 
+                                    "type":"Screen",
+                                    "component":"ProfileScreen"
+                                },
+                                {
+                                    "name":"DomainsOfTaste", 
+                                    "type":"Screen",
+                                    "component":"DomainsOfTaste"
+                                },
+                                {
+                                    "name":"MediaItemsViewScreen", 
+                                    "type":"Screen",
+                                    "component":"MediaItemsViewScreen"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        } 
+    ]
+
+}

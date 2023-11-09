@@ -10,19 +10,14 @@ import {
   Text,
 } from "react-native";
 import { useState } from "react";
-
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
+import { normalize } from "../utils";
+import { AuthNavigationProp, MainNavigationProp } from "../types";
 
-const { width } = Dimensions.get("window"); // Window Dimensions
-const normalize = (value) => width * (value / 390);
-// modalHeaderContainer
-const modalHeaderContainerGap = width * 0.051;
-const modalHeaderContainerMarginTop = width * 0.026;
-
-export default function SignUpEnd({ navigation }) {
-  // const navigation = useNavigation();
-
+export default function SignUpEnd() {
+  const navigation = useNavigation<AuthNavigationProp>();
+  const mainNavigation = useNavigation<MainNavigationProp>();
   const [profileImage, setProfileImage] = useState(true);
   const [musicIsSelected, setMusicIsSelected] = useState(false);
   const [filmsTVShowsIsSelected, setFilmsTVShowsIsSelected] = useState(false);
@@ -50,8 +45,8 @@ export default function SignUpEnd({ navigation }) {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            gap: modalHeaderContainerGap,
-            marginTop: modalHeaderContainerMarginTop,
+            gap: normalize(20),
+            marginTop: normalize(10),
           }}
         >
           <TouchableOpacity
@@ -83,7 +78,7 @@ export default function SignUpEnd({ navigation }) {
               style={{
                 color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(22),
-                fontWeight: 600,
+                fontWeight: "600",
               }}
             >
               Cancel
@@ -128,7 +123,7 @@ export default function SignUpEnd({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(25),
-              fontWeight: 500,
+              fontWeight: "500",
               letterSpacing: -1,
             }}
           >
@@ -140,7 +135,7 @@ export default function SignUpEnd({ navigation }) {
           style={{
             color: "white",
             fontSize: normalize(25),
-            fontWeight: 400,
+            fontWeight: "400",
             letterSpacing: -1,
             width: normalize(284),
             marginTop: normalize(30),
@@ -185,7 +180,7 @@ export default function SignUpEnd({ navigation }) {
                   : "rgba(162, 148, 255, 1)",
                 textAlign: "center",
                 fontSize: normalize(20),
-                fontWeight: 400,
+                fontWeight: "400",
                 letterSpacing: -0.8,
                 width: normalize(80),
               }}
@@ -222,7 +217,7 @@ export default function SignUpEnd({ navigation }) {
                   : "rgba(162, 148, 255, 1)",
                 textAlign: "center",
                 fontSize: normalize(18),
-                fontWeight: 400,
+                fontWeight: "400",
                 letterSpacing: -0.8,
                 width: normalize(80),
               }}
@@ -259,7 +254,7 @@ export default function SignUpEnd({ navigation }) {
                   : "rgba(162, 148, 255, 1)",
                 textAlign: "center",
                 fontSize: normalize(20),
-                fontWeight: 400,
+                fontWeight: "400",
                 letterSpacing: -0.8,
                 width: normalize(80),
               }}
@@ -275,7 +270,7 @@ export default function SignUpEnd({ navigation }) {
           podcastsEpisodesIsSelected) ? (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Tabs");
+              mainNavigation.navigate("Tabs");
             }}
             style={{
               paddingVertical: normalize(10),
@@ -291,7 +286,7 @@ export default function SignUpEnd({ navigation }) {
               style={{
                 color: "white",
                 fontSize: normalize(20),
-                fontWeight: 800,
+                fontWeight: "800",
               }}
             >
               ready to go!
@@ -313,7 +308,7 @@ export default function SignUpEnd({ navigation }) {
               style={{
                 color: "white",
                 fontSize: normalize(20),
-                fontWeight: 800,
+                fontWeight: "800",
               }}
             >
               ready to go!

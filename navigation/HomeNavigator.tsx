@@ -2,8 +2,9 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import SearchUser from "../screens/SearchUserScreen";
+import { HomeNavigatorParamsList } from "../types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<HomeNavigatorParamsList>();
 
 function HomeNavigator() {
   return (

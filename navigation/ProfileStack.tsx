@@ -3,8 +3,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ProfileScreen from "../screens/ProfileScreen";
 import MediaItemsViewScreen from "../screens/PostsViewScreen";
 import DomainOfTaste from "../screens/DomainOfTasteScreen";
+import { ProfileNavigatorParamsList } from "../types";
 
-const Stack = createStackNavigator();
+
+const Stack = createStackNavigator<ProfileNavigatorParamsList>();
 
 function ProfileNavigator() {
   return (

@@ -4,8 +4,9 @@ import Auth from "../screens/AuthScreen";
 import SignUpPersonalInfo from "../screens/SignUpPersonalInfoScreen";
 import SignUpEnd from "../screens/SignUpEndScreen";
 import AuthEmailPassword from "../screens/AuthEmailPasswordScreen";
+import { AuthNavigatorParamsList } from "../types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<AuthNavigatorParamsList>();
 
 const AuthNavigator = () => {
   return (

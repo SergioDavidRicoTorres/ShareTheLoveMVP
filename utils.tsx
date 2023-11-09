@@ -8,17 +8,18 @@ import {
   FlatList,
 } from "react-native";
 import React from "react";
+import { Domain, PlaylistsMediaItemComponent } from "./types";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
-const normalize = (value) => width * (value / 390);
+export const normalize = (value: number) => width * (value / 390);
 
 // get Search Result Item subtitle, depending on the media type:
-export const getItemSubTitle = (item, postType) => {
+export const getItemSubTitle = (item: any, postType: string) => {
   try {
     if (postType === "Song") {
       return (
         <View style={{ flexDirection: "row" }}>
-          {item.artists.map((artist, index) => (
+          {item.artists.map((artist: any, index: number) => (
             <React.Fragment key={index}>
               {/* itemArtistName */}
               {index !== item.artists.length - 1 ? (
@@ -62,7 +63,7 @@ export const getItemSubTitle = (item, postType) => {
   }
 };
 
-export const getItemTitle = (item, postType) => {
+export const getItemTitle = (item: any, postType: string) => {
   try {
     if (postType === "Song") {
       return item.name;
@@ -78,7 +79,7 @@ export const getItemTitle = (item, postType) => {
   }
 };
 
-export const getItemImage = (item, postType) => {
+export const getItemImage = (item: any, postType: string) => {
   // logic for image fetching depending postType (it didn't work by defining a separating function)
   try {
     if (postType === "Song") {
@@ -95,7 +96,7 @@ export const getItemImage = (item, postType) => {
 };
 
 // returns color depending on the type of post
-export const getButtonsAccentColor = (postType) => {
+export const getButtonsAccentColor = (postType: string) => {
   try {
     if (postType === "Song") {
       return "rgba(0, 255, 163, 1)";
@@ -113,7 +114,7 @@ export const getButtonsAccentColor = (postType) => {
 };
 
 // returns first color for the background gradient depending on the type of post
-export const getGradientsFirstColor = (postType) => {
+export const getGradientsFirstColor = (postType: string) => {
   try {
     if (postType === "Song") {
       return "rgba(0, 209, 134, 1)";
@@ -131,7 +132,7 @@ export const getGradientsFirstColor = (postType) => {
 };
 
 // returns color depending on the type of post
-export const getSearchBarColor = (postType) => {
+export const getSearchBarColor = (postType: string) => {
   try {
     if (postType === "Song") {
       return "rgba(20, 169, 115, 0.75)";
@@ -147,7 +148,7 @@ export const getSearchBarColor = (postType) => {
   }
 };
 
-export const getMoodTextColor = (postType) => {
+export const getMoodTextColor = (postType: string) => {
   try {
     if (postType === "Song") {
       return "rgba(153, 255, 218, 1)";
@@ -164,7 +165,7 @@ export const getMoodTextColor = (postType) => {
   }
 };
 
-export const getMoodContainerColor = (postType) => {
+export const getMoodContainerColor = (postType: string) => {
   try {
     if (postType === "Song") {
       return "rgba(0, 255, 163, 0.4)";
@@ -181,7 +182,7 @@ export const getMoodContainerColor = (postType) => {
   }
 };
 
-export const getPlaylistCardBackgroundColor = (postType) => {
+export const getPlaylistCardBackgroundColor = (postType: string) => {
   try {
     if (postType === "Song") {
       return "rgba(0, 255, 163, 0.75)";
@@ -198,7 +199,7 @@ export const getPlaylistCardBackgroundColor = (postType) => {
   }
 };
 
-export const getImageWidth = (postType) => {
+export const getImageWidth = (postType: string) => {
   try {
     if (postType === "Film/TVShow") {
       return normalize(275);
@@ -211,7 +212,7 @@ export const getImageWidth = (postType) => {
   }
 };
 
-export const getScreenGradientFirstColor = (category) => {
+export const getScreenGradientFirstColor = (category: Domain) => {
   try {
     if (category.id === 0) {
       return "rgba(0, 98, 62, 1)";
@@ -228,7 +229,7 @@ export const getScreenGradientFirstColor = (category) => {
   }
 };
 
-export const getDomainsOfTasteGradientsFirstColor = (category) => {
+export const getDomainsOfTasteGradientsFirstColor = (category: Domain) => {
   try {
     if (category.id === 0) {
       return "rgba(0, 209, 134, 0.75)";
@@ -245,7 +246,7 @@ export const getDomainsOfTasteGradientsFirstColor = (category) => {
   }
 };
 
-export const getPlaylistBigCardBackgroundColor = (category) => {
+export const getPlaylistBigCardBackgroundColor = (category: Domain) => {
   try {
     if (category.id === 0) {
       return "rgba(0, 255, 163, 0.3)";
@@ -262,7 +263,7 @@ export const getPlaylistBigCardBackgroundColor = (category) => {
   }
 };
 
-export const getDomainOfTasteScoreIcon = (category) => {
+export const getDomainOfTasteScoreIcon = (category: Domain) => {
   try {
     if (category.id === 0) {
       return require("./assets/icons/MusicDomainScoreIcon.png");
@@ -279,7 +280,7 @@ export const getDomainOfTasteScoreIcon = (category) => {
   }
 };
 
-export const getPlaylistScoreIcon = (category) => {
+export const getPlaylistScoreIcon = (category: Domain) => {
   try {
     if (category.id === 0) {
       return require("./assets/icons/MusicPlaylistScoreIcon.png");
@@ -296,7 +297,7 @@ export const getPlaylistScoreIcon = (category) => {
   }
 };
 
-export const getImageHeight = (postType) => {
+export const getImageHeight = (postType: string) => {
   try {
     if (postType === "Film/TVShow") {
       return normalize(377);
@@ -314,7 +315,7 @@ export const getPlaylistsMediaItemComponent = ({
   item: post,
   navigation,
   user,
-}) => {
+}: PlaylistsMediaItemComponent) => {
   try {
     if (domainOfTaste.id === 0) {
       return (
@@ -358,7 +359,7 @@ export const getPlaylistsMediaItemComponent = ({
                 style={{
                   color: "white",
                   fontSize: normalize(20),
-                  fontWeight: 400,
+                  fontWeight: "400",
                   textAlign: "center",
                 }}
                 numberOfLines={1}
@@ -369,7 +370,7 @@ export const getPlaylistsMediaItemComponent = ({
                 style={{
                   color: "white",
                   fontSize: normalize(15),
-                  fontWeight: 300,
+                  fontWeight: "300",
                 }}
               >
                 {post.mediaItem.album}
@@ -397,7 +398,7 @@ export const getPlaylistsMediaItemComponent = ({
                       style={{
                         color: "white",
                         fontSize: normalize(15),
-                        fontWeight: 500,
+                        fontWeight: "500",
                       }}
                     >
                       {" "}
@@ -410,7 +411,7 @@ export const getPlaylistsMediaItemComponent = ({
                       style={{
                         color: "white",
                         fontSize: normalize(15),
-                        fontWeight: 500,
+                        fontWeight: "500",
                       }}
                     >
                       {item}
@@ -511,7 +512,7 @@ export const getPlaylistsMediaItemComponent = ({
                   style={{
                     color: "white",
                     fontSize: normalize(20),
-                    fontWeight: 700,
+                    fontWeight: "700",
 
                     // textAlign: "center",
                   }}
@@ -547,6 +548,6 @@ const styles = StyleSheet.create({
   itemSubtitle: {
     color: "white",
     fontSize: normalize(18),
-    fontWeight: 400,
+    fontWeight: "400",
   },
 });

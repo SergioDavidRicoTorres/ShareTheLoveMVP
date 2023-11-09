@@ -1,0 +1,49 @@
+MOODS and Tags: {
+    Music Moods List: {
+        Feeling it: {
+            -Nostalgic
+            -Sad
+            -Heart Broken
+            -Inspired
+            -Purposefull
+            -Lonely
+            -Tired
+            -In Love
+            -Home-sick
+            -Missing
+        }
+        Hyped: {
+            -Hard Beat
+            -On Fire
+            -Dancy
+            -Party Monster
+            -Speeding Up
+            -Beast-mode 
+            -Nonstop 
+            -Expensive
+            -Luxus
+            -Beat on my feet 
+            -Unleashed
+            -Out of my way
+            -God Complex
+            -Turn it up
+            -Heart On Fire
+        }
+        Chilled: {
+            -Hugging trees
+            -Everything is fine
+            -Flowing
+        }
+    }
+    Episodes Moods List: {
+        -Knowledge Thurst 
+        -Pondersome
+        -Inspired
+        -
+    }
+    Movies/TV-Shows Moods List: {
+        -Mind blown
+        -Pondersome
+
+    }
+}

@@ -1,11 +1,12 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { View } from "react-native";
-import Tabs from "./Tabs.js";
-import AuthNavigator from "./AuthNavigator.js";
+import Tabs from "./Tabs";
+import AuthNavigator from "./AuthNavigator";
+import { MainNavigatorParamsList } from "../types";
 
-const Stack = createNativeStackNavigator();
+
+const Stack = createNativeStackNavigator<MainNavigatorParamsList>();
 
 function MainNavigator() {
   return (

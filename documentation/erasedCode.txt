@@ -1,0 +1,690 @@
+App.js:
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
+import HomeScreen from "./screens/HomeScreen";
+
+const Stack = createNativeStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+
+
+HomeScreen.js:
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableHighlight,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+
+import { LinearGradient } from "expo-linear-gradient";
+import { SvgUri } from "react-native-svg";
+
+export default function HomeScreen({ navigation }) {
+  const handleButtonPress = () => {
+    // Handle button press event
+  };
+
+  return (
+    <LinearGradient
+      colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.container}>
+        <View style={styles.NavigationBar}>
+          <TouchableOpacity>
+            <Image
+              source={require("/Users/sergiodavidricotorres/ShareTheLove_0.0/assets/HomeButton.png")}
+              style={styles.homeButton}
+            />
+          </TouchableOpacity>
+
+          <TouchableHighlight>
+            <Image
+              source={require("/Users/sergiodavidricotorres/ShareTheLove_0.0/assets/AddButton.png")}
+              style={styles.addButton}
+            />
+          </TouchableHighlight>
+          <TouchableHighlight>
+            <View style={styles.profileButton}>
+              <Text> </Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  NavigationBar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    position: "absolute",
+    bottom: 0,
+    backgroundColor: "rgba(1, 4, 43, 1)",
+    height: "10%",
+    width: "100%",
+  },
+  homeButton: {
+    height: 31,
+    width: 29,
+    padding: 10,
+  },
+  addButton: {
+    bottom: 45,
+    height: 90,
+    width: 90,
+  },
+  profileButton: {
+    borderRadius: 100,
+    width: 40,
+    height: 40,
+    backgroundColor: "#fff", // Add a background color here
+    shadowColor: "#FFB800",
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 20,
+    shadowOpacity: 1,
+  },
+});
+
+        {post.type === "Music" ? (
+          <Slider
+            style={{ width: window.width * 0.5, height: 20 }}
+            trackStyle={{ height: 10, borderRadius: 20 }}
+            minimumValue={0}
+            maximumValue={10}
+            value={score}
+            onValueChange={(newScore) => setScore(newScore)}
+            minimumTrackTintColor="rgba(0, 255, 163, 1)"
+            maximumTrackTintColor="rgba(58, 17, 90, 1)"
+            thumbStyle={{
+              width: window.width * 0.035,
+              height: window.width * 0.035,
+              backgroundColor: "rgba(0, 255, 163, 1)",
+            }}
+          />
+        ) : (
+          <Slider
+            style={{ width: window.width * 0.5, height: 20 }}
+            trackStyle={{ height: 10, borderRadius: 20 }}
+            minimumValue={0}
+            maximumValue={10}
+            value={score}
+            onValueChange={(newScore) => setScore(newScore)}
+            minimumTrackTintColor="rgba(250, 0, 255, 1)"
+            maximumTrackTintColor="rgba(58, 17, 90, 1)"
+            thumbStyle={{
+              width: window.width * 0.035,
+              height: window.width * 0.035,
+              backgroundColor: "rgba(250, 0, 255, 1)",
+            }}
+          />
+        )}
+
+
+
+
+
+        const HomeStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: true }}>
+      <Stack.Screen name="AddSong" component={AddSongScreen} />
+      <Stack.Screen name="AddFilmTVShow" component={AddFilmTVShowScreen} />
+    </Stack.Navigator>
+  );
+
+  //__________________SearchMusic---------------------------------
+  import React, { useState } from "react";
+import {
+  Modal,
+  View,
+  Dimensions,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  Text,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import GestureRecognizer from "react-native-swipe-gestures";
+
+//Spotify Authorization data
+import { getUserData, refreshTokens } from "./AuthorizationSpotify";
+
+const { width } = Dimensions.get("window"); //screen width constant
+
+//ELEMENT DIMENSIONS
+const modalWidth = width * 0.924;
+const modalHeight = width * 1.95;
+const modalMarginBottom = -width * 0.057;
+
+// SEARCH SONG FUNCTION
+const searchSong = async (searchTerm) => {
+  try {
+    const accessToken = await getUserData("accessToken");
+    const tokenExpirationTime = JSON.parse(await getUserData("expirationTime"));
+
+    if (
+      !accessToken ||
+      !tokenExpirationTime ||
+      new Date().getTime() >= tokenExpirationTime
+    ) {
+      await refreshTokens();
+    }
+
+    const response = await fetch(
+      "https://api.spotify.com/v1/search?q=" +
+        searchTerm +
+        "&type=track&limit=50",
+      {
+        method: "GET",
+        headers: {
+          "Conten-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    console.log("Response.status: ", response.status);
+
+    const data = await response.json();
+    // console.log("Response data: ", data); // Log the actual response data
+    // console.log("Fetch result: ", data.tracks.items);
+    return data.tracks.items;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+// const songsExamples = [
+//   {
+//     id: "1",
+//     name: "Starboy",
+//     artist: "the Weeknd",
+//     image: "https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452",
+//   },
+//   {
+//     id: "2",
+//     name: "Starry Night",
+//     artist: "Peggy Gou",
+//     image: "https://i.scdn.co/image/ab67616d0000b27374ac2cdc993ce37687b3ead7",
+//   },
+//   {
+//     id: "3",
+//     name: "Start a Riot",
+//     artist: "Duckwrth",
+//     image: "https://i.scdn.co/image/ab67616d0000b273e2e352d89826aef6dbd5ff8f",
+//   },
+//   {
+//     id: "4",
+//     name: "Don't Start Now",
+//     artist: "Dua Lipa",
+//     image: "https://i.scdn.co/image/ab67616d0000b2738583df1a14bea9175f9ac520",
+//   },
+//   {
+//     id: "5",
+//     name: "When A Fire Starts to Burn",
+//     artist: "Disclosure",
+//     image: "https://i.scdn.co/image/ab67616d0000b2737d9cf15a27f29ffc8ef01e8d",
+//   },
+//   {
+//     id: "6",
+//     name: "Stargazing",
+//     artist: "Travis Scott",
+//     image: "https://i.scdn.co/image/ab67616d0000b273072e9faef2ef7b6db63834a3",
+//   },
+//   {
+//     id: "7",
+//     name: "Starry Eyes",
+//     artist: "The Weeknd",
+//     image: "https://i.scdn.co/image/ab67616d0000b273b85976e1b1bd2d00ff551a01",
+//   },
+//   {
+//     id: "8",
+//     name: "A Sky Full of Stars",
+//     artist: "Coldplay",
+//     image: "https://i.scdn.co/image/ab67616d0000b273f864bcdcc245f06831d17ae0",
+//   },
+//   {
+//     id: "9",
+//     name: "Music Sounds Better With You",
+//     artist: "Stardust",
+//     image: "https://i.scdn.co/image/ab67616d0000b273b98afa12c212cbbda4f1799b",
+//   },
+//   {
+//     id: "10",
+//     name: "Star",
+//     artist: "Earth, Wind & Fire",
+//     image: "https://i.scdn.co/image/ab67616d0000b2735ccd022a69a4da9551efd988",
+//   },
+// ];
+
+const SearchMusic = ({ visible, onClose }) => {
+  const [searchInput, setSearchInput] = useState({});
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleInputChange = (text) => {
+    setSearchInput(text);
+  };
+
+  const handleEnterPress = async () => {
+    // Do something with the input text
+    try {
+      let results = await searchSong(searchInput);
+      setSearchResults(results);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  return (
+    <GestureRecognizer
+      style={{ flex: 1 }}
+      //onSwipeUp={() => this.setModalVisible(true)}
+      onSwipeDown={onClose}
+      config={{
+        // Add your preferred gesture configuration here
+        velocityThreshold: 0.3,
+        directionalOffsetThreshold: 300,
+      }}
+      // Enable/disable gesture recognition based on modalVisible state
+      // Only enable gesture recognition when modalVisible is true (modal is open)
+      shouldEnableGesture={() => this.state.modalVisible}
+    >
+      <Modal visible={visible} animationType="slide" transparent>
+        <View style={styles.modalContainer}>
+          <LinearGradient
+            colors={["rgba(0, 209, 134, 1)", "rgba(58, 17, 90, 0.9)"]} // Replace with your desired gradient colors
+            style={styles.backgroundGradient}
+          >
+            <View style={styles.modalContent}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    left: 30,
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    width: width * 0.188,
+                    height: width * 0.015,
+                    borderRadius: 20,
+                    marginTop: width * 0.03,
+                  }}
+                />
+
+                <TouchableOpacity
+                  style={{ left: width * 0.229, top: 5 }}
+                  onPress={onClose}
+                >
+                  <Text
+                    style={{
+                      fontStyle: "normal",
+                      fontWeight: 600,
+                      fontSize: width * 0.056,
+                      lineHeight: 26,
+                      color: "rgba(255, 255, 255, 0.75)",
+                    }}
+                  >
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "row",
+
+                  width: width * 0.865,
+                  height: width * 0.079,
+                  borderRadius: 20,
+                  backgroundColor: "rgba(20, 169, 115, 0.75)",
+                  paddingHorizontal: 10,
+                  marginTop: width * 0.03,
+                }}
+              >
+                <Image
+                  style={{
+                    width: width * 0.05,
+                    height: width * 0.05,
+                    top: 5,
+                    marginRight: 5,
+                  }}
+                  source={require("../assets/search.png")}
+                />
+                <TextInput
+                  value={searchInput}
+                  onChangeText={handleInputChange}
+                  onSubmitEditing={handleEnterPress}
+                  returnKeyType="done"
+                  style={{
+                    color: "white",
+                    marginRight: width * 0.064,
+                    width: width * 0.7,
+                  }}
+                  placeholder="Search..."
+                />
+              </View>
+              <FlatList
+                style={{
+                  marginTop: width * 0.03,
+                  width: width * 0.865,
+                  // backgroundColor: "#FFFFFF",
+                  // flex: 1,
+                }}
+                data={searchResults}
+                ItemSeparatorComponent={() => (
+                  <View style={{ height: width * 0.03 }} />
+                )}
+                renderItem={({ item }) => {
+                  return (
+                    <View
+                      style={{
+                        width: width * 0.868,
+                        height: width * 0.127,
+                        borderRadius: 5,
+                        backgroundColor: "rgba(203, 203, 203, 0.5)",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <Image
+                        source={{ uri: item.album.images[0].url }}
+                        style={{
+                          width: width * 0.128,
+                          height: width * 0.128,
+                          borderTopLeftRadius: 5,
+                          borderBottomLeftRadius: 5,
+                        }}
+                      />
+                      <View
+                        style={{
+                          width: width * 0.68,
+                          marginTop: width * 0.01,
+                          marginBottom: width * 0.01,
+                          marginLeft: 15,
+                        }}
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            width: width * 0.68,
+                            fontWeight: 700,
+                            fontSize: width * 0.05,
+                            lineHeight: 23,
+                            color: "white",
+                          }}
+                        >
+                          {item.name}
+                        </Text>
+                        {/* <Text
+                        numberOfLines={1}
+                        style={{
+                          fontWeight: 300,
+                          fontSize: width * 0.03,
+                          lineHeight: 12,
+                          marginTop: 0,
+                          color: "white",
+                        }}
+                      >
+                        {item.artists[0].name}
+                      </Text> */}
+                        <View style={{ flexDirection: "row" }}>
+                          {item.artists.map((artist, index) => (
+                            <React.Fragment key={index}>
+                              {index !== item.artists.length - 1 ? (
+                                <Text
+                                  numberOfLines={1}
+                                  style={{
+                                    fontWeight: 300,
+                                    fontSize: width * 0.03,
+                                    lineHeight: 12,
+                                    marginTop: 0,
+                                    color: "white",
+                                  }}
+                                >
+                                  {artist.name}-
+                                </Text>
+                              ) : (
+                                <Text
+                                  numberOfLines={1}
+                                  style={{
+                                    fontWeight: 300,
+                                    fontSize: width * 0.03,
+                                    lineHeight: 12,
+                                    marginTop: 0,
+                                    color: "white",
+                                  }}
+                                >
+                                  {artist.name}
+                                </Text>
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }}
+                keyExtractor={(song) => song.id}
+              />
+            </View>
+          </LinearGradient>
+        </View>
+      </Modal>
+    </GestureRecognizer>
+  );
+};
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backgroundGradient: {
+    borderRadius: 10,
+    marginBottom: modalMarginBottom,
+    //marginLeft: padding,
+    //marginRight: padding,
+    width: modalWidth,
+    height: modalHeight,
+  },
+  modalContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  searchBar: {
+    color: "white",
+  },
+  flatList: {
+    borderRadius: 10,
+    backgroundColor: "#FFFFFF",
+    flex: 1,
+  },
+});
+
+export default SearchMusic;
+
+
+
+//==================================================================
+//================================ FLOATING TABS ===================
+//==================================================================
+
+import { StyleSheet, View, Image, Dimensions } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AddButtons from "../components/AddButtons";
+import { getCurrentUserData } from "../UserData";
+import { ProfileNavigator } from "./ProfileStack";
+import { HomeNavigator } from "./HomeNavigator";
+
+const Tab = createBottomTabNavigator();
+const { width } = Dimensions.get("window"); // screen width constant
+const normalize = (value) => width * (value / 390);
+
+function Tabs({ homeNavigator }) {
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          borderTopWidth: 3,
+          borderTopColor: "rgba(156, 75, 255, 1)",
+          position: "absolute",
+          backgroundColor: "rgba(1, 4, 43, 1)",
+          height: normalize(60),
+          borderColor: "rgba(156, 75, 255, 1)",
+          borderWidth: normalize(3),
+          // paddingVertical: normalize(10),
+          // paddingHorizontal: normalize(20),
+          bottom: normalize(25),
+          right: normalize(20),
+          left: normalize(20),
+          borderRadius: normalize(50),
+          // alignItemsContent: "center",
+          shadowColor: "rgba(186, 129, 255, 1)",
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
+          shadowOpacity: 1,
+          shadowRadius: normalize(10),
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeNavigator}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                right: normalize(10),
+                top: normalize(15),
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                source={
+                  focused
+                    ? require("../assets/icons/SelectedHomeButtonIcon.png")
+                    : require("../assets/icons/UnselectedHomeButtonIcon.png")
+                }
+                resizeMode="contain"
+                style={{
+                  width: normalize(35),
+                  height: normalize(35),
+                }}
+              />
+            </View>
+          ),
+        }}
+      />
+      {
+        <Tab.Screen
+          name="Add"
+          component={AddButtons}
+          options={({ navigation }) => ({
+            headerShown: false,
+
+            tabBarButton: ({ navigation }) => (
+              <AddButtons navigation={navigation} />
+            ),
+          })}
+        />
+      }
+      <Tab.Screen
+        name="Profile"
+        component={ProfileNavigator}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <View
+              // userImageContainer
+              style={
+                focused
+                  ? styles.selectedProfileButton
+                  : styles.unselectedProfileButton
+              }
+            >
+              <Image
+                // userImage
+                style={{
+                  height: normalize(45),
+                  width: normalize(45),
+                  borderRadius: normalize(100),
+                  borderColor: "rgba(186, 129, 255, 1)",
+                  borderWidth: normalize(3),
+                }}
+                source={{
+                  uri: getCurrentUserData().profilePicture,
+                }}
+              />
+            </View>
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+const styles = StyleSheet.create({
+  selectedProfileButton: {
+    left: normalize(10),
+    top: normalize(15),
+    height: normalize(45),
+    width: normalize(45),
+    borderRadius: normalize(100),
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(186, 129, 255, 1)",
+    shadowColor: "rgba(186, 129, 255, 1)",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 1,
+    shadowRadius: normalize(10),
+  },
+
+  unselectedProfileButton: {
+    left: normalize(10),
+    top: normalize(15),
+    height: normalize(45),
+    width: normalize(45),
+    borderRadius: normalize(100),
+    backgroundColor: "rgba(186, 129, 255, 1)",
+  },
+});
+
+export default Tabs;

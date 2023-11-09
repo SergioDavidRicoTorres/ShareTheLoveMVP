@@ -12,9 +12,12 @@ import {
   Alert,
 } from "react-native";
 import { useState } from "react";
-
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRoute } from "@react-navigation/native";
+// import { useRoute } from "@react-navigation/native";
+import { normalize } from "../utils";
+import { AuthEmailPasswordScreenRouteProp, AuthNavigationProp, MainNavigationProp } from "../types";
+
 // import { getAuth } from "firebase/auth";
 // import { firebaseApp } from "../App"; // Ensure the path matches your file structure
 
@@ -62,46 +65,47 @@ import { useRoute } from "@react-navigation/native";
 // };
 
 const { width } = Dimensions.get("window"); // Window Dimensions
-const normalize = (value) => width * (value / 390);
+//const normalize = (value) => width * (value / 390);
 // modalHeaderContainer
 const modalHeaderContainerGap = width * 0.051;
 const modalHeaderContainerMarginTop = width * 0.026;
 
-export default function AuthEmailPassword({ navigation }) {
-  // const navigation = useNavigation();
+const AuthEmailPassword = () => {
+  const navigation = useNavigation<AuthNavigationProp>();
+  const mainNavigation = useNavigation<MainNavigationProp>();
+  const route = useRoute<AuthEmailPasswordScreenRouteProp>();
+  const { authType } = route.params;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(true);
-  const route = useRoute();
-  const authType = route.params?.authType || "default"; // Provide a default value if authType is not present
 
-  const [errorMessage, setErrorMessage] = useState(null);
+  // const [errorMessage, setErrorMessage] = useState(null);
 
-  const signUpWithEmailAndPassword = async (userEmail, userPassword) => {
-    try {
-      const userCredential = await auth.createUserWithEmailAndPassword(
-        userEmail,
-        userPassword
-      );
-      Alert.alert("Success", "User signed up successfully!");
-    } catch (error) {
-      console.error("Error during sign up:", error);
-      Alert.alert("Sign Up Error", error.message);
-    }
-  };
+  // const signUpWithEmailAndPassword = async (userEmail, userPassword) => {
+  //   try {
+  //     const userCredential = await auth.createUserWithEmailAndPassword(
+  //       userEmail,
+  //       userPassword
+  //     );
+  //     Alert.alert("Success", "User signed up successfully!");
+  //   } catch (error) {
+  //     console.error("Error during sign up:", error);
+  //     Alert.alert("Sign Up Error", error.message);
+  //   }
+  // };
 
-  const signInWithEmailAndPassword = async (userEmail, userPassword) => {
-    try {
-      const userCredential = await auth.signInWithEmailAndPassword(
-        userEmail,
-        userPassword
-      );
-      Alert.alert("Success", "User signed in successfully!");
-    } catch (error) {
-      console.error("Error during sign in:", error);
-      Alert.alert("Sign In Error", error.message);
-    }
-  };
+  // const signInWithEmailAndPassword = async (userEmail, userPassword) => {
+  //   try {
+  //     const userCredential = await auth.signInWithEmailAndPassword(
+  //       userEmail,
+  //       userPassword
+  //     );
+  //     Alert.alert("Success", "User signed in successfully!");
+  //   } catch (error) {
+  //     console.error("Error during sign in:", error);
+  //     Alert.alert("Sign In Error", error.message);
+  //   }
+  // };
 
   const handleButtonPress = async () => {
     try {
@@ -110,11 +114,11 @@ export default function AuthEmailPassword({ navigation }) {
         navigation.navigate("SignUpPersonalInfoScreen");
       } else {
         // await signInWithEmailAndPassword(email, password);
-        navigation.navigate("Tabs");
+        mainNavigation.navigate("Tabs");
       }
     } catch (error) {
       // Handle authentication error
-      setErrorMessage(error.message); // Set an error message to display to the user
+      // setErrorMessage(error.message); // Set an error message to display to the user
       console.error("Authentication error:", error);
     }
   };
@@ -158,7 +162,7 @@ export default function AuthEmailPassword({ navigation }) {
               style={{
                 color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(22),
-                fontWeight: 600,
+                fontWeight: "600",
               }}
             >
               Cancel
@@ -169,7 +173,7 @@ export default function AuthEmailPassword({ navigation }) {
           style={{
             color: "white",
             fontSize: normalize(30),
-            fontWeight: 700,
+            fontWeight: "700",
             marginTop: normalize(20),
           }}
         >
@@ -184,7 +188,7 @@ export default function AuthEmailPassword({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(25),
-              fontWeight: 400,
+              fontWeight: "400",
               left: normalize(7),
               marginTop: normalize(10),
             }}
@@ -225,7 +229,7 @@ export default function AuthEmailPassword({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(25),
-              fontWeight: 400,
+              fontWeight: "400",
               left: normalize(7),
               marginTop: normalize(10),
             }}
@@ -300,9 +304,9 @@ export default function AuthEmailPassword({ navigation }) {
         </View>
         {email !== "" && password !== "" ? (
           <>
-            {errorMessage && (
+            {/* {errorMessage && (
               <Text style={{ color: "red" }}>{errorMessage}</Text>
-            )}
+            )} */}
             <TouchableOpacity
               onPress={handleButtonPress}
               style={{
@@ -321,7 +325,7 @@ export default function AuthEmailPassword({ navigation }) {
                 style={{
                   color: "white",
                   fontSize: normalize(20),
-                  fontWeight: 800,
+                  fontWeight: "800",
                   // letterSpacing: -1,
                 }}
               >
@@ -347,7 +351,7 @@ export default function AuthEmailPassword({ navigation }) {
               style={{
                 color: "white",
                 fontSize: normalize(20),
-                fontWeight: 800,
+                fontWeight: "800",
                 // letterSpacing: -1,
               }}
             >
@@ -366,3 +370,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default AuthEmailPassword;

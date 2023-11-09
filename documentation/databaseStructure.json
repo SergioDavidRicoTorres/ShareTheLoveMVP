@@ -1,0 +1,133 @@
+{
+    "users": {
+      "userID_0": {
+        "profileName": "",
+        "password": "",
+        "dateOfBirth": "",
+        "description": "",
+        "profilePicture": "",
+        "followersCount": 0,
+        "followingCount": 0
+      }
+    },
+    "domainsOfTaste": {
+      "music": {
+        "name": "Music",
+        "isSelected": true,
+        "score": 0
+      },
+      "filmsAndTVShows": {
+        "name": "Films and TV Shows",
+        "isSelected": false,
+        "score": 0
+      },
+      "episodes": {
+        "name": "Episodes",
+        "isSelected": false,
+        "score": 0
+      }
+    },
+    "playlists": {
+      "playlistID_1": {
+        "domainID": "music",
+        "userID": "userID_0",
+        "name": "",
+        "image": "",
+        "score": 0,
+        "moods": {
+          "moodID_1": true,
+          "moodID_2": false
+        }
+      },
+      "playlistID_2": {
+        "domainID": "filmsAndTVShows",
+        "userID": "userID_0",
+        "name": "",
+        "image": "",
+        "score": 0,
+        "moods": {
+          "moodID_3": true,
+          "moodID_4": true
+        }
+      }
+    },
+    "posts": {
+      "postID_1": {
+        "playlistID": "playlistID_1",
+        "caption": "",
+        "mediaItemName": "",
+        "mediaItemImage": "",
+        "likesCount": 0,
+        "moods": {
+          "moodID_1": true
+        }, 
+        "time": ""
+      },
+      "postID_2": {
+        "playlistID": "playlistID_2",
+        "caption": "",
+        "mediaItemName": "",
+        "mediaItemImage": "",
+        "likesCount": 0,
+        "moods": {
+          "moodID_3": true
+        }, 
+        "time": ""
+      }
+    },
+    "moods": {
+      "musicMoods": {
+        "moodID_1": {
+          "name": "Mood 1",
+          "isSelected": false,
+          "author": ""
+        },
+        "moodID_2": {
+          "name": "Mood 2",
+          "isSelected": false,
+          "author": ""
+        }
+      },
+      "filmsAndTVShowsMoods": {
+        "moodID_3": {
+          "name": "Mood 3",
+          "isSelected": false,
+          "author": ""
+        },
+        "moodID_4": {
+          "name": "Mood 4",
+          "isSelected": false,
+          "author": ""
+        }
+      },
+      "episodesMoods": {
+        "moodID_5": {
+          "name": "Mood 5",
+          "isSelected": false,
+          "author": ""
+        },
+        "moodID_6": {
+          "name": "Mood 6",
+          "isSelected": false,
+          "author": ""
+        }
+      }
+    },
+    "followers": {
+      "followerID_1": {
+        "userID": "userID_1"
+      },
+      "followerID_2": {
+        "userID": "userID_2"
+      }
+    },
+    "following": {
+      "followingID_1": {
+        "userID": "userID_1"
+      },
+      "followingID_2": {
+        "userID": "userID_2"
+      }
+    }
+  }
+  

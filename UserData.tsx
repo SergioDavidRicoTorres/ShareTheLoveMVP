@@ -20,10 +20,12 @@
 //   }
 // };
 import currentUser from "./DummyData/currentUserDataExample.json";
+import defaultUser from "./DummyData/defaultUser.json"
 export const getCurrentUserData = () => {
   try {
     return currentUser;
   } catch (error) {
     console.error("Error fetching current user data:", error);
+    return defaultUser;
   }
 };

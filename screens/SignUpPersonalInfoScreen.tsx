@@ -13,19 +13,22 @@ import { useState } from "react";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { TextInput } from "react-native-gesture-handler";
+import { normalize } from "../utils";
 import {
   getAuthorizationCode,
   getTokens,
 } from "../components/AuthorizationSpotify";
+import { useNavigation } from "@react-navigation/native";
+import { AuthNavigationProp } from "../types";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
-const normalize = (value) => width * (value / 390);
+
 // modalHeaderContainer
 const modalHeaderContainerGap = width * 0.051;
 const modalHeaderContainerMarginTop = width * 0.026;
 
-export default function SignUpPersonalInfo({ navigation }) {
-  // const navigation = useNavigation();
+export default function SignUpPersonalInfo() {
+  const navigation = useNavigation<AuthNavigationProp>();
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [dayOfBirth, setDayOfBirth] = useState("");
@@ -98,7 +101,7 @@ export default function SignUpPersonalInfo({ navigation }) {
               style={{
                 color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(22),
-                fontWeight: 600,
+                fontWeight: "600",
               }}
             >
               Cancel
@@ -114,7 +117,7 @@ export default function SignUpPersonalInfo({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(30),
-              fontWeight: 700,
+              fontWeight: "700",
               //   letterSpacing: -1.2,
             }}
           >
@@ -124,7 +127,7 @@ export default function SignUpPersonalInfo({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(25),
-              fontWeight: 400,
+              fontWeight: "400",
               left: normalize(7),
               marginTop: normalize(10),
             }}
@@ -165,7 +168,7 @@ export default function SignUpPersonalInfo({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(25),
-              fontWeight: 400,
+              fontWeight: "400",
               left: normalize(7),
               marginTop: normalize(10),
             }}
@@ -190,7 +193,7 @@ export default function SignUpPersonalInfo({ navigation }) {
                 marginLeft: normalize(15),
                 fontSize: normalize(20),
                 top: normalize(9),
-                fontWeight: 600,
+                fontWeight: "600",
               }}
             >
               @
@@ -219,7 +222,7 @@ export default function SignUpPersonalInfo({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(25),
-              fontWeight: 400,
+              fontWeight: "400",
               left: normalize(7),
               marginTop: normalize(10),
             }}
@@ -329,7 +332,7 @@ export default function SignUpPersonalInfo({ navigation }) {
             style={{
               color: "white",
               fontSize: normalize(25),
-              fontWeight: 400,
+              fontWeight: "400",
               left: normalize(7),
               marginTop: normalize(10),
             }}
@@ -357,7 +360,7 @@ export default function SignUpPersonalInfo({ navigation }) {
               returnKeyType="done"
               style={{
                 color: "white",
-                marginHorizontal: normalize(5),
+                // marginHorizontal: normalize(5),
                 fontSize: normalize(20),
                 // width: normalize(300),
                 height: normalize(130),
@@ -410,7 +413,7 @@ export default function SignUpPersonalInfo({ navigation }) {
               style={{
                 color: "white",
                 fontSize: normalize(20),
-                fontWeight: 800,
+                fontWeight: "800",
                 // letterSpacing: -1,
               }}
             >
@@ -439,7 +442,7 @@ export default function SignUpPersonalInfo({ navigation }) {
               style={{
                 color: "white",
                 fontSize: normalize(20),
-                fontWeight: 800,
+                fontWeight: "800",
                 // letterSpacing: -1,
               }}
             >
