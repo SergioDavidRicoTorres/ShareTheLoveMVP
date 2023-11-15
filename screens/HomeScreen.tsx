@@ -14,7 +14,8 @@ import { useNavigation } from "@react-navigation/native";
 import PostCard from "../components/PostCard";
 import { normalize } from "../utils";
 import { HomeNavigationProp } from "../types";
-// EXAMPLES OF POSTS ARRAY
+import { getChronologicallySortedPosts } from "../utilsData";
+
 const postCardsExamples = [
   {
     id: "song-1",
@@ -92,7 +93,18 @@ const postCardsExamples = [
 // const feedItemSeparatorHeight = width * 0.089;
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavigationProp>();
+  const posts = getChronologicallySortedPosts();
   // console.log(AuthSession.getRedirectUrl());  //outputs the redirect uri link for the spotify API
+  // firestore()
+  // .collection('posts')
+  // .get()
+  // .then(querySnapshot => {
+  //   const posts = querySnapshot.docs.map(doc => ({
+  //     id: doc.id, // Capture the document ID
+  //     ...doc.data()
+  //   }));
+  //   // Now 'posts' is an array of objects, each with an 'id' property
+  // });
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
@@ -139,8 +151,8 @@ export default function HomeScreen() {
             ItemSeparatorComponent={() => (
               <View style={styles.feedItemSeparator} />
             )}
-            keyExtractor={(post) => post.id}
-            data={postCardsExamples}
+            keyExtractor={(index) => index.toString()} // keyExtractor={(item) => item.id}
+            data={posts}
             renderItem={({ item }) => (
               // Post card
               <PostCard post={item} />

@@ -18,131 +18,105 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getCurrentUserData } from "../UserData";
 import MediaItemInfo from "../components/MediaItemInfo";
+import { Domain, PostsViewScreenRouteProp, ProfileNavigationProp } from "../types";
+import { getScreenGradientFirstColor, getMoodTextColor, getMoodContainerColor } from "../utils";
+import { DOMAINPOSTTYPE } from "../constants";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+const normalize = (value: number) => width * (value / 390);
 
 const user = getCurrentUserData();
 
-// moodContainer
-const moodContainerPaddingVertical = width * 0.005;
-const moodContainerPaddingHorizontal = width * 0.051;
-const moodContainerBorderRadius = width * 0.026;
-const moodContainerMarginVertical = width * 0.02;
-const moodContainerMarginHorizontal = width * 0.013;
-// moodText
-const moodTextFontSize = width * 0.046;
-// backButtonImage
-const backButtonImageWidth = width * 0.036;
-const backButtonImageHeight = width * 0.059;
+// const getGradientFirstColor = (domain: Domain) => {
+//   // try {
+//     if (domain.domainId === 0) {
+//       return "rgba(0, 98, 62, 1)";
+//     }
+//     if (domain.domainId === 1) {
+//       return "rgba(99, 0, 101, 1)";
+//     }
+//     if (domain.domainId === 2) {
+//       return "rgba(75, 117, 59, 1)";
+//     }
+//     console.log('Invalid "domain" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+//   // } catch (error) {
+//   //   console.error(error);
+//   //   return [];
+//   // }
+// };
 
-const getGradientFirstColor = (category) => {
-  try {
-    if (category.id === 0) {
-      return "rgba(0, 98, 62, 1)";
-    }
-    if (category.id === 1) {
-      return "rgba(99, 0, 101, 1)";
-    }
-    if (category.id === 2) {
-      return "rgba(75, 117, 59, 1)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
+// const getPlaylistContainerColor = (category) => {
+//   try {
+//     if (category.domainId === 0) {
+//       return "rgba(0, 255, 163, 0.3)";
+//     }
+//     if (category.domainId === 1) {
+//       return "rgba(250, 0, 255, 0.3)";
+//     }
+//     if (category.domainId === 2) {
+//       return "rgba(120, 190, 94, 0.3)";
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
 
-const getPlaylistContainerColor = (category) => {
-  try {
-    if (category.id === 0) {
-      return "rgba(0, 255, 163, 0.3)";
-    }
-    if (category.id === 1) {
-      return "rgba(250, 0, 255, 0.3)";
-    }
-    if (category.id === 2) {
-      return "rgba(120, 190, 94, 0.3)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
+// const getMoodTextColor = (category: Domain) => {
+//   try {
+//     if (category.domainId === 0) {
+//       return "rgba(153, 255, 218, 1)";
+//     }
+//     if (category.domainId === 1) {
+//       return "rgba(253, 153, 255, 1)";
+//     }
+//     if (category.domainId === 2) {
+//       return "rgba(197, 238, 182, 1)";
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
 
-const getMoodTextColor = (category) => {
-  try {
-    if (category.id === 0) {
-      return "rgba(153, 255, 218, 1)";
-    }
-    if (category.id === 1) {
-      return "rgba(253, 153, 255, 1)";
-    }
-    if (category.id === 2) {
-      return "rgba(197, 238, 182, 1)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-const getPlaylistAccentColor = (category) => {
-  try {
-    if (category.id === 0) {
+const getPlaylistAccentColor = (category: Domain) => {
+    if (category.domainId === 0) {
       return "rgba(0, 255, 163, 1)";
     }
-    if (category.id === 1) {
+    if (category.domainId === 1) {
       return "rgba(250, 0, 255, 1)";
     }
-    if (category.id === 2) {
+    if (category.domainId === 2) {
       return "rgba(154, 255, 118, 1)";
     }
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+    console.log('Invalid "domain" was passed!');
+    return "rgba(105, 51, 172, 1)"
 };
 
-const getMoodContainerColor = (category) => {
-  try {
-    if (category.id === 0) {
-      return "rgba(0, 255, 163, 0.6)";
-    }
-    if (category.id === 1) {
-      return "rgba(250, 0, 255, 0.6)";
-    }
-    if (category.id === 2) {
-      return "rgba(110, 212, 73, 0.6)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-const getPlaylistScoreIcon = (category) => {
-  try {
-    if (category.id === 0) {
-      return require("../assets/icons/MusicPlaylistScoreIcon.png");
-    }
-    if (category.id === 1) {
-      return require("../assets/icons/FilmsTVShowsPlaylistScoreIcon.png");
-    }
-    if (category.id === 2) {
-      return require("../assets/icons/EpisodesPlaylistScoreIcon.png");
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
+// const getMoodContainerColor = (category) => {
+//   try {
+//     if (category.domainId === 0) {
+//       return "rgba(0, 255, 163, 0.6)";
+//     }
+//     if (category.domainId === 1) {
+//       return "rgba(250, 0, 255, 0.6)";
+//     }
+//     if (category.domainId === 2) {
+//       return "rgba(110, 212, 73, 0.6)";
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
 
 export default function PostsViewScreen() {
   const handleButtonPress = () => {
     // Handle button press event
   };
-  const route = useRoute();
-  const navigation = useNavigation();
+  const route = useRoute<PostsViewScreenRouteProp> ();
+  const navigation = useNavigation<ProfileNavigationProp>();
 
   const { domainOfTaste, post, user } = route.params;
   //---------------------------------------------------------------------------------
@@ -161,7 +135,7 @@ export default function PostsViewScreen() {
 
   return (
     <LinearGradient
-      colors={[getGradientFirstColor(domainOfTaste), "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
+      colors={[getScreenGradientFirstColor(domainOfTaste), "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
       style={styles.container}
     >
       <SafeAreaView style={styles.container}>
@@ -190,7 +164,7 @@ export default function PostsViewScreen() {
             marginBottom: normalize(10),
             color: "white",
             fontSize: normalize(24),
-            fontWeight: 700,
+            fontWeight: "700",
             textAlign: "center",
           }}
           numberOfLines={1}
@@ -286,14 +260,14 @@ export default function PostsViewScreen() {
                         // moodContainer
                         style={{
                           ...styles.moodContainer,
-                          backgroundColor: getMoodContainerColor(domainOfTaste),
+                          backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
                         }}
                       >
                         <Text
                           // moodText
                           style={{
                             ...styles.moodText,
-                            color: getMoodTextColor(domainOfTaste),
+                            color: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
                           }}
                         >
                           {mood}
@@ -309,7 +283,7 @@ export default function PostsViewScreen() {
                     style={{
                       color: "white",
                       fontSize: normalize(18),
-                      fontWeight: 400,
+                      fontWeight: "400",
                     }}
                   >
                     {user.profileName}
@@ -319,7 +293,7 @@ export default function PostsViewScreen() {
                       style={{
                         color: "white",
                         fontSize: normalize(18),
-                        fontWeight: 300,
+                        fontWeight: "300",
                       }}
                       numberOfLines={4}
                     >
@@ -346,7 +320,7 @@ export default function PostsViewScreen() {
                   style={{
                     color: "white",
                     fontSize: normalize(20),
-                    fontWeight: 700,
+                    fontWeight: "700",
                     // marginHorizontal: normalize(20),
 
                     // marginVertical: normalize(10),
@@ -385,21 +359,34 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
 
+  // moodContainer: {
+  //   paddingVertical: moodContainerPaddingVertical,
+  //   paddingHorizontal: moodContainerPaddingHorizontal,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   borderRadius: moodContainerBorderRadius,
+  //   // marginVertical: moodContainerMarginVertical,
+  //   marginHorizontal: moodContainerMarginHorizontal,
+  // },
+  // moodText: {
+  //   fontWeight: "600",
+  //   fontSize: moodTextFontSize,
+  // },
   moodContainer: {
-    paddingVertical: moodContainerPaddingVertical,
-    paddingHorizontal: moodContainerPaddingHorizontal,
+    paddingVertical: normalize(2),
+    paddingHorizontal: normalize(20),
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: moodContainerBorderRadius,
-    // marginVertical: moodContainerMarginVertical,
-    marginHorizontal: moodContainerMarginHorizontal,
+    borderRadius: normalize(10),
+    // marginVertical: normalize(8),
+    marginHorizontal: normalize(5),
   },
   moodText: {
-    fontWeight: 600,
-    fontSize: moodTextFontSize,
+    fontWeight: "600",
+    fontSize: normalize(18),
   },
   backButtonImage: {
-    width: backButtonImageWidth,
-    height: backButtonImageHeight,
+    width: normalize(14),
+    height: normalize(23),
   },
 });

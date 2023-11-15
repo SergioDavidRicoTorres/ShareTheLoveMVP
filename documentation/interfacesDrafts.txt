@@ -1,0 +1,42 @@
+"user": {
+    "name": string, 
+    "profileName": string,
+    "profilePicture": image, 
+    "profileDescription": string,
+    "followersCount": int, 
+    "followingCount": int,
+    "DomainsOfTaste": [
+        "Music": {
+            "isActive": boolean, 
+            "score": double,
+        }
+        "FilmsTVShows": {
+            "isActive": boolean, 
+            "score": double,
+        }, 
+        "PodcastsEpisodes": {
+            "isActive": boolean, 
+            "score": int,
+        },
+    ]
+}
+
+"playlist": {
+    "userId": int, 
+    "domainId": int,
+    "name": string,
+    "image": image,
+    "moods": Mood[],
+    "score": int,
+}
+
+"post": {
+    "userId": int,
+    "domainId": int,
+    "playlistId": int,
+    "moods": Mood[],
+    "caption": string,
+    "likesCount": int, 
+    "time": string, 
+    "mediaItem": any,
+}

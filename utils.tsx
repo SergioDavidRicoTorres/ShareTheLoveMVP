@@ -8,15 +8,17 @@ import {
   FlatList,
 } from "react-native";
 import React from "react";
-import { Domain, PlaylistsMediaItemComponent } from "./types";
+import { Domain, Mood, PlaylistsMediaItemComponentProps } from "./types";
+// import { Song, FilmOrTVShow, PodcastEpisode } from "./types";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 export const normalize = (value: number) => width * (value / 390);
 
 // get Search Result Item subtitle, depending on the media type:
-export const getItemSubTitle = (item: any, postType: string) => {
-  try {
-    if (postType === "Song") {
+export const getItemSubTitle = (item: any, postType?: string) => {
+  // try {
+    switch (postType){
+    case "Song" : {
       return (
         <View style={{ flexDirection: "row" }}>
           {item.artists.map((artist: any, index: number) => (
@@ -44,284 +46,508 @@ export const getItemSubTitle = (item: any, postType: string) => {
         </View>
       );
     }
-    if (postType === "PodcastEpisode") {
+    case "PodcastEpisode" : {
       return (
         <Text numberOfLines={1} style={styles.itemSubtitle}>
           {item.description}
         </Text>
       );
     }
-    if (postType === "Film/TVShow") {
+    case "Film/TVShow" : {
       return (
         <Text numberOfLines={1} style={styles.itemSubtitle}>
           {item.media_type}
         </Text>
       );
     }
+    default: {
+      return (
+        <Text numberOfLines={1} style={styles.itemSubtitle}>
+          Error: Invalid post type!
+        </Text>
+      )
+    }
+  }
+  // } catch (error) {
+  //   console.error(error);
+  // }
+};
+
+// export const getItemImage = (item: any, postType: string) => {
+//   // logic for image fetching depending postType (it didn't work by defining a separating function)
+//   try {
+//     if (postType === "Song") {
+//       return { uri: item.album.images[0].url };
+//     } else if (postType === "PodcastEpisode") {
+//       return { uri: item.images[0].url };
+//     } else if (postType === "Film/TVShow") {
+//       return { uri: `https://image.tmdb.org/t/p/original/${item.poster_path}` };
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
+
+// export const getItemTitle = (item: any, postType: string) => {
+//     if (postType === "Song") {
+//       return item.name;
+//     }
+//     if (postType === "PodcastEpisode") {
+//       return item.name;
+//     }
+//     if (postType === "Film/TVShow") {
+//       return item.media_type === "movie" ? item.title : item.name;
+//     }
+//     console.log('Invalid "postType" was passed!');
+//     return "Unknown Title"
+// };
+
+// // returns color depending on the type of post
+// export const getButtonsAccentColor = (postType: string) => {
+//   // try {
+//     if (postType === "Song") {
+//       return "rgba(0, 255, 163, 1)";
+//     }
+//     if (postType === "PodcastEpisode") {
+//       return "rgba(110, 212, 73, 1)";
+//     }
+//     if (postType === "Film/TVShow") {
+//       return "rgba(250, 0, 255, 1)";
+//     }
+//     console.log('Invalid "postType" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+// };
+
+// // returns first color for the background gradient depending on the type of post
+// export const getGradientsFirstColor = (postType: string) => {
+//     if (postType === "Song") {
+//       return "rgba(0, 209, 134, 1)";
+//     }
+//     if (postType === "PodcastEpisode") {
+//       return "rgba(110, 212, 73, 1)";
+//     }
+//     if (postType === "Film/TVShow") {
+//       return "rgba(207, 0, 211, 1)";
+//     }
+//     console.log('Invalid "postType" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+// };
+
+// // returns color depending on the type of post
+// export const getSearchBarColor = (postType: string) => {
+//     if (postType === "Song") {
+//       return "rgba(20, 169, 115, 0.75)";
+//     }
+//     if (postType === "PodcastEpisode") {
+//       return "rgba(105, 146, 91, 0.75)";
+//     }
+//     if (postType === "Film/TVShow") {
+//       return "rgba(134, 0, 137, 0.75)";
+//     }
+//     console.log('Invalid "postType" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+// };
+
+// export const getMoodTextColor = (postType: string) => {
+//     if (postType === "Song") {
+//       return "rgba(153, 255, 218, 1)";
+//     }
+//     if (postType === "PodcastEpisode") {
+//       return "rgba(197, 238, 182, 1)";
+//     }
+//     if (postType === "Film/TVShow") {
+//       return "rgba(253, 153, 255, 1)";
+//     }
+//     console.log('Invalid "postType" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+// };
+
+// export const getMoodContainerColor = (postType: string) => {
+//     if (postType === "Song") {
+//       return "rgba(0, 255, 163, 0.4)";
+//     }
+//     if (postType === "PodcastEpisode") {
+//       return "rgba(110, 212, 73, 0.4)";
+//     }
+//     if (postType === "Film/TVShow") {
+//       return "rgba(250, 0, 255, 0.4)";
+//     }
+//     console.log('Invalid "postType" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+// };
+
+// export const getPlaylistCardBackgroundColor = (postType: string) => {
+//     if (postType === "Song") {
+//       return "rgba(0, 255, 163, 0.75)";
+//     }
+//     if (postType === "PodcastEpisode") {
+//       return "rgba(110, 212, 73, 0.75)";
+//     }
+//     if (postType === "Film/TVShow") {
+//       return "rgba(250, 0, 255, 0.75)";
+//     }
+//     console.log('Invalid "postType" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+// };
+
+// export const getImageWidth = (postType: string) => {
+//   try {
+//     if (postType === "Film/TVShow") {
+//       return normalize(275);
+//     } else {
+//       return normalize(300);
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
+
+// export const getScreenGradientFirstColor = (domain: Domain) => {
+//     if (domain.domainId === 0) {
+//       return "rgba(0, 98, 62, 1)";
+//     }
+//     if (domain.domainId === 1) {
+//       return "rgba(99, 0, 101, 1)";
+//     }
+//     if (domain.domainId === 2) {
+//       return "rgba(75, 117, 59, 1)";
+//     }
+//     console.log('Invalid "domain" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+// };
+
+// export const getDomainsOfTasteGradientsFirstColor = (domain: Domain) => {
+//     if (domain.domainId === 0) {
+//       return "rgba(0, 209, 134, 0.75)";
+//     }
+//     if (domain.domainId === 1) {
+//       return "rgba(207, 0, 211, 0.75)";
+//     }
+//     if (domain.domainId === 2) {
+//       return "rgba(110, 212, 73, 0.75)";
+//     }
+//     console.log('Invalid "domain" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+// };
+
+// export const getPlaylistBigCardBackgroundColor = (domain: Domain) => {
+//     if (domain.domainId === 0) {
+//       return "rgba(0, 255, 163, 0.3)";
+//     }
+//     if (domain.domainId === 1) {
+//       return "rgba(250, 0, 255, 0.3)";
+//     }
+//     if (domain.domainId === 2) {
+//       return "rgba(120, 190, 94, 0.3)";
+//     }
+//     console.log('Invalid "postType" was passed!');
+//     return "rgba(105, 51, 172, 1)"
+
+// export const getDomainOfTasteScoreIcon = (domain: Domain) => {
+//   try {
+//     if (domain.domainId === 0) {
+//       return require("./assets/icons/MusicDomainScoreIcon.png");
+//     }
+//     if (domain.domainId === 1) {
+//       return require("./assets/icons/FilmsTVShowsDomainScoreIcon.png");
+//     }
+//     if (domain.domainId === 2) {
+//       return require("./assets/icons/EpisodesDomainScoreIcon.png");
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
+
+// export const getPlaylistScoreIcon = (domain: Domain) => {
+//   try {
+//     if (domain.domainId === 0) {
+//       return require("./assets/icons/MusicPlaylistScoreIcon.png");
+//     }
+//     if (domain.domainId === 1) {
+//       return require("./assets/icons/FilmsTVShowsPlaylistScoreIcon.png");
+//     }
+//     if (domain.domainId === 2) {
+//       return require("./assets/icons/EpisodesPlaylistScoreIcon.png");
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
+
+// export const getImageHeight = (postType: string) => {
+//   try {
+//     if (postType === "Film/TVShow") {
+//       return normalize(377);
+//     } else {
+//       return normalize(300);
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
+// };
+export const getItemImage = (item: any, postType: string) => {
+  try {
+    switch (postType) {
+      case "Song":
+        return { uri: item.album.images[0].url };
+      case "PodcastEpisode":
+        return { uri: item.images[0].url };
+      case "Film/TVShow":
+        return { uri: `https://image.tmdb.org/t/p/original/${item.poster_path}` };
+      default:
+        throw new Error(`Invalid postType: ${postType}`);
+    }
   } catch (error) {
     console.error(error);
+    return { uri: 'DefaultImageURL' }; // Replace 'DefaultImageURL' with a default image url if needed
   }
 };
+
 
 export const getItemTitle = (item: any, postType: string) => {
-  try {
-    if (postType === "Song") {
-      return item.name;
-    }
-    if (postType === "PodcastEpisode") {
-      return item.name;
-    }
-    if (postType === "Film/TVShow") {
-      return item.media_type === "movie" ? item.title : item.name;
-    }
-  } catch (error) {
-    console.error(error);
+  switch (postType) {
+      case "Song":
+      case "PodcastEpisode":
+          return item.name;
+      case "Film/TVShow":
+          return item.media_type === "movie" ? item.title : item.name;
+      default:
+          console.log('Invalid "postType" was passed!');
+          return "Unknown Title";
   }
 };
 
-export const getItemImage = (item: any, postType: string) => {
-  // logic for image fetching depending postType (it didn't work by defining a separating function)
-  try {
-    if (postType === "Song") {
-      return { uri: item.album.images[0].url };
-    } else if (postType === "PodcastEpisode") {
-      return { uri: item.images[0].url };
-    } else if (postType === "Film/TVShow") {
-      return { uri: `https://image.tmdb.org/t/p/original/${item.poster_path}` };
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
+export const getButtonsAccentColor = (postType?: string) => {
+  switch (postType) {
+      case "Song":
+          return "rgba(0, 255, 163, 1)";
+      case "PodcastEpisode":
+          return "rgba(110, 212, 73, 1)";
+      case "Film/TVShow":
+          return "rgba(250, 0, 255, 1)";
+      default:
+          console.log('Invalid "postType" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
-// returns color depending on the type of post
-export const getButtonsAccentColor = (postType: string) => {
-  try {
-    if (postType === "Song") {
-      return "rgba(0, 255, 163, 1)";
-    }
-    if (postType === "PodcastEpisode") {
-      return "rgba(110, 212, 73, 1)";
-    }
-    if (postType === "Film/TVShow") {
-      return "rgba(250, 0, 255, 1)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-// returns first color for the background gradient depending on the type of post
 export const getGradientsFirstColor = (postType: string) => {
-  try {
-    if (postType === "Song") {
-      return "rgba(0, 209, 134, 1)";
-    }
-    if (postType === "PodcastEpisode") {
-      return "rgba(110, 212, 73, 1)";
-    }
-    if (postType === "Film/TVShow") {
-      return "rgba(207, 0, 211, 1)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
+  switch (postType) {
+      case "Song":
+          return "rgba(0, 209, 134, 1)";
+      case "PodcastEpisode":
+          return "rgba(110, 212, 73, 1)";
+      case "Film/TVShow":
+          return "rgba(207, 0, 211, 1)";
+      default:
+          console.log('Invalid "postType" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
-// returns color depending on the type of post
 export const getSearchBarColor = (postType: string) => {
-  try {
-    if (postType === "Song") {
-      return "rgba(20, 169, 115, 0.75)";
-    }
-    if (postType === "PodcastEpisode") {
-      return "rgba(105, 146, 91, 0.75)";
-    }
-    if (postType === "Film/TVShow") {
-      return "rgba(134, 0, 137, 0.75)";
-    }
-  } catch (error) {
-    console.error(error);
+  switch (postType) {
+      case "Song":
+          return "rgba(20, 169, 115, 0.75)";
+      case "PodcastEpisode":
+          return "rgba(105, 146, 91, 0.75)";
+      case "Film/TVShow":
+          return "rgba(134, 0, 137, 0.75)";
+      default:
+          console.log('Invalid "postType" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
-export const getMoodTextColor = (postType: string) => {
-  try {
-    if (postType === "Song") {
-      return "rgba(153, 255, 218, 1)";
-    }
-    if (postType === "PodcastEpisode") {
-      return "rgba(197, 238, 182, 1)";
-    }
-    if (postType === "Film/TVShow") {
-      return "rgba(253, 153, 255, 1)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
+export const getMoodTextColor = (postType?: string) => {
+  switch (postType) {
+      case "Song":
+          return "rgba(153, 255, 218, 1)";
+      case "PodcastEpisode":
+          return "rgba(197, 238, 182, 1)";
+      case "Film/TVShow":
+          return "rgba(253, 153, 255, 1)";
+      default:
+          console.log('Invalid "postType" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
-export const getMoodContainerColor = (postType: string) => {
-  try {
-    if (postType === "Song") {
-      return "rgba(0, 255, 163, 0.4)";
-    }
-    if (postType === "PodcastEpisode") {
-      return "rgba(110, 212, 73, 0.4)";
-    }
-    if (postType === "Film/TVShow") {
-      return "rgba(250, 0, 255, 0.4)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
+export const getMoodContainerColor = (postType?: string) => {
+  switch (postType) {
+      case "Song":
+          return "rgba(0, 255, 163, 0.4)";
+      case "PodcastEpisode":
+          return "rgba(110, 212, 73, 0.4)";
+      case "Film/TVShow":
+          return "rgba(250, 0, 255, 0.4)";
+      default:
+          console.log('Invalid "postType" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getPlaylistCardBackgroundColor = (postType: string) => {
-  try {
-    if (postType === "Song") {
-      return "rgba(0, 255, 163, 0.75)";
-    }
-    if (postType === "PodcastEpisode") {
-      return "rgba(110, 212, 73, 0.75)";
-    }
-    if (postType === "Film/TVShow") {
-      return "rgba(250, 0, 255, 0.75)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
+  switch (postType) {
+      case "Song":
+          return "rgba(0, 255, 163, 0.75)";
+      case "PodcastEpisode":
+          return "rgba(110, 212, 73, 0.75)";
+      case "Film/TVShow":
+          return "rgba(250, 0, 255, 0.75)";
+      default:
+          console.log('Invalid "postType" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getImageWidth = (postType: string) => {
-  try {
-    if (postType === "Film/TVShow") {
-      return normalize(275);
-    } else {
-      return normalize(300);
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
+  // try {
+      switch (postType) {
+          case "Film/TVShow":
+              return normalize(275);
+          default:
+              return normalize(300);
+      }
+  // } catch (error) {
+  //     console.error(error);
+  //     return "Error"; // Updated to return a string indicating an error instead of an array
+  // }
+};
+
+export const getScreenGradientFirstColor = (domain: Domain) => {
+  switch (domain.domainId) {
+      case 0:
+          return "rgba(0, 98, 62, 1)";
+      case 1:
+          return "rgba(99, 0, 101, 1)";
+      case 2:
+          return "rgba(75, 117, 59, 1)";
+      default:
+          console.log('Invalid "domain" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
-export const getScreenGradientFirstColor = (category: Domain) => {
-  try {
-    if (category.id === 0) {
-      return "rgba(0, 98, 62, 1)";
-    }
-    if (category.id === 1) {
-      return "rgba(99, 0, 101, 1)";
-    }
-    if (category.id === 2) {
-      return "rgba(75, 117, 59, 1)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
+export const getDomainsOfTasteGradientsFirstColor = (domain: Domain) => {
+  switch (domain.domainId) {
+      case 0:
+          return "rgba(0, 209, 134, 0.75)";
+      case 1:
+          return "rgba(207, 0, 211, 0.75)";
+      case 2:
+          return "rgba(110, 212, 73, 0.75)";
+      default:
+          console.log('Invalid "domain" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
-export const getDomainsOfTasteGradientsFirstColor = (category: Domain) => {
-  try {
-    if (category.id === 0) {
-      return "rgba(0, 209, 134, 0.75)";
-    }
-    if (category.id === 1) {
-      return "rgba(207, 0, 211, 0.75)";
-    }
-    if (category.id === 2) {
-      return "rgba(110, 212, 73, 0.75)";
-    }
-  } catch (error) {
-    console.error(error);
-    return [];
+export const getPlaylistBigCardBackgroundColor = (domain: Domain) => {
+  switch (domain.domainId) {
+      case 0:
+          return "rgba(0, 255, 163, 0.3)";
+      case 1:
+          return "rgba(250, 0, 255, 0.3)";
+      case 2:
+          return "rgba(120, 190, 94, 0.3)";
+      default:
+          console.log('Invalid "domain" was passed!');
+          return "rgba(105, 51, 172, 1)";
   }
 };
 
-export const getPlaylistBigCardBackgroundColor = (category: Domain) => {
+export const getDomainOfTasteScoreIcon = (domain: Domain) => {
   try {
-    if (category.id === 0) {
-      return "rgba(0, 255, 163, 0.3)";
-    }
-    if (category.id === 1) {
-      return "rgba(250, 0, 255, 0.3)";
-    }
-    if (category.id === 2) {
-      return "rgba(120, 190, 94, 0.3)";
+    switch (domain.domainId) {
+      case 0:
+        return require("./assets/icons/MusicDomainScoreIcon.png");
+      case 1:
+        return require("./assets/icons/FilmsTVShowsDomainScoreIcon.png");
+      case 2:
+        return require("./assets/icons/EpisodesDomainScoreIcon.png");
+      default:
+        throw new Error(`Invalid domain id: ${domain.domainId}`);
     }
   } catch (error) {
     console.error(error);
-    return [];
+    return require("./assets/icons/DefaultIcon.png"); // Replace with your default icon
   }
 };
 
-export const getDomainOfTasteScoreIcon = (category: Domain) => {
+
+export const getPlaylistScoreIcon = (domain: Domain) => {
   try {
-    if (category.id === 0) {
-      return require("./assets/icons/MusicDomainScoreIcon.png");
-    }
-    if (category.id === 1) {
-      return require("./assets/icons/FilmsTVShowsDomainScoreIcon.png");
-    }
-    if (category.id === 2) {
-      return require("./assets/icons/EpisodesDomainScoreIcon.png");
+    switch (domain.domainId) {
+      case 0:
+        return require("./assets/icons/MusicPlaylistScoreIcon.png");
+      case 1:
+        return require("./assets/icons/FilmsTVShowsPlaylistScoreIcon.png");
+      case 2:
+        return require("./assets/icons/EpisodesPlaylistScoreIcon.png");
+      default:
+        throw new Error(`Invalid domain id: ${domain.domainId}`);
     }
   } catch (error) {
     console.error(error);
-    return [];
+    return require("./assets/icons/DefaultIcon.png"); // Replace with your default icon
   }
 };
 
-export const getPlaylistScoreIcon = (category: Domain) => {
+export const getDomainsName = (domain: Domain) => {
   try {
-    if (category.id === 0) {
-      return require("./assets/icons/MusicPlaylistScoreIcon.png");
-    }
-    if (category.id === 1) {
-      return require("./assets/icons/FilmsTVShowsPlaylistScoreIcon.png");
-    }
-    if (category.id === 2) {
-      return require("./assets/icons/EpisodesPlaylistScoreIcon.png");
+    switch (domain.domainId) {
+      case 0:
+        return "Music";
+      case 1:
+        return "Films and TV Shows";
+      case 2:
+        return "Podcasts Episodes";
+      default:
+        throw new Error(`Invalid domain id: ${domain.domainId}`);
     }
   } catch (error) {
     console.error(error);
-    return [];
+    return "Default Domain"; // Replace with your default icon
   }
-};
+}
+
 
 export const getImageHeight = (postType: string) => {
   try {
-    if (postType === "Film/TVShow") {
-      return normalize(377);
-    } else {
-      return normalize(300);
+    switch (postType) {
+      case "Film/TVShow":
+        return normalize(377);
+      default:
+        return normalize(300);
     }
   } catch (error) {
     console.error(error);
-    return [];
+    return normalize(300); // Assume 300 is a safe default, or handle differently if needed
   }
 };
+
+
 
 export const getPlaylistsMediaItemComponent = ({
   domainOfTaste,
   item: post,
   navigation,
   user,
-}: PlaylistsMediaItemComponent) => {
-  try {
-    if (domainOfTaste.id === 0) {
+}: PlaylistsMediaItemComponentProps) => {
+  switch (domainOfTaste.domainId){
+    case 0: {
       return (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("MediaItemsViewScreen", {
+            navigation.navigate("PostsViewScreen", {
               domainOfTaste,
               post,
               user,
@@ -392,7 +618,7 @@ export const getPlaylistsMediaItemComponent = ({
                     marginHorizontal: normalize(5),
                     //   numberOfLines: 1,
                   }}
-                  // keyExtractor={(item) => item.id.toString()} // Change this to your key extractor function
+                  // keyExtractor={(item) => item.domainId.toString()} // Change this to your key extractor function
                   ItemSeparatorComponent={() => (
                     <Text
                       style={{
@@ -424,11 +650,11 @@ export const getPlaylistsMediaItemComponent = ({
         </TouchableOpacity>
       );
     }
-    if (domainOfTaste.id === 1) {
+    case 1: {
       return (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("MediaItemsViewScreen", {
+            navigation.navigate("PostsViewScreen", {
               domainOfTaste,
               post,
               user,
@@ -459,11 +685,11 @@ export const getPlaylistsMediaItemComponent = ({
         </TouchableOpacity>
       );
     }
-    if (domainOfTaste.id === 2) {
+    case 2: {
       return (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("MediaItemsViewScreen", {
+            navigation.navigate("PostsViewScreen", {
               domainOfTaste,
               post,
               user,
@@ -538,10 +764,47 @@ export const getPlaylistsMediaItemComponent = ({
         </TouchableOpacity>
       );
     }
-  } catch (error) {
-    console.error(error);
-    return [];
+    default: {
+      return <View
+            style={{
+              width: normalize(165),
+              height: normalize(189),
+              borderRadius: normalize(10),
+              backgroundColor: "rgba(105, 51, 172, 1)",
+              marginRight: normalize(15),
+              alignItems: "center",
+            }}
+          />
+    }
   }
+};
+
+// function isSong(item: any): item is Song {
+//   return item.mediaType === 'Song' && item.album !== undefined && item.artists !== undefined;
+// }
+
+// function isFilmOrTVShow(item: any): item is FilmOrTVShow {
+//   return (item.mediaType === 'Film' || item.mediaType === 'TV Show') && item.overview !== undefined;
+// }
+
+// function isPodcastEpisode(item: any): item is PodcastEpisode {
+//   return item.mediaType === 'Podcast Episode' && item.description !== undefined;
+// }
+
+// const processMediaItem = (mediaItem: Song | FilmOrTVShow | PodcastEpisode) => {
+//   if (isSong(mediaItem)) {
+//     // Now TypeScript knows mediaItem is a Song
+//     console.log("Processing song:", mediaItem.name, mediaItem.album, mediaItem.artists);
+//   } else if (isFilmOrTVShow(mediaItem)) {
+//     // Now TypeScript knows mediaItem is a FilmOrTVShow
+//     console.log("Processing film/TV show:", mediaItem.name, mediaItem.overview);
+//   } else if (isPodcastEpisode(mediaItem)) {
+//     // Now TypeScript knows mediaItem is a PodcastEpisode
+//     console.log("Processing podcast episode:", mediaItem.name, mediaItem.description);
+//   }
+// };
+export const transformMoodsToStringArray = (moods: Mood[]): string[] => {
+  return moods.map(mood => mood.name);
 };
 
 const styles = StyleSheet.create({

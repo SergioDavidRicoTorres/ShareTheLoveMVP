@@ -1,41 +1,86 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-export interface Profile {
-  profileName: string;
-  id: number;
-  name: string;
-  profilePicture: string;
-  profileDescription: string;
-  domainsOfTaste: Domain[];
+export interface User {
+    name: string;
+    profileName: string;
+    profilePicture: string;
+    profileDescription: string;
+    followersCount: number; 
+    followingCount: number; 
+    domainsOfTaste: {
+        Music: Domain,
+        FilmsTVShows: Domain, 
+        PodcastsEpisodes: Domain
+    }
 }
 
 export interface Domain {
-  id: number;
-  name: string;
+  isActive: boolean;
+  domainId: number;
   score: number;
-  playlists: Playlist[];
 }
 
 export interface Playlist {
-  id: number;
-  name: string;
-  image: string;
-  moods: Mood[];
-  score: number;
-  posts: Post[];
+    userId: number;
+    domainId: number;
+    name: string;
+    image?: string;
+    moods: Mood[];
+    score: number;
 }
 
 export interface Mood {
   id: number;
   name: string;
+  isSelected: boolean;
+  creator: string; 
+}
+
+export interface MoodsAndTagsCategory {
+  categoryId: number; 
+  name: string; 
+  moodsTagsList: Mood[];
+}
+
+export interface MoodsAndTagsCatalogue {
+  Music: MoodsAndTagsCategory[]; 
+  FilmsAndTVShows: MoodsAndTagsCategory[]; 
+  PodcastsEpisodes: MoodsAndTagsCategory[];
 }
 
 export interface Post {
-  mediaItem: any; // will be defined by the used media API's Item
-  moods: string[];
-  caption: string;
+    userId: number; 
+    domainId: number; 
+    playlistId: number; 
+    moods: Mood[];
+    caption: string;
+    likesCount: number;
+    creationTime: number; 
+    mediaItem: any; // will be defined by the used media API's Item
 }
+
+// export type Song = {
+//     name: string;
+//     mediaType: 'Song';
+//     album: string;
+//     artists: string[];
+//     image: string;
+//   };
+  
+// export type FilmOrTVShow = {
+//     name: string;
+//     mediaType: 'Film' | 'TV Show';
+//     overview?: string;
+//     image: string;
+//   };
+
+// export type PodcastEpisode = {
+//     name: string;
+//     mediaType: 'Podcast Episode';
+//     description: string;
+//     image: string;
+//   };
 
 
     export type MainNavigatorParamsList = {
@@ -57,13 +102,13 @@ export interface Post {
     export type ProfileNavigatorParamsList = {
         ProfileScreen: undefined; 
         DomainOfTaste: {
-          domainOfTaste: Domain, 
-          user: Profile
+          domainOfTaste: Domain, //NEEDS TO BE UPDATED BASED ON THE FIRESTORE SETUP: DOMAINS_COLLECTION
+          user: User //NEEDS TO BE UPDATED BASED ON THE FIRESTORE SETUP: USERS_COLLECTION
         }
-        MediaItemsViewScreen: {
+        PostsViewScreen: {
           domainOfTaste: Domain, 
           post: Post, 
-          user: Profile, 
+          user: User, 
         }
       }
 
@@ -85,16 +130,90 @@ export interface Post {
         navigation: AuthNavigationProp;
         authType: string;
       };
-    
 
-    export type PlaylistsMediaItemComponent = {
-        domainOfTaste: Domain,
-        item: any,
-        navigation: ProfileNavigationProp,
-        user: Profile,
+    export type PlaylistCardProps = {
+      playlist: Playlist;
+      domainOfTaste: Domain;
+      navigation: ProfileNavigationProp,
+      user: User,
     };
 
+    export type SettingsProps = {
+      visible: boolean;
+      onClose: () => void;
+      // navigation: AuthNavigationProp;
+      // authType: string;
+    };
+
+    export type PostCardProps = {
+      post: Post;
+    };
+    
+    export type PlaylistsMediaItemComponentProps = {
+        domainOfTaste: Domain,
+        item: Post,
+        navigation: ProfileNavigationProp,
+        user: User,
+    };
+
+    export type MediaItemInfoProps = { 
+      visible: boolean; 
+      onClose: () => void;
+      mediaItem: any; 
+    }
+
+    export type SearchMediaProps = {
+      visible: boolean; 
+      onClose: () => void;
+      postType: string; 
+    }
+
+    export type MoodsTagsProps = {
+      visible: boolean; 
+      onClose: () => void;
+      onCloseAll: () => void;
+      selectedMedia: any; 
+      postType: string; 
+    }
+    export type AddMoodProps = {
+      visible: boolean; 
+      onClose: () => void;
+    }
+
+    export type PostCaptionProps = {
+      visible: boolean; 
+      onClose: () => void;
+      onCloseAll: () => void;
+      selectedMedia: any; 
+      postType: string; 
+      selectedMoodsTags: Mood[];
+    }
+
+    export type SearchPlaylistProps = {
+      visible: boolean; 
+      onClose: () => void;
+      onCloseAll: () => void;
+      selectedMedia: any; 
+      postType: string; 
+      selectedMoodsTags: Mood[]; 
+      insertedCaption: string ;
+    }
+
+    export type AddPlaylistProps = {
+      visible: boolean; 
+      onClose: () => void;
+      onCloseAll: () => void;
+      selectedMedia: any; 
+      postType: string; 
+    }
+
+
+
     export type AuthEmailPasswordScreenRouteProp = RouteProp<AuthNavigatorParamsList, 'AuthEmailPasswordScreen'>;
+    export type PostsViewScreenRouteProp = RouteProp<ProfileNavigatorParamsList, 'PostsViewScreen'>;
+    export type DomainOfTasteScreenRouteProp = RouteProp<ProfileNavigatorParamsList, 'PostsViewScreen'>;
+
+
     // export type AuthEmailPasswordScreenNavigationProp = StackNavigationProp<AuthNavigatorParamsList,'AuthEmailPasswordScreen'>;
     // export type AuthEmailPasswordProps = {
     // route: AuthEmailPasswordScreenRouteProp;

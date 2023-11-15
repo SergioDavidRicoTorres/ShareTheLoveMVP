@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Image, TouchableOpacity, Dimensions } from "react-native";
 import SearchMedia from "./SearchMedia";
+import { normalize } from "../../utils";
 
 function AddButtons() {
   const [isMusicPostModalVisible, setIsMusicPostModalVisible] = useState(false);
@@ -20,7 +21,7 @@ function AddButtons() {
   };
 
   const { width } = Dimensions.get("window"); // screen width constant
-  const normalize = (value) => width * (value / 390);
+  // const normalize = (value) => width * (value / 390);
   const [opened, setOpened] = React.useState(false);
 
   return (

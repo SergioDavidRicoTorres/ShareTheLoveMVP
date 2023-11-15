@@ -12,7 +12,7 @@ import {
 
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
-import { getCurrentUserData } from "../UserData";
+// import { getCurrentUserData } from "../UserData";
 import Settings from "../components/Settings";
 import { useState } from "react";
 import Carousel from "react-native-snap-carousel";
@@ -22,16 +22,22 @@ import {
   getMoodTextColor,
   getDomainsOfTasteGradientsFirstColor,
   getButtonsAccentColor,
+  getDomainsName,
 } from "../utils";
 import { DOMAINPOSTTYPE } from "../constants";
+import { normalize } from "../utils";
+import { ProfileNavigationProp, User } from "../types";
+import { getUserData, getDomainsPlaylistsData, getUsersDomains } from "../utilsData";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+// const normalize = (value) => width * (value / 390);
 
-const user = getCurrentUserData();
+const userId: number = 0;//getCurrentUserId();
+const user: User = getUserData(userId);
+const domainsArray = getUsersDomains(user); 
 
 export default function ProfileScreen({}) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<ProfileNavigationProp>();
 
   // Optional Modal Boolean State
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
@@ -52,7 +58,7 @@ export default function ProfileScreen({}) {
               style={{
                 color: "white",
                 fontSize: normalize(30),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               @abel
@@ -70,7 +76,7 @@ export default function ProfileScreen({}) {
                   style={{
                     color: "white",
                     fontSize: normalize(25),
-                    fontWeight: 900,
+                    fontWeight: "900",
                     letterSpacing: -1,
                   }}
                 >
@@ -80,7 +86,7 @@ export default function ProfileScreen({}) {
                   style={{
                     color: "white",
                     fontSize: normalize(17),
-                    fontWeight: 300,
+                    fontWeight: "300",
                     letterSpacing: -0.68,
                   }}
                 >
@@ -122,7 +128,7 @@ export default function ProfileScreen({}) {
                   style={{
                     color: "white",
                     fontSize: normalize(25),
-                    fontWeight: 900,
+                    fontWeight: "900",
                     letterSpacing: -1,
                   }}
                 >
@@ -132,7 +138,7 @@ export default function ProfileScreen({}) {
                   style={{
                     color: "white",
                     fontSize: normalize(17),
-                    fontWeight: 300,
+                    fontWeight: "300",
                     letterSpacing: -0.68,
                   }}
                 >
@@ -162,7 +168,7 @@ export default function ProfileScreen({}) {
                   style={{
                     color: "white",
                     fontSize: normalize(22),
-                    fontWeight: 700,
+                    fontWeight: "700",
                   }}
                 >
                   Edit Profile
@@ -200,7 +206,7 @@ export default function ProfileScreen({}) {
                   style={{
                     color: "white",
                     fontSize: normalize(20),
-                    fontWeight: 700,
+                    fontWeight: "700",
                   }}
                 >
                   Abel Tesfaye
@@ -217,7 +223,7 @@ export default function ProfileScreen({}) {
                   style={{
                     color: "white",
                     fontSize: normalize(20),
-                    fontWeight: 300,
+                    fontWeight: "300",
                   }}
                   numberOfLines={2}
                 >
@@ -233,7 +239,7 @@ export default function ProfileScreen({}) {
               }}
             >
               <Carousel
-                data={user.domainsOfTaste}
+                data={domainsArray}
                 sliderWidth={width}
                 firstItem={1}
                 inactiveSlideOpacity={0.5} // Sets the opacity of inactive items to 60%
@@ -275,7 +281,7 @@ export default function ProfileScreen({}) {
                             paddingHorizontal: normalize(6),
                           }}
                         >
-                          {category.name}
+                          {getDomainsName(category)}
                         </Text>
                         <View
                           style={{
@@ -295,7 +301,7 @@ export default function ProfileScreen({}) {
                           <Text
                             style={{
                               color: getButtonsAccentColor(
-                                DOMAINPOSTTYPE[category.id]
+                                DOMAINPOSTTYPE.get(category.domainId)
                               ),
                               fontSize: normalize(22),
                               fontWeight: "700",
@@ -310,9 +316,9 @@ export default function ProfileScreen({}) {
                           marginTop: normalize(18),
                           width: normalize(251),
                         }}
-                        snapToAlignment={normalize(300)}
+                        // snapToAlignment={normalize(300)}
                         scrollEnabled={false}
-                        data={category.playlists}
+                        data={getDomainsPlaylistsData(userId, category.domainId)}
                         ItemSeparatorComponent={() => (
                           <View style={{ height: normalize(20) }} />
                         )}
@@ -322,7 +328,7 @@ export default function ProfileScreen({}) {
                               width: normalize(251),
                               height: normalize(50),
                               backgroundColor: getMoodContainerColor(
-                                DOMAINPOSTTYPE[category.id]
+                                DOMAINPOSTTYPE.get(category.domainId)
                               ),
                               borderRadius: normalize(5),
                               flexDirection: "row",
@@ -351,7 +357,7 @@ export default function ProfileScreen({}) {
                                 style={{
                                   color: "white",
                                   fontSize: normalize(20),
-                                  fontWeight: 700,
+                                  fontWeight: "700",
                                 }}
                               >
                                 {playlist.name}
@@ -359,7 +365,7 @@ export default function ProfileScreen({}) {
                               <FlatList
                                 data={playlist.moods}
                                 scrollEnabled={false}
-                                keyExtractor={(item) => item.id.toString()}
+                                keyExtractor={(index) => index.toString()} 
                                 style={{
                                   marginTop: normalize(7),
                                   width: normalize(186),
@@ -367,15 +373,15 @@ export default function ProfileScreen({}) {
                                   gap: normalize(3),
                                   flexDirection: "row",
                                 }}
-                                renderItem={({ item }) => (
+                                renderItem={({ index, item }) => (
                                   <View
-                                    key={item.id}
+                                    key={index}
                                     style={{
                                       paddingVertical: normalize(2),
                                       paddingHorizontal: normalize(10),
                                       borderRadius: normalize(10),
                                       backgroundColor: getMoodContainerColor(
-                                        DOMAINPOSTTYPE[category.id]
+                                        DOMAINPOSTTYPE.get(category.domainId)
                                       ),
                                       justifyContent: "center",
                                       alignItems: "center",
@@ -385,13 +391,13 @@ export default function ProfileScreen({}) {
                                       // playlistMoodItemText
                                       style={{
                                         fontSize: normalize(12),
-                                        fontWeight: 600,
+                                        fontWeight: "600",
                                         color: getMoodTextColor(
-                                          DOMAINPOSTTYPE[category.id]
+                                          DOMAINPOSTTYPE.get(category.domainId)
                                         ),
                                       }}
                                     >
-                                      {item.name}
+                                      {item}
                                     </Text>
                                   </View>
                                 )}
@@ -399,7 +405,7 @@ export default function ProfileScreen({}) {
                             </View>
                           </View>
                         )}
-                        keyExtractor={(playlist) => playlist.id}
+                        keyExtractor={(index) => index.toString()}  //fetch and use element id from firestore
                       />
                     </LinearGradient>
                   </TouchableOpacity>
@@ -412,7 +418,7 @@ export default function ProfileScreen({}) {
           <Settings
             visible={isSettingsModalVisible}
             onClose={toggleSettingsModal}
-            navigation={navigation}
+            // navigation={navigation}
           />
         )}
       </SafeAreaView>

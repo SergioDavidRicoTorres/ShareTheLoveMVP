@@ -24,25 +24,38 @@ import {
   getMoodContainerColor,
   getButtonsAccentColor,
   getGradientsFirstColor,
+  normalize,
+  transformMoodsToStringArray
 } from "../../utils";
+import { Mood, MoodsAndTagsCategory, MoodsTagsProps } from "../../types";
+import { getMoodsAndTagsCategories } from "../../utilsData";
 
 // screen WIDTH constant:
 const { width } = Dimensions.get("window");
-const normalize = (value) => width * (value / 390);
 
-function MoodsTagsMusic({
+function MoodsTags({
   visible,
   onClose,
   onCloseAll,
   selectedMedia,
   postType,
-}) {
-  const MOODSANDTAGS =
-    postType === "Song"
-      ? MoodsAndTags["Music"]
-      : postType === "Film/TVShow"
-      ? MoodsAndTags["FilmsAndTVShows"]
-      : MoodsAndTags["PodcastsEpisodes"];
+}: MoodsTagsProps) {
+
+  const MOODSANDTAGS = getMoodsAndTagsCategories(postType);
+
+  // const MOODSANDTAGS = getMoodsAndTagsCategories(postType).map(category => ({
+  //   ...category,
+  //   moodsTagsList: category.moodsTagsList.map(mood => ({
+  //     ...mood, 
+  //     isSelected: false 
+  //   }))
+  // }));
+  // const MOODSANDTAGS: any =
+  //   postType === "Song"
+  //     ? MoodsAndTags["Music"]
+  //     : postType === "Film/TVShow"
+  //     ? MoodsAndTags["FilmsAndTVShows"]
+  //     : MoodsAndTags["PodcastsEpisodes"];
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (PostCaption) ----------------------------
   //---------------------------------------------------------------------------------
@@ -77,7 +90,7 @@ function MoodsTagsMusic({
   const getInitiallySelectedMoods = () => {
     const initiallySelectedMoods = [];
     for (const category of MOODSANDTAGS) {
-      for (const mood of category.list) {
+      for (const mood of category.moodsTagsList) {
         if (mood.isSelected) {
           initiallySelectedMoods.push(mood);
         }
@@ -99,16 +112,16 @@ function MoodsTagsMusic({
   //---------------------------------------------------------------------------------
   // HANDLE EVENT FUNCTIONS:
   // inserts the selected item (mood) to the selectedMoodsTags array
-  const handleElementSelection = (categoryId, itemId) => {
+  const handleElementSelection = (categoryId: number, itemId: number) => {
     const modifiedData = [...MOODSANDTAGS];
 
     // Toggle the isSelected attribute of the selected element
-    modifiedData[categoryId].list[itemId].isSelected =
-      !modifiedData[categoryId].list[itemId].isSelected;
+    modifiedData[categoryId].moodsTagsList[itemId].isSelected =
+      !modifiedData[categoryId].moodsTagsList[itemId].isSelected;
 
     // Update the selectedMoodsTags array based on the isSelected attribute
-    const updatedselectedMoodsTags = modifiedData.reduce((acc, category) => {
-      const selectedItems = category.list.filter((item) => item.isSelected);
+    const updatedselectedMoodsTags = modifiedData.reduce((acc: Mood[], category: MoodsAndTagsCategory) => {
+      const selectedItems = category.moodsTagsList.filter((item) => item.isSelected);
       return [...acc, ...selectedItems];
     }, []);
 
@@ -145,7 +158,10 @@ function MoodsTagsMusic({
                   {/* Back Button Image */}
                   <Image
                     source={require("../../assets/icons/ArrowBack.png")}
-                    style={styles.backButtonImage}
+                    style={{
+                      width: normalize(14),
+                      height: normalize(23),
+                    }}
                   />
                 </TouchableOpacity>
                 {/* Progress Tracker */}
@@ -219,7 +235,12 @@ function MoodsTagsMusic({
                     //   : require("../assets/default/image.png") // default image source
                     getItemImage(selectedMedia, postType)
                   }
-                  style={styles.mediaItemImage}
+                  style={{
+                    width: normalize(50),
+                    height: normalize(50),
+                    borderTopLeftRadius: normalize(5),
+                    borderBottomLeftRadius: normalize(5),
+                  }}
                 />
                 <View
                   // mediaItemTextContainer
@@ -268,7 +289,7 @@ function MoodsTagsMusic({
                       // moodsCategoryContainer
                       columnWrapperStyle={{ flexWrap: "wrap" }}
                       numColumns={6}
-                      data={category.list}
+                      data={category.moodsTagsList}
                       style={styles.moodsCategoryContainer}
                       renderItem={({ item, index: itemIndex }) => {
                         const isSelected = item.isSelected || false;
@@ -305,7 +326,7 @@ function MoodsTagsMusic({
                     />
                   </>
                 )}
-                keyExtractor={(category) => category.id.toString()}
+                keyExtractor={(category) => category.categoryId.toString()}
               />
               {/* </View> */}
             </View>
@@ -325,14 +346,14 @@ function MoodsTagsMusic({
             {isAddMoodModalVisible && (
               <AddMood
                 visible={isAddMoodModalVisible}
-                onCloseAll={() => {
-                  setIsAddMoodModalVisible(false);
-                  onCloseAll();
-                }}
+                // onCloseAll={() => {
+                //   setIsAddMoodModalVisible(false);
+                //   onCloseAll();
+                // }}
                 onClose={toggleAddMoodModal}
-                selectedMedia={selectedMedia}
-                selectedMoodsTags={selectedMoodsTags}
-                postType={postType}
+                // selectedMedia={selectedMedia}
+                // selectedMoodsTags={selectedMoodsTags}
+                // postType={postType}
               />
             )}
           </LinearGradient>
@@ -392,10 +413,10 @@ const styles = StyleSheet.create({
     gap: normalize(20),
     marginTop: normalize(10),
   },
-  backButtonImage: {
-    width: normalize(14),
-    height: normalize(23),
-  },
+  // backButtonImage: {
+  //   width: normalize(14),
+  //   height: normalize(23),
+  // },
   progressTrackerContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -416,7 +437,7 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     fontStyle: "normal",
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(22),
     lineHeight: normalize(26),
     color: "rgba(255, 255, 255, 0.75)",
@@ -449,7 +470,7 @@ const styles = StyleSheet.create({
     marginBottom: normalize(10),
   },
   chooseButtonText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(18),
     lineHeight: normalize(21),
     color: "white",
@@ -471,7 +492,7 @@ const styles = StyleSheet.create({
     shadowRadius: normalize(5),
   },
   addMoodButtonText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(18),
     color: "white",
   },
@@ -490,12 +511,12 @@ const styles = StyleSheet.create({
     shadowOpacity: normalize(1),
     shadowRadius: normalize(20),
   },
-  mediaItemImage: {
-    width: normalize(50),
-    height: normalize(50),
-    borderTopLeftRadius: normalize(5),
-    borderBottomLeftRadius: normalize(5),
-  },
+  // mediaItemImage: {
+  //   width: normalize(50),
+  //   height: normalize(50),
+  //   borderTopLeftRadius: normalize(5),
+  //   borderBottomLeftRadius: normalize(5),
+  // },
   mediaItemTextContainer: {
     width: normalize(265),
     marginTop: normalize(4),
@@ -504,13 +525,13 @@ const styles = StyleSheet.create({
   },
   mediaItemText: {
     width: normalize(265),
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(20),
     lineHeight: normalize(23),
     color: "white",
   },
   itemSubtitle: {
-    fontWeight: 300,
+    fontWeight: "300",
     fontSize: normalize(12),
     lineHeight: normalize(12),
     color: "white",
@@ -535,7 +556,7 @@ const styles = StyleSheet.create({
     marginHorizontal: normalize(10),
   },
   titleText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(24),
     color: "white",
     left: -normalize(20),
@@ -547,7 +568,7 @@ const styles = StyleSheet.create({
     paddingBottom: normalize(55),
   },
   moodsCategoryTitleText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(24),
     left: normalize(36),
     marginTop: normalize(20),
@@ -556,7 +577,7 @@ const styles = StyleSheet.create({
     marginTop: normalize(15),
   },
   moodText: {
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(18),
   },
 });
@@ -565,4 +586,4 @@ const styles = StyleSheet.create({
 // -------------------------------- Styles -----------------------------------------
 //---------------------------------------------------------------------------------
 
-export default MoodsTagsMusic;
+export default MoodsTags;

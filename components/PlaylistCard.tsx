@@ -18,25 +18,30 @@ import {
   getMoodTextColor,
   getPlaylistScoreIcon,
   getPlaylistsMediaItemComponent,
+  normalize,
 } from "../utils";
+import { PlaylistCardProps } from "../types";
 
 import { DOMAINPOSTTYPE } from "../constants";
+import { getPlaylistId, getPlaylistsPostsData, getPosts } from "../utilsData";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+// const normalize = (value) => width * (value / 390);
 
-export default PlaylistCard = function ({
+export default function PlaylistCard ({
   playlist,
   domainOfTaste,
   navigation,
   user,
-}) {
+}: PlaylistCardProps) {
   const [score, setScore] = useState(playlist.score);
   // const DOMAINPOSTTYPE = {
   //   0: "Song",
   //   1: "Film/TVShow",
   //   2: "PodcastEpisode",
   // };
+  const playlistId = getPlaylistId(playlist); 
+  // const playlistsPosts = getPlaylistsPostsData(playlistId);
 
   return (
     <ImageBackground
@@ -67,7 +72,7 @@ export default PlaylistCard = function ({
               marginTop: normalize(10),
               color: "white",
               fontSize: normalize(35),
-              fontWeight: 500,
+              fontWeight: "500",
             }}
           >
             {playlist.name}
@@ -83,7 +88,7 @@ export default PlaylistCard = function ({
                 style={{
                   ...styles.moodContainer,
                   backgroundColor: getMoodContainerColor(
-                    DOMAINPOSTTYPE[domainOfTaste.id]
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
                   ),
                 }}
               >
@@ -91,17 +96,17 @@ export default PlaylistCard = function ({
                   // moodText
                   style={{
                     ...styles.moodText,
-                    color: getMoodTextColor(DOMAINPOSTTYPE[domainOfTaste.id]),
+                    color: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
                   }}
                 >
-                  {mood.name}
+                  {mood}
                 </Text>
               </View>
             )}
           />
           <FlatList
             style={{ marginTop: normalize(12), marginLeft: normalize(10) }}
-            data={playlist.posts}
+            data={getPosts()}
             horizontal
             renderItem={({ item }) =>
               getPlaylistsMediaItemComponent({
@@ -111,6 +116,7 @@ export default PlaylistCard = function ({
                 user,
               })
             }
+            keyExtractor={(index) => index.toString()}
           />
 
           <View
@@ -151,11 +157,11 @@ export default PlaylistCard = function ({
               }
               step={1}
               minimumTrackTintColor={getButtonsAccentColor(
-                DOMAINPOSTTYPE[domainOfTaste.id]
+                DOMAINPOSTTYPE.get(domainOfTaste.domainId)
               )}
               maximumTrackTintColor="rgba(58, 17, 90, 1)"
               thumbTintColor={getButtonsAccentColor(
-                DOMAINPOSTTYPE[domainOfTaste.id]
+                DOMAINPOSTTYPE.get(domainOfTaste.domainId)
               )}
             />
             <Image
@@ -164,9 +170,9 @@ export default PlaylistCard = function ({
             />
             <Text
               style={{
-                color: getButtonsAccentColor(DOMAINPOSTTYPE[domainOfTaste.id]),
+                color: getButtonsAccentColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
                 fontSize: normalize(20),
-                fontWeight: 900,
+                fontWeight: "900",
               }}
             >
               {score}
@@ -189,7 +195,7 @@ const styles = StyleSheet.create({
     marginHorizontal: normalize(5),
   },
   moodText: {
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(18),
   },
 });

@@ -26,10 +26,11 @@ import {
   getMoodTextColor,
   getImageHeight,
   getImageWidth,
+  normalize
 } from "../../utils";
+import { PostCaptionProps } from "../../types";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
 
 function PostCaption({
   visible,
@@ -38,7 +39,7 @@ function PostCaption({
   selectedMedia,
   postType,
   selectedMoodsTags,
-}) {
+}: PostCaptionProps) {
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (SearchPlaylist) -----------------------------
   //---------------------------------------------------------------------------------
@@ -65,7 +66,7 @@ function PostCaption({
   //---------------------------------------------------------------------------------
 
   // stores the given input(queue)
-  const handleCaptionChange = (value) => {
+  const handleCaptionChange = (value: string) => {
     setCaption(value);
     setHasCaption(value != "");
   };
@@ -107,7 +108,10 @@ function PostCaption({
                   {/* Back Button Image */}
                   <Image
                     source={require("../../assets/icons/ArrowBack.png")}
-                    style={styles.backButtonImage}
+                    style={{
+                      width: normalize(14),
+                      height: normalize(23),
+                    }}
                   />
                 </TouchableOpacity>
                 {/* Progress Tracker */}
@@ -173,7 +177,7 @@ function PostCaption({
                   // mediaItemImage
                   source={getItemImage(selectedMedia, postType)}
                   style={{
-                    ...styles.mediaItemImage,
+                    borderRadius: normalize(5),
                     width: getImageWidth(postType),
                     height: getImageHeight(postType),
                   }}
@@ -226,7 +230,11 @@ function PostCaption({
                 >
                   <Image
                     // userImage
-                    style={styles.userImage}
+                    style={{
+                      height: normalize(70),
+                      width: normalize(70),
+                      borderRadius: normalize(100),
+                    }}
                     source={{
                       uri: getCurrentUserData().profilePicture,
                     }}
@@ -349,7 +357,7 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     fontStyle: "normal",
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(22),
     lineHeight: normalize(26),
     color: "rgba(255, 255, 255, 0.75)",
@@ -382,7 +390,7 @@ const styles = StyleSheet.create({
     marginBottom: normalize(10),
   },
   chooseButtonText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(18),
     lineHeight: normalize(21),
     color: "white",
@@ -399,20 +407,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: normalize(10),
   },
-  mediaItemImage: {
-    width: normalize(298),
-    height: normalize(298),
-    borderRadius: normalize(5),
-  },
+  // mediaItemImage: {
+  //   // width: normalize(298),
+  //   // height: normalize(298),
+  //   borderRadius: normalize(5),
+  // },
   mediaItemTitle: {
     width: normalize(265),
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(20),
     color: "white",
     marginTop: normalize(10),
   },
   itemSubtitle: {
-    fontWeight: 300,
+    fontWeight: "300",
     fontSize: normalize(18),
     color: "white",
   },
@@ -435,7 +443,7 @@ const styles = StyleSheet.create({
     marginHorizontal: normalize(5),
   },
   moodText: {
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(18),
   },
   CaptionContainer: {
@@ -458,11 +466,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: normalize(8),
   },
-  userImage: {
-    height: normalize(70),
-    width: normalize(70),
-    borderRadius: normalize(100),
-  },
+  // userImage: {
+  //   height: normalize(70),
+  //   width: normalize(70),
+  //   borderRadius: normalize(100),
+  // },
   CaptionBoxContainer: {
     paddingTop: normalize(18),
     paddingBottom: normalize(5),

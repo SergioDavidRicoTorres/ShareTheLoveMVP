@@ -1,4 +1,29 @@
 [
+    {
+        "name":"Abel Tesfaye",
+        "profileName":"@abel",
+        "profilePicture":"https://e0.pxfuel.com/wallpapers/331/1007/desktop-wallpaper-the-weeknd-releases-dawn-fm-see-the-fan-reactions-billboard.jpg",
+        "profileDescription":"Welcome to the coolest part of me : )",
+        "followersCount": 800,
+        "followingCount": 120,
+        "domainsOfTaste": {
+            "Music":{
+                "domainId": 0,
+                "isActive": true,
+                "score": 9.8
+            }, 
+            "FilmsTVShows":{
+                "domainId": 1,
+                "isActive": true,
+                "score": 8
+            },
+            "PodcastsEpisodes":{
+                "domainId": 2, 
+                "isActive": true,
+                "score": 6.5
+            }
+        }
+    },     
     {"profileName": "@Fridsaurus_lex", 
     "name": "Lex Fridman",
     "profilePicture": "https://pbs.twimg.com/media/FoZTlasXgAIrKKI.jpg",

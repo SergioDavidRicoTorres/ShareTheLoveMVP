@@ -15,17 +15,21 @@ import {
   getMoodTextColor,
   getMoodContainerColor,
   getItemSubTitle,
+  normalize
 } from "../utils";
+import { PostCardProps } from "../types";
+import { DOMAINPOSTTYPE } from "../constants";
+import { getUserData } from "../utilsData";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
-const normalize = (value) => width * (value / 390);
 
-export default PostCard = function ({ post }) {
+export default function PostCard ({ post }: PostCardProps) {
   const [isLiked, setIsLiked] = useState(false);
+  const user = getUserData(post.userId);
 
-  const getLikeComponent = (postType) => {
-    try {
-      if (postType === "Song") {
+  const getLikeComponent = (postType?: string) => {
+      switch (postType) {
+        case "Song" :{
         if (isLiked) {
           return (
             <TouchableOpacity
@@ -90,7 +94,7 @@ export default PostCard = function ({ post }) {
           );
         }
       }
-      if (postType === "Film/TVShow") {
+      case "Film/TVShow" : {
         if (isLiked) {
           return (
             <TouchableOpacity
@@ -154,7 +158,7 @@ export default PostCard = function ({ post }) {
           );
         }
       }
-      if (postType === "PodcastEpisode") {
+      case "PodcastEpisode" : {
         if (isLiked) {
           return (
             <TouchableOpacity
@@ -219,8 +223,28 @@ export default PostCard = function ({ post }) {
           );
         }
       }
-    } catch (error) {
-      console.error(error);
+      default : {
+        return (<View
+              style={{
+                width: normalize(50),
+                height: normalize(50),
+                right: normalize(21),
+                bottom: normalize(386),
+                position: "absolute",
+                zIndex: 1,
+                // top: normalize(33),
+                backgroundColor: "rgba(105, 51, 172, 1)",
+                shadowColor: "black",
+                shadowOffset: { width: 0, height: 0 },
+                shadowRadius: normalize(10),
+                shadowOpacity: 0.6,
+
+                borderRadius: normalize(15),
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+        />)
+      }
     }
   };
 
@@ -233,7 +257,7 @@ export default PostCard = function ({ post }) {
         gap: normalize(7),
       }}
     >
-      {getLikeComponent(post.type)}
+      {getLikeComponent(DOMAINPOSTTYPE.get(post.domainId))}
       {/* POST TITLE */}
 
       <View
@@ -249,18 +273,18 @@ export default PostCard = function ({ post }) {
           // postTitleText
           // style={[
           //   { ...styles.postTitleText },
-          //   post.type === "Song"
+          //   DOMAINPOSTTYPE.get(post.domainId) === "Song"
           //     ? styles.textTitleMusic
           //     : styles.textTitleFilms_TV,
           // ]}
           style={{
-            color: getButtonsAccentColor(post.type),
+            color: getButtonsAccentColor(DOMAINPOSTTYPE.get(post.domainId)),
             fontSize: normalize(25),
-            fontWeight: 500,
+            fontWeight: "500",
             textAlign: "center",
           }}
         >
-          {post.name}
+          {post.mediaItem.name}
         </Text>
       </View>
 
@@ -271,7 +295,7 @@ export default PostCard = function ({ post }) {
           maxWidth: normalize(300),
         }}
       >
-        {getItemSubTitle(post, post.type)}
+        {getItemSubTitle(post, DOMAINPOSTTYPE.get(post.domainId))}
       </View>
 
       {/* POST IMAGE */}
@@ -281,10 +305,10 @@ export default PostCard = function ({ post }) {
         resizeMethod="auto"
         style={{
           width: normalize(300),
-          height: post.type === "Film/TVShow" ? normalize(450) : normalize(300),
+          height: DOMAINPOSTTYPE.get(post.domainId) === "Film/TVShow" ? normalize(450) : normalize(300),
           borderRadius: normalize(15),
         }}
-        source={{ uri: post.image }}
+        source={{ uri: post.mediaItem.image }}
       />
 
       {/* MOODS */}
@@ -315,14 +339,14 @@ export default PostCard = function ({ post }) {
               alignItems: "center",
               borderRadius: normalize(10),
               height: normalize(25),
-              backgroundColor: getMoodContainerColor(post.type),
+              backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(post.domainId)),
             }}
           >
             <Text
               style={{
-                fontWeight: 600,
+                fontWeight: "600",
                 fontSize: normalize(18),
-                color: getMoodTextColor(post.type),
+                color: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
               }}
             >
               {mood}
@@ -342,7 +366,7 @@ export default PostCard = function ({ post }) {
       >
         <Image
           // profilePicture
-          source={{ uri: post.user.profilePicture }}
+          source={{ uri: user.profilePicture }}
           style={{
             borderRadius: normalize(100),
             width: normalize(50),
@@ -357,7 +381,7 @@ export default PostCard = function ({ post }) {
             // height: normalize(76),
             // paddingVertical: normalize(5),
             borderRadius: normalize(5),
-            backgroundColor: getMoodContainerColor(post.type),
+            backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(post.domainId)),
           }}
         >
           <View>
@@ -368,13 +392,13 @@ export default PostCard = function ({ post }) {
                 fontStyle: "normal",
                 fontSize: normalize(18),
                 fontWeight: "500",
-                color: getMoodTextColor(post.type),
+                color: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
                 // textShadowColor: "black",
                 // textShadowOffset: { width: 0, height: 0 },
                 // textShadowRadius: 15,
               }}
             >
-              @{post.user.name}
+              @{user.profileName}
             </Text>
           </View>
           <View
@@ -412,6 +436,6 @@ const styles = StyleSheet.create({
   itemSubtitle: {
     color: "white",
     fontSize: normalize(18),
-    fontWeight: 400,
+    fontWeight: "400",
   },
 });

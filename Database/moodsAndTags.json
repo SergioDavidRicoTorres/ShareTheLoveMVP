@@ -1,0 +1,220 @@
+{
+    "Music": [
+      {
+        "categoryId": 1,
+        "name": "Feeling it",
+        "moodsTagsList": [
+          { "id": 1, "name": "Nostalgic", "isSelected": false, "creator": "Share The Love" },
+          { "id": 2, "name": "Sad", "isSelected": false, "creator": "Share The Love" },
+          { "id": 3, "name": "Heart Broken", "isSelected": false, "creator": "Share The Love" },
+          { "id": 4, "name": "Inspired", "isSelected": false, "creator": "Share The Love" },
+          { "id": 5, "name": "Purposefull", "isSelected": false, "creator": "Share The Love" },
+          { "id": 6, "name": "Lonely", "isSelected": false, "creator": "Share The Love" },
+          { "id": 7, "name": "Tired", "isSelected": false, "creator": "Share The Love" },
+          { "id": 8, "name": "In Love", "isSelected": false, "creator": "Share The Love" },
+          { "id": 9, "name": "Home sick", "isSelected": false, "creator": "Share The Love" },
+          { "id": 10, "name": "Missing", "isSelected": false, "creator": "Share The Love" },
+          { "id": 115, "name": "Iconic", "isSelected": false, "creator": "Share The Love" },
+          { "id": 121, "name": "Boogie On", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+        "categoryId": 2,
+        "name": "Hyped",
+        "moodsTagsList": [
+          { "id": 11, "name": "Hard Beat", "isSelected": false, "creator": "Share The Love" },
+          { "id": 12, "name": "On Fire", "isSelected": false, "creator": "Share The Love" },
+          { "id": 13, "name": "Dancy", "isSelected": false, "creator": "Share The Love" },
+          { "id": 14, "name": "Party Monster", "isSelected": false, "creator": "Share The Love" },
+          { "id": 15, "name": "Speeding Up", "isSelected": false, "creator": "Share The Love" },
+          { "id": 16, "name": "Beast mode", "isSelected": false, "creator": "Share The Love" },
+          { "id": 17, "name": "Nonstop", "isSelected": false, "creator": "Share The Love" },
+          { "id": 18, "name": "Expensive", "isSelected": false, "creator": "Share The Love" },
+          { "id": 19, "name": "Luxus", "isSelected": false, "creator": "Share The Love" },
+          { "id": 20, "name": "Beat on my feet", "isSelected": false, "creator": "Share The Love" },
+          { "id": 21, "name": "Unleashed", "isSelected": false, "creator": "Share The Love" },
+          { "id": 22, "name": "Out of my way", "isSelected": false, "creator": "Share The Love" },
+          { "id": 23, "name": "God Complex", "isSelected": false, "creator": "Share The Love" },
+          { "id": 24, "name": "Turn it up", "isSelected": false, "creator": "Share The Love" },
+          { "id": 25, "name": "Heart On Fire", "isSelected": false, "creator": "Share The Love" },
+          { "id": 122, "name": "Pop em bottles", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+        "categoryId": 3,
+        "name": "Chilled",
+        "moodsTagsList": [
+          { "id": 26, "name": "Hugging trees", "isSelected": false, "creator": "Share The Love" },
+          { "id": 27, "name": "Everything is fine", "isSelected": false, "creator": "Share The Love" },
+          { "id": 28, "name": "Flowing", "isSelected": false, "creator": "Share The Love" }, 
+          { "id": 127, "name": "Easy to Digest", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+          "categoryId": 4,
+          "name": "Vibes",
+          "moodsTagsList": [
+            { "id": 89, "name": "Mellow", "isSelected": false, "creator": "Share The Love" },
+            { "id": 90, "name": "Soulful", "isSelected": false, "creator": "Share The Love" },
+            { "id": 91, "name": "Chill Vibes", "isSelected": false, "creator": "Share The Love" },
+            { "id": 92, "name": "Groovy", "isSelected": false, "creator": "Share The Love" },
+            { "id": 93, "name": "Funky", "isSelected": false, "creator": "Share The Love" },
+            { "id": 94, "name": "Electronic", "isSelected": false, "creator": "Share The Love" },
+            { "id": 95, "name": "Energetic", "isSelected": false, "creator": "Share The Love" },
+            { "id": 96, "name": "Hypnotic", "isSelected": false, "creator": "Share The Love" },
+            { "id": 97, "name": "My body knows it", "isSelected": false, "creator": "Share The Love" }, 
+            { "id": 117, "name": "Good Mood", "isSelected": false, "creator": "Share The Love" }, 
+            { "id": 118, "name": "In Good Company", "isSelected": false, "creator": "Share The Love" },
+            { "id": 120, "name": "Long Day", "isSelected": false, "creator": "Share The Love" }
+          ]
+        }
+    ],
+    "FilmsAndTVShows": [
+      {
+        "categoryId": 1,
+        "name": "Emotional Journey",
+        "moodsTagsList": [
+          { "id": 29, "name": "In Family", "isSelected": false, "creator": "Share The Love" },
+          { "id": 30, "name": "Emotional Roller coaster", "isSelected": false, "creator": "Share The Love" },
+          { "id": 31, "name": "Heartstrings pulled", "isSelected": false, "creator": "Share The Love" },
+          { "id": 32, "name": "Inspired", "isSelected": false, "creator": "Share The Love" },
+          { "id": 33, "name": "Wanderlust filled", "isSelected": false, "creator": "Share The Love" },
+          { "id": 34, "name": "Lonely", "isSelected": false, "creator": "Share The Love" },
+          { "id": 35, "name": "Giddy", "isSelected": false, "creator": "Share The Love" },
+          { "id": 36, "name": "Petrified", "isSelected": false, "creator": "Share The Love" },
+          { "id": 37, "name": "On the edge", "isSelected": false, "creator": "Share The Love" },
+          { "id": 38, "name": "Mind blown", "isSelected": false, "creator": "Share The Love" }, 
+          { "id": 116, "name": "Not for Everyone", "isSelected": false, "creator": "Share The Love" },
+          { "id": 123, "name": "Therapeutic", "isSelected": false, "creator": "Share The Love" }, 
+          { "id": 125, "name": "On My Way Home", "isSelected": false, "creator": "Share The Love" },
+          { "id": 125, "name": "Indulging in my emotions", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+        "categoryId": 2,
+        "name": "Adrenaline Rush",
+        "moodsTagsList": [
+          { "id": 39, "name": "Laugh riot", "isSelected": false, "creator": "Share The Love" },
+          { "id": 40, "name": "Adrenaline rush", "isSelected": false, "creator": "Share The Love" },
+          { "id": 41, "name": "Epic saga", "isSelected": false, "creator": "Share The Love" },
+          { "id": 42, "name": "Whodunit", "isSelected": false, "creator": "Share The Love" },
+          { "id": 43, "name": "Blast from the past", "isSelected": false, "creator": "Share The Love" },
+          { "id": 44, "name": "Future glimpse", "isSelected": false, "creator": "Share The Love" },
+          { "id": 45, "name": "Romantic tale", "isSelected": false, "creator": "Share The Love" },
+          { "id": 46, "name": "Tear jerker", "isSelected": false, "creator": "Share The Love" },
+          { "id": 47, "name": "Real world", "isSelected": false, "creator": "Share The Love" },
+          { "id": 48, "name": "Family bonding", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+        "categoryId": 3,
+        "name": "Slice of Life",
+        "moodsTagsList": [
+          { "id": 49, "name": "Calm", "isSelected": false, "creator": "Share The Love" },
+          { "id": 50, "name": "Grounded", "isSelected": false, "creator": "Share The Love" },
+          { "id": 51, "name": "Hopeful", "isSelected": false, "creator": "Share The Love" },
+          { "id": 52, "name": "Light hearted", "isSelected": false, "creator": "Share The Love" },
+          { "id": 53, "name": "Deep in thought", "isSelected": false, "creator": "Share The Love" },
+          { "id": 54, "name": "Puzzled", "isSelected": false, "creator": "Share The Love" },
+          { "id": 55, "name": "Curiosity piqued", "isSelected": false, "creator": "Share The Love" },
+          { "id": 56, "name": "Disturbed", "isSelected": false, "creator": "Share The Love" },
+          { "id": 57, "name": "Hyped", "isSelected": false, "creator": "Share The Love" },
+          { "id": 58, "name": "Motivated", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+          "categoryId": 4,
+          "name": "Comedy and Satire",
+          "moodsTagsList": [
+            { "id": 98, "name": "Satirical", "isSelected": false, "creator": "Share The Love" },
+            { "id": 99, "name": "Hilarious", "isSelected": false, "creator": "Share The Love" },
+            { "id": 100, "name": "Controversial", "isSelected": false, "creator": "Share The Love" }
+          ]
+        },
+        {
+          "categoryId": 5,
+          "name": "Heartwarming",
+          "moodsTagsList": [
+            { "id": 101, "name": "Heartwarming", "isSelected": false, "creator": "Share The Love" },
+            { "id": 102, "name": "Sci-Fi", "isSelected": false, "creator": "Share The Love" },
+            { "id": 103, "name": "Friendship", "isSelected": false, "creator": "Share The Love" },
+            { "id": 104, "name": "Comedic", "isSelected": false, "creator": "Share The Love" },
+            { "id": 105, "name": "Holiday", "isSelected": false, "creator": "Share The Love" },
+            { "id": 106, "name": "Mischief", "isSelected": false, "creator": "Share The Love" }
+          ]
+        }
+    ],
+    "PodcastsEpisodes": [
+      {
+        "categoryId": 1,
+        "name": "Thought Provoking",
+        "moodsTagsList": [
+          { "id": 59, "name": "Deep in thought", "isSelected": false, "creator": "Share The Love" },
+          { "id": 60, "name": "Curiosity piqued", "isSelected": false, "creator": "Share The Love" },
+          { "id": 61, "name": "Puzzled", "isSelected": false, "creator": "Share The Love" },
+          { "id": 62, "name": "Disturbed", "isSelected": false, "creator": "Share The Love" },
+          { "id": 63, "name": "Hyped", "isSelected": false, "creator": "Share The Love" },
+          { "id": 64, "name": "Grounded", "isSelected": false, "creator": "Share The Love" },
+          { "id": 65, "name": "Hopeful", "isSelected": false, "creator": "Share The Love" },
+          { "id": 66, "name": "Motivated", "isSelected": false, "creator": "Share The Love" },
+          { "id": 67, "name": "Light hearted", "isSelected": false, "creator": "Share The Love" },
+          { "id": 129, "name": "Food for Thought", "isSelected": false, "creator": "Share The Love" },
+          { "id": 68, "name": "Deep thought", "isSelected": false, "creator": "Share The Love" },
+          { "id": 129, "name": "Pondering", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+        "categoryId": 2,
+        "name": "Informative",
+        "moodsTagsList": [
+          { "id": 69, "name": "Expert talk", "isSelected": false, "creator": "Share The Love" },
+          { "id": 70, "name": "Newsy", "isSelected": false, "creator": "Share The Love" },
+          { "id": 71, "name": "Historical deep dive", "isSelected": false, "creator": "Share The Love" },
+          { "id": 72, "name": "Techy", "isSelected": false, "creator": "Share The Love" },
+          { "id": 73, "name": "Behind the scenes", "isSelected": false, "creator": "Share The Love" },
+          { "id": 74, "name": "Society scope", "isSelected": false, "creator": "Share The Love" },
+          { "id": 75, "name": "Globe trotter", "isSelected": false, "creator": "Share The Love" },
+          { "id": 76, "name": "Creative juices", "isSelected": false, "creator": "Share The Love" },
+          { "id": 77, "name": "Life hacks", "isSelected": false, "creator": "Share The Love" },
+          { "id": 78, "name": "Storytime", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+        "categoryId": 3,
+        "name": "Relaxed Vibes",
+        "moodsTagsList": [
+          { "id": 79, "name": "Calm", "isSelected": false, "creator": "Share The Love" },
+          { "id": 80, "name": "Chilled", "isSelected": false, "creator": "Share The Love" },
+          { "id": 81, "name": "Peaceful", "isSelected": false, "creator": "Share The Love" },
+          { "id": 82, "name": "Soothing", "isSelected": false, "creator": "Share The Love" },
+          { "id": 83, "name": "Easy listening", "isSelected": false, "creator": "Share The Love" },
+          { "id": 84, "name": "Feel good", "isSelected": false, "creator": "Share The Love" },
+          { "id": 85, "name": "Zen", "isSelected": false, "creator": "Share The Love" },
+          { "id": 86, "name": "Tranquil", "isSelected": false, "creator": "Share The Love" },
+          { "id": 87, "name": "Meditative", "isSelected": false, "creator": "Share The Love" },
+          { "id": 88, "name": "Gentle focus", "isSelected": false, "creator": "Share The Love" },
+          { "id": 115, "name": "After a Long Day", "isSelected": false, "creator": "Share The Love" },
+          { "id": 119, "name": "On My Way", "isSelected": false, "creator": "Share The Love" }, 
+          { "id": 124, "name": "Ol' Reliable", "isSelected": false, "creator": "Share The Love" }
+        ]
+      },
+      {
+          "categoryId": 4,
+          "name": "Inspirational",
+          "moodsTagsList": [
+            { "id": 107, "name": "Scientific Marvel", "isSelected": false, "creator": "Share The Love" },
+            { "id": 108, "name": "Alien Adventures", "isSelected": false, "creator": "Share The Love" },
+            { "id": 109, "name": "Inner Peace", "isSelected": false, "creator": "Share The Love" },
+            { "id": 110, "name": "Mindfulness Magic", "isSelected": false, "creator": "Share The Love" },
+            { "id": 111, "name": "Mystical Insights", "isSelected": false, "creator": "Share The Love" },
+            { "id": 112, "name": "Life Redefined", "isSelected": false, "creator": "Share The Love" },
+            { "id": 113, "name": "Joyful Play", "isSelected": false, "creator": "Share The Love" },
+            { "id": 114, "name": "Mindful Rest", "isSelected": false, "creator": "Share The Love" },
+            { "id": 128, "name": "Adventure is out there!", "isSelected": false, "creator": "Share The Love" },
+            { "id": 130, "name": "The Sky is the limit", "isSelected": false, "creator": "Share The Love" }, 
+            { "id": 131, "name": "Exciting", "isSelected": false, "creator": "Share The Love" }
+          ]
+        }
+    ]
+  }
+  

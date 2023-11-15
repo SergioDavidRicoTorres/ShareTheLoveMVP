@@ -13,21 +13,19 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { normalize } from "../../utils";
 
 import { getCurrentUserData } from "../../UserData";
 import SearchPlaylist from "./SearchPlaylist";
+import { AddMoodProps } from "../../types";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+// const normalize = (value) => width * (value / 390);
 
 function AddMood({
   visible,
   onClose,
-  onCloseAll,
-  selectedMedia,
-  postType,
-  selectedMoodsTags,
-}) {
+}: AddMoodProps) {
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (SearchPlaylist) -----------------------------
   //---------------------------------------------------------------------------------
@@ -35,9 +33,9 @@ function AddMood({
   const [isSearchPlaylistModalVisible, setIsSearchPlaylistModalVisible] =
     useState(false);
   // Next Modal show Function
-  const toggleSearchPlaylistModal = () => {
-    setIsSearchPlaylistModalVisible(!isSearchPlaylistModalVisible);
-  };
+  // const toggleSearchPlaylistModal = () => {
+  //   setIsSearchPlaylistModalVisible(!isSearchPlaylistModalVisible);
+  // };
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (SearchPlaylist) -----------------------------
   //---------------------------------------------------------------------------------
@@ -60,18 +58,18 @@ function AddMood({
   //---------------------------------------------------------------------------------
   // HANDLE EVENT FUNCTIONS:
   // stores the given input(queue)
-  const handleCaptionChange = (value) => {
+  const handleCaptionChange = (value: string) => {
     setCaption(value);
     setHasCaption(value != "");
   };
 
-  const handleEnterPress = () => {
-    try {
-      toggleSearchPlaylistModal();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const handleEnterPress = () => {
+  //   try {
+  //     toggleSearchPlaylistModal();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   //---------------------------------------------------------------------------------
   // -------------------- FUNCTIONS CURRENT MODAL (AddMood)-------------------
@@ -147,7 +145,11 @@ function AddMood({
                 >
                   <Image
                     // userImage
-                    style={styles.userImage}
+                    style={{
+                      height: normalize(60),
+                      width: normalize(60),
+                      borderRadius: normalize(100),
+                    }}
                     source={{
                       uri: getCurrentUserData().profilePicture,
                     }}
@@ -242,7 +244,7 @@ function AddMood({
                       color: "rgba(58, 17, 90, 0.75)",
                       fontSize: normalize(12),
                       fontStyle: "normal",
-                      fontWeight: 500,
+                      fontWeight: "500",
                       // lineHeight: "normal",
                     }}
                   >
@@ -253,7 +255,7 @@ function AddMood({
               </View>
             </View>
             {/* Next Modal (SearchPlaylist) */}
-            {isSearchPlaylistModalVisible && (
+            {/* {isSearchPlaylistModalVisible && (
               <SearchPlaylist
                 visible={isSearchPlaylistModalVisible}
                 onCloseAll={() => {
@@ -266,7 +268,7 @@ function AddMood({
                 insertedCaption={caption}
                 postType={postType}
               />
-            )}
+            )} */}
           </View>
           {hasCaption === false ? (
             <View style={styles.chooseButtonContainer}>
@@ -343,7 +345,7 @@ const styles = StyleSheet.create({
     bottom: normalize(12),
   },
   chooseButtonText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(18),
     lineHeight: normalize(21),
     color: "white",
@@ -368,13 +370,13 @@ const styles = StyleSheet.create({
   },
   mediaItemTitle: {
     width: normalize(265),
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(20),
     color: "white",
     marginTop: normalize(10),
   },
   itemSubtitle: {
-    fontWeight: 300,
+    fontWeight: "300",
     fontSize: normalize(18),
     color: "white",
   },
@@ -397,7 +399,7 @@ const styles = StyleSheet.create({
     marginHorizontal: normalize(5),
   },
   moodText: {
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(18),
   },
   descriptionContainer: {
@@ -419,11 +421,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: normalize(8),
   },
-  userImage: {
-    height: normalize(60),
-    width: normalize(60),
-    borderRadius: normalize(100),
-  },
+  // userImage: {
+  //   height: normalize(60),
+  //   width: normalize(60),
+  //   borderRadius: normalize(100),
+  // },
   descriptionBoxContainer: {
     paddingVertical: 2,
     backgroundColor: "#371C5D",

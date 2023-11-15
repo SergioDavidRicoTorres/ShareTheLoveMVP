@@ -17,11 +17,14 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { getCurrentUserData } from "../UserData";
 import PlaylistCard from "../components/PlaylistCard";
 import { getScreenGradientFirstColor } from "../utils";
+import { normalize } from "../utils";
+import { ProfileNavigationProp, DomainOfTasteScreenRouteProp } from "../types";
+import { getCurrentUserId, getDomainName, getDomainsPlaylistsData } from "../utilsData";
 
 const { width } = Dimensions.get("window"); // screen width constant
 
 const user = getCurrentUserData();
-const normalize = (value) => width * (value / 390);
+// const normalize = (value) => width * (value / 390);
 
 // moodText
 const moodTextFontSize = width * 0.046;
@@ -50,9 +53,11 @@ export default function DomainOfTaste() {
   const handleButtonPress = () => {
     // Handle button press event
   };
-  const navigation = useNavigation();
-  const route = useRoute();
+  const navigation = useNavigation<ProfileNavigationProp>();
+  const route = useRoute<DomainOfTasteScreenRouteProp>();
   const { domainOfTaste, user } = route.params;
+
+  const playlists = getDomainsPlaylistsData(domainOfTaste.domainId, getCurrentUserId());
 
   return (
     <LinearGradient
@@ -91,13 +96,13 @@ export default function DomainOfTaste() {
                 fontWeight: "700",
               }}
             >
-              {domainOfTaste.name}
+              {getDomainName(domainOfTaste.domainId)}
             </Text>
             {/* {console.log(domainOfTaste)} */}
 
             <FlatList
               scrollEnabled={false}
-              data={domainOfTaste.playlists}
+              data={playlists}
               style={{ marginBottom: normalize(70) }}
               ItemSeparatorComponent={() => (
                 <View style={{ height: normalize(20) }} />
@@ -127,7 +132,7 @@ const styles = StyleSheet.create({
   },
 
   backButtonImage: {
-    width: backButtonImageWidth,
-    height: backButtonImageHeight,
+    width: normalize(14),
+    height: normalize(23),
   },
 });

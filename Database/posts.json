@@ -1,0 +1,378 @@
+[
+    {
+      "userId": 0,
+      "domainId": 0,
+      "playlistId": 0,
+      "creationTime": 123,
+      "likesCount": 29,
+      "moods": [
+        { "id": 14, "name": "Party Monster", "isSelected": false, "creator": "Share The Love" },
+        { "id": 13, "name": "Dancy", "isSelected": false, "creator": "Share The Love" },
+        { "id": 24, "name": "Turn it up", "isSelected": false, "creator": "Share The Love" },
+        { "id": 15, "name": "Speeding Up", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Just feel that nasty beat in your bones!! sdlfkjalsd fjsadlfk asdlfj alsdkfj dsalfjk sldafjsljdkfj slkjf lskfj lsk",
+      "mediaItem": {
+        "name": "Starboy",
+        "mediaType": "Song",
+        "album": "Starboy",
+        "artists": [
+          "The Weeknd"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452"
+      }
+    },
+    {
+      "userId": 0,
+      "domainId": 0,
+      "playlistId": 0,
+      "creationTime": 60,
+      "likesCount": 40,
+      "mediaItem": {
+        "name": "Clouded",
+        "mediaType": "Song",
+        "album": "Fuck The World",
+        "artists": [
+          "Brent Faiyaz"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b2736a463f436bbf07f3c9e8c62a"
+      },
+      "moods": [
+        { "id": 89, "name": "Mellow", "isSelected": false, "creator": "Share The Love" },
+        { "id": 90, "name": "Soulful", "isSelected": false, "creator": "Share The Love" },
+        { "id": 91, "name": "Chill Vibes", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Embrace the soulful rhythm and let your worries fade away."
+    },
+    {
+      "userId": 0,
+      "domainId": 0,
+      "playlistId": 0,
+      "creationTime": 200,
+      "likesCount": 10,
+      "mediaItem": {
+        "name": "Baby Boy",
+        "mediaType": "Song",
+        "album": "Awaken, My Love",
+        "artists": [
+          "Childish Gambino"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d00001e027582716b3666a5235d5af4ea"
+      },
+      "moods": [
+        { "id": 92, "name": "Groovy", "isSelected": false, "creator": "Share The Love" },
+        { "id": 93, "name": "Funky", "isSelected": false, "creator": "Share The Love" },
+        { "id": 84, "name": "Feel good", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Get your groove on and dance like nobody's watching!"
+    },
+    {
+      "userId": 0,
+      "domainId": 0,
+      "playlistId": 0,
+      "creationTime": 100,
+      "likesCount": 40,
+      "mediaItem": {
+        "name": "Around The World",
+        "mediaType": "Song",
+        "album": "Homework",
+        "artists": [
+          "Daft Punk"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b2739b9b36b0e22870b9f542d937"
+      },
+      "moods": [
+        { "id": 94, "name": "Electronic", "isSelected": false, "creator": "Share The Love" },
+        { "id": 95, "name": "Energetic", "isSelected": false, "creator": "Share The Love" },
+        { "id": 96, "name": "Hypnotic", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Take a musical journey around the world with electrifying beats."
+    },
+    {
+      "userId": 0,
+      "domainId": 0,
+      "playlistId": 1,
+      "creationTime": 100,
+      "likesCount": 40,
+      "moods": [
+        { "id": 14, "name": "Party Monster", "isSelected": false, "creator": "Share The Love" },
+        { "id": 16, "name": "Beast mode", "isSelected": false, "creator": "Share The Love" },
+        { "id": 17, "name": "Nonstop", "isSelected": false, "creator": "Share The Love" },
+        { "id": 21, "name": "Unleashed", "isSelected": false, "creator": "Share The Love" },
+        { "id": 23, "name": "God Complex", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Open in case of having to embrace chaos!!!!",
+      "mediaItem": {
+        "name": "Nightcrawler",
+        "mediaType": "Song",
+        "album": "Rodeo",
+        "artists": [
+          "Travis Scott",
+          "Swae Lee",
+          "Chief Keef"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b273715973050587fe3c93033aad"
+      }
+    },
+    {
+      "userId": 0,
+      "domainId": 0,
+      "playlistId": 1,
+      "creationTime": 230,
+      "likesCount": 80,
+      "moods": [
+        { "id": 19, "name": "Luxus", "isSelected": false, "creator": "Share The Love" },
+        { "id": 24, "name": "Turn it up", "isSelected": false, "creator": "Share The Love" },
+        { "id": 21, "name": "Unleashed", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "This is the kind of stuff that feeds the egomaniac inside me",
+      "mediaItem": {
+        "name": "Wake Up In The Sky",
+        "mediaType": "Song",
+        "album": "Evil Genius",
+        "artists": [
+          " Bruno Mars",
+          "Kodak Black",
+          "Gucci Mane"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b273b64fc7036d0fccef26f9f7e8"
+      }
+    },
+    {
+      "userId": 0,
+      "domainId": 0,
+      "playlistId": 1,
+      "creationTime": 120,
+      "likesCount": 75,
+      "moods": [
+        { "id": 16, "name": "Beast mode", "isSelected": false, "creator": "Share The Love" },
+        { "id": 13, "name": "Dancy", "isSelected": false, "creator": "Share The Love" },
+        { "id": 24, "name": "Turn it up", "isSelected": false, "creator": "Share The Love" },
+        { "id": 15, "name": "Speeding Up", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "I guess i'm letting it out tonight!",
+      "mediaItem": {
+        "name": { "id": 14, "name": "Party Monster", "isSelected": false, "creator": "Share The Love" },
+        "mediaType": "Song",
+        "album": "Starboy",
+        "artists": [
+          "The Weeknd"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b273df1cfe1218748681e348e763"
+      }
+    },
+    {
+      "userId": 0,
+      "domainId": 0,
+      "playlistId": 1,
+      "creationTime": 97,
+      "likesCount": 63,
+      "moods": [
+        { "id": 11, "name": "Hard Beat", "isSelected": false, "creator": "Share The Love" },
+        { "id": 13, "name": "Dancy", "isSelected": false, "creator": "Share The Love" },
+        { "id": 97, "name": "My body knows it", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Just feel that nasty beat in your bones!!",
+      "mediaItem": {
+        "name": "Safaera",
+        "mediaType": "Song",
+        "album": "YHLQMDLG",
+        "artists": [
+          "Bad Bunny",
+          "Ñengo Flow",
+          "Jowell & Randy"
+        ],
+        "image": "https://i.scdn.co/image/ab67616d0000b273548f7ec52da7313de0c5e4a0"
+      }
+    },
+    {
+      "userId": 0,
+      "domainId": 1,
+      "playlistId": 0,
+      "creationTime": 97,
+      "likesCount": 63,
+      "mediaItem": {
+        "name": "Borat Subsequent Moviefilm",
+        "overview": "14 years after making a film about his journey across the USA, Borat risks life and limb when he returns to the United States with his young daughter, and reveals more about the culture, the COVID-19 pandemic, and the political elections.",
+        "mediaType": "Film",
+        "image": "https://flxt.tmsimg.com/assets/p18898617_v_v12_ae.jpg"
+      },
+      "moods": [
+        { "id": 98, "name": "Satirical", "isSelected": false, "creator": "Share The Love" },
+        { "id": 99, "name": "Hilarious", "isSelected": false, "creator": "Share The Love" },
+        { "id": 100, "name": "Controversial", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Prepare for belly laughs! Borat is back to mock the world in this uproarious film."
+    },
+    {
+      "userId": 0,
+      "domainId": 1,
+      "playlistId": 0,
+      "creationTime": 300,
+      "likesCount": 120,
+      "mediaItem": {
+        "name": "Silicon Valley",
+        "overview": "In the high-tech gold rush of modern Silicon Valley, the people most qualified to succeed are the least capable of handling success. Partially inspired by Mike Judge’s own experiences as a Silicon Valley engineer in the late ‘80s, Silicon Valley is an American sitcom that centers around six programmers who are living together and trying to make it big in the Silicon Valley.",
+        "mediaType": "TV Show",
+        "image": "https://m.media-amazon.com/images/M/MV5BM2Q5YjNjZWMtYThmYy00N2ZjLWE2NDctNmZjMmZjYWE2NjEwXkEyXkFqcGdeQXVyMTAzMDM4MjM0._V1_.jpg"
+      },
+      "moods": [
+        { "id": 98, "name": "Satirical", "isSelected": false, "creator": "Share The Love" },
+        { "id": 99, "name": "Hilarious", "isSelected": false, "creator": "Share The Love" },
+        { "id": 58, "name": "Motivated", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Welcome to the wild world of tech startups! Silicon Valley is a riotous TV show filled with coding, comedy, and chaos."
+    },
+    {
+      "userId": 0,
+      "domainId": 1,
+      "playlistId": 0,
+      "creationTime": 210,
+      "likesCount": 70,
+      "mediaItem": {
+        "name": "Don't Look Up",
+        "overview": "Two American astronomers attempt to warn humankind about an approaching comet that will wipe out life on planet Earth.",
+        "mediaType": "Film",
+        "image": "https://m.media-amazon.com/images/M/MV5BZjcwZjY3NjAtNzkxZS00NmFjLTg1OGYtODJmMThhY2UwMTc5XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg"
+      },
+      "moods": [
+        { "id": 98, "name": "Satirical", "isSelected": false, "creator": "Share The Love" },
+        { "id": 99, "name": "Hilarious", "isSelected": false, "creator": "Share The Love" },
+        { "id": 100, "name": "Controversial", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "This film is a cosmic comedy with a serious message. Get ready for a hilarious and thought-provoking ride!"
+    },
+    {
+      "userId": 0,
+      "domainId": 1,
+      "playlistId": 1,
+      "creationTime": 210,
+      "likesCount": 70,
+      "mediaItem": {
+        "name": "Shrek",
+        "overview": "It ain't easy bein' green -- especially if you're a likable (albeit smelly) ogre named Shrek. On a mission to retrieve a gorgeous princess from the clutches of a fire-breathing dragon, Shrek teams up with an unlikely compatriot -- a wisecracking donkey.",
+        "mediaType": "Film",
+        "image": "https://m.media-amazon.com/images/M/MV5BOGZhM2FhNTItODAzNi00YjA0LWEyN2UtNjJlYWQzYzU1MDg5L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg"
+      },
+      "moods": [
+        { "id": 99, "name": "Hilarious", "isSelected": false, "creator": "Share The Love" },
+        { "id": 101, "name": "Heartwarming", "isSelected": false, "creator": "Share The Love" },
+        { "id": 104, "name": "Comedic", "isSelected": false, "creator": "Share The Love" }
+
+      ],
+      "caption": "Get ready for an ogre-sized adventure! Shrek is a hilarious fairy tale with a twist."
+    },
+    {
+      "userId": 0,
+      "domainId": 1,
+      "playlistId": 1,
+      "creationTime": 320,
+      "likesCount": 150,
+      "mediaItem": {
+        "name": "The Iron Giant",
+        "overview": "In the small town of Rockwell, Maine in October 1957, a giant metal machine befriends a nine-year-old boy and ultimately finds its humanity by unselfishly saving people from their own fears and prejudices.",
+        "mediaType": "Film",
+        "image": "https://static.wikia.nocookie.net/irongiant/images/f/f6/The_Iron_Giant_2015_Re-Release_Poster.jpg/revision/latest/scale-to-width-down/1200?cb=20150917213143"
+      },
+      "moods": [
+        { "id": 101, "name": "Heartwarming", "isSelected": false, "creator": "Share The Love" },
+        { "id": 102, "name": "Sci-Fi", "isSelected": false, "creator": "Share The Love" },
+        { "id": 103, "name": "Friendship", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Befriend a giant robot from space in this heartwarming tale of unlikely friendship."
+    },
+    {
+      "userId": 0,
+      "domainId": 1,
+      "playlistId": 1,
+      "creationTime": 110,
+      "likesCount": 112,
+      "mediaItem": {
+        "name": "Home Alone",
+        "overview": "Eight-year-old Kevin McCallister makes the most of the situation after his family unwittingly leaves him behind when they go on Christmas vacation. But when a pair of bungling burglars set their sights on Kevin's house, the plucky kid stands ready to defend his territory. By planting booby traps galore, adorably mischievous Kevin stands his ground as his frantic mother attempts to race home before Christmas Day.",
+        "mediaType": "Film",
+        "image": "https://m.media-amazon.com/images/M/MV5BMzFkM2YwOTQtYzk2Mi00N2VlLWE3NTItN2YwNDg1YmY0ZDNmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg"
+      },
+      "moods": [
+        { "id": 104, "name": "Comedic", "isSelected": false, "creator": "Share The Love" },
+        { "id": 105, "name": "Holiday", "isSelected": false, "creator": "Share The Love" },
+        { "id": 106, "name": "Mischief", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "When the parents are away, the pranks will play! Home Alone is a hilarious holiday classic."
+    },
+    {
+      "userId": 0,
+      "domainId": 2,
+      "playlistId": 0,
+      "creationTime": 86,
+      "likesCount": 56,
+      "mediaItem": {
+        "name": "#325 – Michael Levin: Biology, Life, Aliens, Evolution, Embryogenesis & Xenobots",
+        "mediaType": "Podcast Episode",
+        "description": "Michael Levin is a biologist at Tufts University working on novel ways to understand and control complex pattern formation in biological systems. Please support this podcast by checking out our sponsors:  - Henson Shaving: https://hensonshaving.com/lex and use code LEX to get 100 free blades with your razor.",
+        "image": "https://i.scdn.co/image/ab6765630000ba8a563ebb538d297875b10114b7"
+      },
+      "moods": [
+        { "id": 107, "name": "Scientific Marvel", "isSelected": false, "creator": "Share The Love" },
+        { "id": 108, "name": "Alien Adventures", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Tune in to unravel the secrets of biology and discover the truth about aliens with Michael Levin!"
+    },
+    {
+      "userId": 0,
+      "domainId": 2,
+      "playlistId": 0,
+      "creationTime": 20,
+      "likesCount": 87,
+      "mediaItem": {
+        "name": "Meditation",
+        "mediaType": "Podcast Episode",
+        "description": "Silicon Valley CEOs, Tibetan monks, and crunchy hippies alike describe meditation as blissful and life-changing, but what does the science say? Can it reduce stress, increase your attention, and improve mental health -- or is all this focus on breathing just a bunch of hot air? Sit back, get comfortable, and focus your mind as we talk to Tim Ferriss, Professor Gaelle Desbordes, Dr. Clifford Saron, and Dr. Britta Hölzel.",
+        "image": "https://megaphone.imgix.net/podcasts/f521b120-2c30-11e6-b5f3-63ee984ee1a4/image/Spotify_Gimlet_Science-VS_Key-Art_3000x3000-Brooks.jpg?ixlib=rails-4.3.1&max-w=3000&max-h=3000&fit=crop&auto=format,compress"
+      },
+      "moods": [
+        { "id": 109, "name": "Inner Peace", "isSelected": false, "creator": "Share The Love" },
+        { "id": 110, "name": "Mindfulness Magic", "isSelected": false, "creator": "Share The Love" },
+        { "id": 111, "name": "Mystical Insights", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Join us on a journey of self-discovery through meditation, where we'll explore inner peace and mindfulness. Is it life-changing or just hot air?"
+    },
+    {
+      "userId": 0,
+      "domainId": 2,
+      "playlistId": 1,
+      "creationTime": 56,
+      "likesCount": 63,
+      "mediaItem": {
+        "name": "Listen Again: Work, Play, Rest - Part 1",
+        "mediaType": "Podcast Episode",
+        "description": "Original broadcast date: February 4, 2022. The past few years have shaken the fundamental ways we live. It's... disorienting. But it's also an opportunity to reexamine how we spend our time. Over the next three episodes, TED speakers will investigate evolving notions of what it means to pay our bills, feel joy in play, and rest our minds and bodies. This hour: Work. Guests include labor organizer Jess Kutch, social entrepreneur Irma Olguin, and tech reporter Kevin Roose.",
+        "image": "https://i.scdn.co/image/ab6765630000ba8af83cfe9570897876407e5dcf"
+      },
+      "moods": [
+        { "id": 112, "name": "Life Redefined", "isSelected": false, "creator": "Share The Love" },
+        { "id": 113, "name": "Joyful Play", "isSelected": false, "creator": "Share The Love" },
+        { "id": 114, "name": "Mindful Rest", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Reexamine life's fundamental aspects - work, play, and rest - with TED speakers. It's disorienting yet enlightening!"
+    },
+    {
+      "userId": 0,
+      "domainId": 2,
+      "playlistId": 1,
+      "creationTime": 20,
+      "likesCount": 87,
+      "mediaItem": {
+        "name": "OceanGate",
+        "mediaType": "Podcast Episode",
+        "description": "Deep-sea explorer G. Michael Harris has been down to the wreck of the Titanic 14 times. He begged his friend PH Nargeolet not to get on the OceanGate Titan submersible before it imploded in the sea earlier this week. He explains why he saw this coming. This episode was produced by Amanda Lewellyn and edited by Amina Al-Sadi. It was engineered by Michael Raphael and fact-checked by Laura Bullard and hosted by Noel King. Transcript at vox.com/todayexplained Support Today, Explained by making a financial contribution to Vox! bit.ly/givepodcasts Learn more about your ad choices. Visit podcastchoices.com/adchoices",
+        "image": "https://i.scdn.co/image/ab6765630000ba8adfc0a3d7959906e9ae5c3fc9"
+      },
+      "moods": [
+        { "id": 69, "name": "Expert talk", "isSelected": false, "creator": "Share The Love" },
+        { "id": 73, "name": "Behind the scenes", "isSelected": false, "creator": "Share The Love" },
+        { "id": 78, "name": "Storytime", "isSelected": false, "creator": "Share The Love" }
+      ],
+      "caption": "Join deep-sea explorer G. Michael Harris as he ventures down to the Titanic wreckage. Will it end in disaster or discovery?"
+    }
+  ]

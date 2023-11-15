@@ -7,13 +7,14 @@ import {
   Text,
   ScrollView,
   Dimensions,
+  FlatList
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { normalize } from "../utils";
+import { MediaItemInfoProps } from "../types";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
 
-const getMediaInfoComponent = (mediaItem) => {
+const getMediaInfoComponent = (mediaItem: any) => {
   try {
     if (mediaItem.mediaType === "Song") {
       return (
@@ -36,7 +37,7 @@ const getMediaInfoComponent = (mediaItem) => {
               style={{
                 color: "rgba(255, 184, 0, 1)",
                 fontSize: normalize(25),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               name:
@@ -58,7 +59,7 @@ const getMediaInfoComponent = (mediaItem) => {
                 style={{
                   color: "rgba(58, 17, 90, 1)",
                   fontSize: normalize(18),
-                  fontWeight: 400,
+                  fontWeight: "400",
                 }}
               >
                 {mediaItem.name}
@@ -77,7 +78,7 @@ const getMediaInfoComponent = (mediaItem) => {
               style={{
                 color: "rgba(255, 184, 0, 1)",
                 fontSize: normalize(25),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               album:
@@ -99,7 +100,7 @@ const getMediaInfoComponent = (mediaItem) => {
                 style={{
                   color: "rgba(58, 17, 90, 1)",
                   fontSize: normalize(18),
-                  fontWeight: 400,
+                  fontWeight: "400",
                 }}
               >
                 {mediaItem.album}
@@ -118,7 +119,7 @@ const getMediaInfoComponent = (mediaItem) => {
               style={{
                 color: "rgba(255, 184, 0, 1)",
                 fontSize: normalize(25),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               artists:
@@ -157,7 +158,7 @@ const getMediaInfoComponent = (mediaItem) => {
                     style={{
                       color: "white",
                       fontSize: normalize(18),
-                      fontWeight: 400,
+                      fontWeight: "400",
                     }}
                   >
                     {" "}
@@ -170,7 +171,7 @@ const getMediaInfoComponent = (mediaItem) => {
                     style={{
                       color: "rgba(58, 17, 90, 1)",
                       fontSize: normalize(18),
-                      fontWeight: 400,
+                      fontWeight: "400",
                     }}
                   >
                     {item}
@@ -197,7 +198,7 @@ const getMediaInfoComponent = (mediaItem) => {
               style={{
                 color: "rgba(255, 184, 0, 1)",
                 fontSize: normalize(25),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               name:
@@ -220,7 +221,7 @@ const getMediaInfoComponent = (mediaItem) => {
                 style={{
                   color: "rgba(58, 17, 90, 1)",
                   fontSize: normalize(18),
-                  fontWeight: 400,
+                  fontWeight: "400",
                 }}
                 // numberOfLines={4}
               >
@@ -241,7 +242,7 @@ const getMediaInfoComponent = (mediaItem) => {
               style={{
                 color: "rgba(255, 184, 0, 1)",
                 fontSize: normalize(25),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               overview:
@@ -286,7 +287,7 @@ const getMediaInfoComponent = (mediaItem) => {
               style={{
                 color: "rgba(255, 184, 0, 1)",
                 fontSize: normalize(25),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               name:
@@ -309,7 +310,7 @@ const getMediaInfoComponent = (mediaItem) => {
                 style={{
                   color: "rgba(58, 17, 90, 1)",
                   fontSize: normalize(18),
-                  fontWeight: 400,
+                  fontWeight: "400",
                 }}
                 // numberOfLines={4}
               >
@@ -330,7 +331,7 @@ const getMediaInfoComponent = (mediaItem) => {
               style={{
                 color: "rgba(255, 184, 0, 1)",
                 fontSize: normalize(25),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               description:
@@ -366,7 +367,7 @@ const getMediaInfoComponent = (mediaItem) => {
   }
 };
 
-export default function MediaItemInfo({ visible, onClose, mediaItem }) {
+export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItemInfoProps) {
   return (
     <View style={{ flex: 0.2 }}>
       <Modal visible={visible} animationType="slide" transparent>
@@ -422,7 +423,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }) {
             style={{
               color: "rgba(255, 184, 0, 1)",
               fontSize: normalize(30),
-              fontWeight: 800,
+              fontWeight: "800",
             }}
           >
             {mediaItem.mediaType}
@@ -443,7 +444,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }) {
                 style={{
                   color: "rgba(58, 17, 90, 1)",
                   fontSize: normalize(25),
-                  fontWeight: 700,
+                  fontWeight: "700",
                 }}
               >
                 name:
@@ -474,7 +475,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }) {
                 style={{
                   color: "rgba(58, 17, 90, 1)",
                   fontSize: normalize(25),
-                  fontWeight: 700,
+                  fontWeight: "700",
                 }}
               >
                 album:
@@ -498,7 +499,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }) {
                 style={{
                   color: "rgba(58, 17, 90, 1)",
                   fontSize: normalize(25),
-                  fontWeight: 700,
+                  fontWeight: "700",
                 }}
               >
                 artists:
@@ -534,7 +535,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }) {
                       style={{
                         color: "white",
                         fontSize: normalize(18),
-                        fontWeight: 400,
+                        fontWeight: "400",
                       }}
                     >
                       {" "}
@@ -548,7 +549,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }) {
                         style={{
                           color: "white",
                           fontSize: normalize(18),
-                          fontWeight: 400,
+                          fontWeight: "400",
                         }}
                       >
                         {item}

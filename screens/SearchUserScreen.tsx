@@ -13,19 +13,21 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import sampleUsers from "../DummyData/sampleUsers.json";
+// import sampleUsers from "../DummyData/sampleUsers.json";
 import { normalize } from "../utils";
-import { Profile } from "../types";
+import { User } from "../types";
+import { getUsers } from "../utilsData";
 
 
 export default function SearchUser() {
+  const USERS = getUsers();
   const [searchInput, setSearchInput] = useState<string>("");
-  const [searchResults, setSearchResults] = useState <Profile[]> ([]);
+  const [searchResults, setSearchResults] = useState <User[]> ([]);
 
   const handleSearch = (text: string) => {
     setSearchInput(text);
 
-    const filteredData: Profile[] = sampleUsers.filter((item) =>
+    const filteredData: User[] = USERS.filter((item) =>
       item.profileName.toLowerCase().includes(text.toLowerCase())
     );
 

@@ -19,10 +19,12 @@ import {
   getButtonsAccentColor,
   getMoodContainerColor,
   getMoodTextColor,
+  normalize
 } from "../../utils";
+import { AddPlaylistProps } from "../../types";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+// const normalize = (value) => width * (value / 390);
 
 const handleTitleChange = (value) => {
   setPlaylistTitle(value);
@@ -35,7 +37,7 @@ function AddPlaylist({
   onCloseAll,
   selectedMedia,
   postType,
-}) {
+}: AddPlaylistProps) {
   // search states (input, results)
   const [playlistTitle, setPlaylistTitle] = useState("");
   const [hasCover, setHasCover] = useState(false);

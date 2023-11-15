@@ -4,7 +4,7 @@ import { encode as btoa } from 'base-64'; // AUTHORIZATION CODE FLOW: STEP 2
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { spotifyCredentials } from '../secrets';
 
-const setUserData = async (key, value) => {
+const setUserData = async (key: string, value: string) => {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (err) {
@@ -12,7 +12,7 @@ const setUserData = async (key, value) => {
   }
 };
 
-const getUserData = async (key) => {
+const getUserData = async (key: string) => {
   try {
     const value = await AsyncStorage.getItem(key);
     return value;

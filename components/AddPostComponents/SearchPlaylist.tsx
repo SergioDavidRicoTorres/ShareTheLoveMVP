@@ -21,37 +21,23 @@ import {
   getMoodTextColor,
   getSearchBarColor,
   getPlaylistCardBackgroundColor,
+  normalize
 } from "../../utils";
 import { getCurrentUserData } from "../../UserData";
+import { getCurrentUserId, getDomainsPlaylistsData } from "../../utilsData";
+import { DOMAINID } from "../../constants";
+import { Playlist, SearchPlaylistProps } from "../../types";
 
 // screen WIDTH constant:
 const { width } = Dimensions.get("window");
-const normalize = (value) => width * (value / 390);
-const userPlaylists = getCurrentUserData().domainsOfTaste;
 
 //---------------------------------------------------------------------------------
 // ---------------------- FUNCTIONS CURRENT MODAL (SearchPlaylist)------------------
 //---------------------------------------------------------------------------------
 // HANDLE EVENT FUNCTIONS:
 // stores the given input(queue)
-const handleSearch = (text) => {
-  setSearchInput(text);
-
-  const playlistTypeIndex = {
-    Song: 0,
-    "Film/TVShow": 1,
-    PodcastEpisode: 2,
-  };
-
-  const filteredData = userPlaylists[
-    playlistTypeIndex[postType]
-  ].playlists.filter((item) =>
-    item.name.toLowerCase().includes(text.toLowerCase())
-  );
-
-  setSearchResults(filteredData);
-};
 // COLOR FUNCTIONS:
+
 // const getGradientFirstColor = (postType) => {
 //   try {
 //     if (postType === "Song") {
@@ -163,10 +149,10 @@ function SearchPlaylist({
   postType,
   selectedMoodsTags,
   insertedCaption,
-}) {
-  //---------------------------------------------------------------------------------
-  // ----------------------- OPTIONAL MODAL (AddPlaylist) ----------------------------
-  //---------------------------------------------------------------------------------
+}: SearchPlaylistProps) {
+  const userId = getCurrentUserId();
+  const domainPlaylists = getDomainsPlaylistsData(userId, DOMAINID.get(postType));
+
   // Optional Modal Visible State
   const [isAddPlaylistModalVisible, setIsAddPlaylistModalVisible] =
     useState(false);
@@ -174,32 +160,44 @@ function SearchPlaylist({
   const toggleAddPlaylistModal = () => {
     setIsAddPlaylistModalVisible(!isAddPlaylistModalVisible);
   };
-  //---------------------------------------------------------------------------------
-  // ----------------------- OPTIONAL MODAL (AddPlaylist) ----------------------------
-  //---------------------------------------------------------------------------------
-
-  //---------------------------------------------------------------------------------
-  // ---------------------- STATES CURRENT MODAL (SearchPlaylist)---------------------
-  //---------------------------------------------------------------------------------
   // selected Playlist (Object):
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null);
   // search states (input)
   const [searchInput, setSearchInput] = useState("");
   // search results
-  const [searchResults, setSearchResults] = useState(
-    postType === "Song"
-      ? userPlaylists[0].playlists
-      : postType === "Film/TVShow"
-      ? userPlaylists[1].playlists
-      : userPlaylists[2].playlists
-  );
-  //---------------------------------------------------------------------------------
-  // ---------------------- STATES CURRENT MODAL (SearchPlaylist)---------------------
-  //---------------------------------------------------------------------------------
-
-  //---------------------------------------------------------------------------------
-  // -------------------------------- RENDERING --------------------------------------
-  //---------------------------------------------------------------------------------
+  const [searchResults, setSearchResults] = useState(domainPlaylists);
+  // const handleSearch = (text: string) => {
+  //   setSearchInput(text);
+  
+  //   const playlistTypeIndex = {
+  //     Song: 0,
+  //     "Film/TVShow": 1,
+  //     PodcastEpisode: 2,
+  //   };
+  
+  //   const filteredData = userPlaylists[
+  //     playlistTypeIndex[postType]
+  //   ].playlists.filter((item) =>
+  //     item.name.toLowerCase().includes(text.toLowerCase())
+  //   );
+  
+  //   setSearchResults(filteredData);
+  // };
+  const handleSearch = (text: string) => {
+    setSearchInput(text);
+  
+    const playlistTypeIndex = {
+      Song: 0,
+      "Film/TVShow": 1,
+      PodcastEpisode: 2,
+    };
+  
+    const filteredData = domainPlaylists.filter((item) =>
+      item.name.toLowerCase().includes(text.toLowerCase())
+    );
+  
+    setSearchResults(filteredData);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -227,7 +225,11 @@ function SearchPlaylist({
                   {/* Back Button Image */}
                   <Image
                     source={require("../../assets/icons/ArrowBack.png")}
-                    style={styles.backButtonImage}
+                    // style={styles.backButtonImage}
+                    style = {{
+                      width: normalize(14),
+                      height: normalize(23),
+                    }}
                   />
                 </TouchableOpacity>
                 {/* Progress Tracker */}
@@ -275,7 +277,13 @@ function SearchPlaylist({
               >
                 <Image
                   // searchIcon
-                  style={styles.searchIcon}
+                  // style={styles.searchIcon}
+                  style={{
+                    width: normalize(20),
+                    height: normalize(20),
+                    top: normalize(5),
+                    marginRight: normalize(5),
+                  }}
                   source={require("../../assets/icons/SearchIcon.png")}
                 />
                 <TextInput
@@ -283,14 +291,7 @@ function SearchPlaylist({
                   value={searchInput}
                   onChangeText={(text) => {
                     if (searchInput !== "" && text == "") {
-                      setSearchResults(
-                        postType === "Song"
-                          ? userPlaylists[0].playlists
-                          : postType === "Film/TVShow"
-                          ? userPlaylists[1].playlists
-                          : userPlaylists[2].playlists
-                      );
-                    }
+                      setSearchResults(domainPlaylists)}
                     setSearchInput(text);
                   }}
                   onSubmitEditing={() => handleSearch(searchInput)}
@@ -338,7 +339,11 @@ function SearchPlaylist({
                           source={{ uri: item.image }}
                           style={styles.playlistBackgroundImage}
                           resizeMode="cover"
-                          imageStyle={styles.playlistBackgroundImageStyle}
+                          // imageStyle={styles.playlistBackgroundImageStyle}
+                          imageStyle = {{
+                            opacity: 0.5,
+                            borderRadius: normalize(10),
+                          }}
                           blurRadius={8}
                         >
                           <Text
@@ -356,12 +361,13 @@ function SearchPlaylist({
                             columnWrapperStyle={{ flexWrap: "wrap" }}
                             numColumns={3}
                             data={item.moods}
-                            keyExtractor={(item) => item.id.toString()}
+                            // keyExtractor={(item) => item.id.toString()}
+                            keyExtractor={(index) => index.toString()}
                             style={styles.playlistMoodsContainer}
                             renderItem={({ item }) => (
                               <View
                                 // playlistMoodItemContainer
-                                key={item.id}
+                                // key={index.toString()}
                                 style={{
                                   ...styles.playlistMoodItemContainer,
                                   backgroundColor: backgroundColorMoods,
@@ -374,7 +380,7 @@ function SearchPlaylist({
                                     color: getMoodTextColor(postType),
                                   }}
                                 >
-                                  {item.name}
+                                  {item}
                                 </Text>
                               </View>
                             )}
@@ -384,7 +390,7 @@ function SearchPlaylist({
                     </TouchableWithoutFeedback>
                   );
                 }}
-                keyExtractor={(media) => media.id}
+                keyExtractor={(index) => index.toString()}
               />
             </View>
             {isAddPlaylistModalVisible && (
@@ -460,10 +466,10 @@ const styles = StyleSheet.create({
     gap: normalize(20),
     marginTop: normalize(10),
   },
-  backButtonImage: {
-    width: normalize(14),
-    height: normalize(23),
-  },
+  // backButtonImage: {
+  //   width: normalize(14),
+  //   height: normalize(23),
+  // },
   progressTrackerContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -484,7 +490,7 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     fontStyle: "normal",
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(22),
     lineHeight: normalize(26),
     color: "rgba(255, 255, 255, 0.75)",
@@ -517,7 +523,7 @@ const styles = StyleSheet.create({
     marginBottom: normalize(10),
   },
   chooseButtonText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(18),
     lineHeight: normalize(21),
     color: "white",
@@ -556,12 +562,12 @@ const styles = StyleSheet.create({
     width: normalize(340),
     height: normalize(136),
   },
-  playlistBackgroundImageStyle: {
-    opacity: 0.5,
-    borderRadius: normalize(10),
-  },
+  // playlistBackgroundImageStyle: {
+  //   opacity: 0.5,
+  //   borderRadius: normalize(10),
+  // },
   playlistTitle: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(20),
     marginBottom: -normalize(64),
     marginLeft: normalize(16),
@@ -580,7 +586,7 @@ const styles = StyleSheet.create({
     marginHorizontal: normalize(8),
   },
   playlistMoodItemText: {
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(16),
   },
   touchableAddNewPlaylistButtonContainer: {

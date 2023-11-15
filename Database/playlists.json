@@ -1,0 +1,50 @@
+[
+    {
+        "userId": 0, 
+        "domainId": 0,
+        "name":"Favourites",
+        "image":"https://images.hdqwalls.com/wallpapers/delorean-and-chill-0d.jpg",
+        "moods":[ { "id": 9, "name": "Home sick", "isSelected": false, "creator": "Share The Love" }, { "id": 120, "name": "Long Day", "isSelected": false, "creator": "Share The Love" }, { "id": 121, "name": "Boogie On", "isSelected": false, "creator": "Share The Love" }, { "id": 119, "name": "On My Way", "isSelected": false, "creator": "Share The Love" }, { "id": 117, "name": "Good Mood", "isSelected": false, "creator": "Share The Love" }, { "id": 80, "name": "Chilled", "isSelected": false, "creator": "Share The Love" }, { "id": 1, "name": "Nostalgic", "isSelected": false, "creator": "Share The Love" }],
+        "score":7.8
+    },
+    {
+        "userId": 0, 
+        "domainId": 0,
+        "name":"We Going Out",
+        "image":"https://www.billboard.com/wp-content/uploads/media/01-bruno-mars-gucci-mane-kodak-black-wake-up-in-the-sky-MV-vid-2018-billboard-1548.jpg",
+        "moods":[
+            { "id": 18, "name": "Expensive", "isSelected": false, "creator": "Share The Love" }, { "id": 15, "name": "Speeding Up", "isSelected": false, "creator": "Share The Love" }, { "id": 115, "name": "Iconic", "isSelected": false, "creator": "Share The Love" }, { "id": 14, "name": "Party Monster", "isSelected": false, "creator": "Share The Love" }, { "id": 122, "name": "Pop em bottles", "isSelected": false, "creator": "Share The Love" }],
+        "score":7.8
+    }, 
+    {
+        "userId": 0, 
+        "domainId": 1,
+        "name":"Just For a Laugh",
+        "image":"https://img.zeit.de/news/2021-04/19/borat-fortsetzung-fuer-drei-preise-nominiert-image.jpg/wide__1300x731",
+        "moods":[ { "id": 99, "name": "Hilarious", "isSelected": false, "creator": "Share The Love" }, { "id": 115, "name": "After a Long Day", "isSelected": false, "creator": "Share The Love" }, { "id": 116, "name": "Not for Everyone", "isSelected": false, "creator": "Share The Love" }, { "id": 117, "name": "Good Mood", "isSelected": false, "creator": "Share The Love" }, { "id": 118, "name": "In Good Company", "isSelected": false, "creator": "Share The Love" }], 
+        "score":7.8
+    },
+    {
+        "userId": 0, 
+        "domainId": 1,
+        "name":"Classics",
+        "image":"https://www.piratesandprincesses.net/wp-content/uploads/2022/12/Harry-and-Marv.jpg",
+        "moods":[{ "id": 29, "name": "In Family", "isSelected": false, "creator": "Share The Love" }, { "id": 123, "name": "Therapeutic", "isSelected": false, "creator": "Share The Love" }, { "id": 115, "name": "Iconic", "isSelected": false, "creator": "Share The Love" }, { "id": 124, "name": "Ol' Reliable", "isSelected": false, "creator": "Share The Love" }],
+        "score":7.8
+    }, 
+    {
+        "userId": 0, 
+        "domainId": 2,
+        "name":"Mundanities",
+        "moods":[{ "id": 125, "name": "On My Way Home", "isSelected": false, "creator": "Share The Love" }, { "id": 125, "name": "Indulging in my emotions", "isSelected": false, "creator": "Share The Love" }, { "id": 127, "name": "Easy to Digest", "isSelected": false, "creator": "Share The Love" }],
+        "score":7.8
+    }, 
+    {
+        "userId": 0, 
+        "domainId": 2,
+        "name":"Beautiful Science",
+        "image":"https://images.ctfassets.net/k3n74unfin40/74p5R8EwRhs2Mu0XBHIcUB/bb5cfe92a57fa4bb08d68e97ebcea89d/cosmos3.jpg",
+        "moods":[{ "id": 128, "name": "Adventure is out there!", "isSelected": false, "creator": "Share The Love" }, { "id": 38, "name": "Mind blown", "isSelected": false, "creator": "Share The Love" }, { "id": 129, "name": "Food for Thought", "isSelected": false, "creator": "Share The Love" }, { "id": 130, "name": "The Sky is the limit", "isSelected": false, "creator": "Share The Love" }, { "id": 65, "name": "Hopeful", "isSelected": false, "creator": "Share The Love" }, { "id": 131, "name": "Exciting", "isSelected": false, "creator": "Share The Love" }, { "id": 129, "name": "Pondering", "isSelected": false, "creator": "Share The Love" }],
+        "score":7.8
+    }
+]

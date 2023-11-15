@@ -10,11 +10,13 @@ import {
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
+import { normalize } from "../utils";
+import { SettingsProps } from "../types";
 
 const { width, height } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+// const normalize = (value) => width * (value / 390);
 
-export default function Settings({ visible, onClose, navigation }) {
+export default function Settings({ visible, onClose }: SettingsProps) {
   // const navigation = useNavigation();
   return (
     <View>
@@ -76,7 +78,7 @@ export default function Settings({ visible, onClose, navigation }) {
                 color: "rgba(156, 75, 255, 1)",
                 textAlign: "center",
                 fontSize: normalize(30),
-                fontWeight: 700,
+                fontWeight: "700",
               }}
             >
               Settings
@@ -92,7 +94,7 @@ export default function Settings({ visible, onClose, navigation }) {
                   color: "rgba(156, 75, 255, 0.8)",
                   //   textAlign: "center",
                   fontSize: normalize(25),
-                  fontWeight: 700,
+                  fontWeight: "700",
                   marginHorizontal: normalize(25),
                 }}
               >
@@ -117,7 +119,7 @@ export default function Settings({ visible, onClose, navigation }) {
                   style={{
                     color: "white",
                     fontSize: normalize(20),
-                    fontWeight: 600,
+                    fontWeight: "600",
                   }}
                 >
                   Log Out

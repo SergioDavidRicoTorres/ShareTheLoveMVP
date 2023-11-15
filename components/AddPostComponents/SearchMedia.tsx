@@ -27,12 +27,14 @@ import {
   getItemSubTitle,
   getItemImage,
   getItemTitle,
-} from "../../utils.tsx";
+  normalize
+} from "../../utils";
+import { SearchMediaProps } from "../../types";
 
-const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value) => width * (value / 390);
+// const { width } = Dimensions.get("window"); // screen width constant
+// const normalize = (value) => width * (value / 390);
 
-function SearchMedia({ visible, onClose, postType }) {
+function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
 
   // Media Search Input (string):
   const [searchInput, setSearchInput] = useState("");
@@ -44,7 +46,7 @@ function SearchMedia({ visible, onClose, postType }) {
   const [isFirstSearch, setIsFirstSearch] = useState(true);
 
   // SEARCH PodcastEpisode FUNCTION::::::::::::::::::::::
-  const searchPodcastEpisode = async (searchTerm) => {
+  const searchPodcastEpisode = async (searchTerm: string) => {
     try {
       if (isFirstSearch) {
         // Refresh tokens only on the first search
@@ -96,7 +98,7 @@ function SearchMedia({ visible, onClose, postType }) {
   };
 
   // SEARCH SONG FUNCTION:::::::::::::::::::::::::::::
-  const searchSong = async (searchTerm) => {
+  const searchSong = async (searchTerm: string) => {
     try {
       if (isFirstSearch) {
         // Refresh tokens only on the first search
@@ -139,7 +141,7 @@ function SearchMedia({ visible, onClose, postType }) {
   };
 
   // SEARCH FILM AND TVSHOW FUNCTION::::::::::::::::::::
-  const searchFilmAndTVShow = async (query) => {
+  const searchFilmAndTVShow = async (query: string) => {
     try {
       const API_KEY = TMDBCredentials.api_key;
 
@@ -150,7 +152,7 @@ function SearchMedia({ visible, onClose, postType }) {
 
       // Filter the results to include only movies and TV shows, excluding persons
       const filteredResults = data.results.filter(
-        (result) => result.media_type === "movie" || result.media_type === "tv"
+        (result: any) => result.media_type === "movie" || result.media_type === "tv"
       );
 
       // Process the filtered results as needed
@@ -170,7 +172,7 @@ function SearchMedia({ visible, onClose, postType }) {
 
   // HANDLE EVENT FUNCTIONS:
   // store search input:
-  const handleInputChange = (text) => {
+  const handleInputChange = (text: string) => {
     setSearchInput(text);
   };
 
@@ -230,7 +232,10 @@ function SearchMedia({ visible, onClose, postType }) {
                   {/* Back Button Image */}
                   <Image
                     source={require("../../assets/icons/ArrowBack.png")}
-                    style={styles.backButtonImage}
+                    style={{
+                      width: normalize(14),
+                      height: normalize(23),
+                    }}
                   />
                 </TouchableOpacity>
                 {/* Progress Tracker */}
@@ -279,7 +284,12 @@ function SearchMedia({ visible, onClose, postType }) {
               >
                 <Image
                   // searchIcon
-                  style={styles.searchIcon}
+                  style={{
+                    width: normalize(20),
+                    height: normalize(20),
+                    top: normalize(5),
+                    marginRight: normalize(5),
+                  }}
                   source={require("../../assets/icons/SearchIcon.png")}
                 />
                 <TextInput
@@ -329,7 +339,12 @@ function SearchMedia({ visible, onClose, postType }) {
                           <Image
                             // searchResultItemImage
                             source={getItemImage(item, postType)}
-                            style={styles.searchResultItemImage}
+                            style={{
+                              width: normalize(50),
+                              height: normalize(50),
+                              borderTopLeftRadius: normalize(5),
+                              borderBottomLeftRadius: normalize(5),
+                            }}
                           />
                         )}
                         <View
@@ -422,10 +437,10 @@ const styles = StyleSheet.create({
     gap: normalize(20),
     marginTop: normalize(10),
   },
-  backButtonImage: {
-    width: normalize(14),
-    height: normalize(23),
-  },
+  // backButtonImage: {
+  //   width: normalize(14),
+  //   height: normalize(23),
+  // },
   progressTrackerContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -446,7 +461,7 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     fontStyle: "normal",
-    fontWeight: 600,
+    fontWeight: "600",
     fontSize: normalize(22),
     lineHeight: normalize(26),
     color: "rgba(255, 255, 255, 0.75)",
@@ -479,7 +494,7 @@ const styles = StyleSheet.create({
     marginBottom: normalize(10),
   },
   chooseButtonText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(18),
     lineHeight: normalize(21),
     color: "white",
@@ -492,12 +507,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(10),
     marginTop: normalize(12),
   },
-  searchIcon: {
-    width: normalize(20),
-    height: normalize(20),
-    top: normalize(5),
-    marginRight: normalize(5),
-  },
+  // searchIcon: {
+  //   width: normalize(20),
+  //   height: normalize(20),
+  //   top: normalize(5),
+  //   marginRight: normalize(5),
+  // },
   searchInput: {
     color: "white",
     marginRight: normalize(25),
@@ -552,13 +567,13 @@ const styles = StyleSheet.create({
   },
   searchResultItemText: {
     width: normalize(265),
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(20),
     lineHeight: normalize(23),
     color: "white",
   },
   itemSubtitle: {
-    fontWeight: 300,
+    fontWeight: "300",
     fontSize: normalize(12),
     lineHeight: normalize(12),
     color: "white",

@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProfileScreen from "../screens/ProfileScreen";
-import MediaItemsViewScreen from "../screens/PostsViewScreen";
+import PostsViewScreen from "../screens/PostsViewScreen";
 import DomainOfTaste from "../screens/DomainOfTasteScreen";
 import { ProfileNavigatorParamsList } from "../types";
 
@@ -17,8 +17,8 @@ function ProfileNavigator() {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="DomainOfTaste" component={DomainOfTaste} />
       <Stack.Screen
-        name="MediaItemsViewScreen"
-        component={MediaItemsViewScreen}
+        name="PostsViewScreen"
+        component={PostsViewScreen}
       />
     </Stack.Navigator>
   );
