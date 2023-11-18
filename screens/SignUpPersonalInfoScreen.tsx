@@ -14,12 +14,14 @@ import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { TextInput } from "react-native-gesture-handler";
 import { normalize } from "../utils";
-import {
-  getAuthorizationCode,
-  getTokens,
-} from "../components/AuthorizationSpotify";
+// import {
+//   getAuthorizationCode,
+//   getTokens,
+// } from "../components/AuthorizationSpotify";
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigationProp } from "../types";
+// import { authenticateSpotify } from "../AuthorizationSpotify";
+import { SpotifyAuthComponent } from "../SpotifyAuthComponent";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 
@@ -383,43 +385,7 @@ export default function SignUpPersonalInfo() {
         monthOfBirth !== "" &&
         yearOfBirth !== "" &&
         generalDescription !== "" ? (
-          <TouchableOpacity
-            onPress={() => {
-              getTokens()
-                .then(() => {
-                  navigation.navigate("SignUpEndScreen");
-                })
-                .catch((error) => {
-                  console.error("Error during authorization:", error);
-                });
-            }}
-            style={{
-              paddingHorizontal: normalize(15),
-              paddingVertical: normalize(5),
-              justifyContent: "center",
-              alignItems: "center",
-              gap: normalize(10),
-              borderRadius: normalize(20),
-              backgroundColor: "rgba(29, 185, 84, 1)",
-              flexDirection: "row",
-              marginTop: normalize(90),
-            }}
-          >
-            <Image
-              style={{ width: 35, height: 35 }}
-              source={require("../assets/icons/SpotifyIcon.png")}
-            />
-            <Text
-              style={{
-                color: "white",
-                fontSize: normalize(20),
-                fontWeight: "800",
-                // letterSpacing: -1,
-              }}
-            >
-              Link with Spotify
-            </Text>
-          </TouchableOpacity>
+          <SpotifyAuthComponent authType="Sign Up"/>
         ) : (
           <View
             style={{

@@ -145,10 +145,10 @@ function SearchPlaylist({
   visible,
   onClose,
   onCloseAll,
-  selectedMedia,
+  postSelectedMedia,
   postType,
-  selectedMoodsTags,
-  insertedCaption,
+  postSelectedMoodsTags,
+  postInsertedCaption,
 }: SearchPlaylistProps) {
   const userId = getCurrentUserId();
   const domainPlaylists = getDomainsPlaylistsData(userId, DOMAINID.get(postType));
@@ -362,9 +362,9 @@ function SearchPlaylist({
                             numColumns={3}
                             data={item.moods}
                             // keyExtractor={(item) => item.id.toString()}
-                            keyExtractor={(index) => index.toString()}
+                            keyExtractor={(mood) => mood.id.toString()}
                             style={styles.playlistMoodsContainer}
-                            renderItem={({ item }) => (
+                            renderItem={({ item: mood }) => (
                               <View
                                 // playlistMoodItemContainer
                                 // key={index.toString()}
@@ -380,7 +380,7 @@ function SearchPlaylist({
                                     color: getMoodTextColor(postType),
                                   }}
                                 >
-                                  {item}
+                                  {mood.name}
                                 </Text>
                               </View>
                             )}
@@ -401,9 +401,10 @@ function SearchPlaylist({
                   onCloseAll();
                 }}
                 onClose={toggleAddPlaylistModal}
-                selectedMedia={selectedMedia}
-                selectedMoodsTags={selectedMoodsTags}
+                postSelectedMedia={postSelectedMedia}
+                postSelectedMoodsTags={postSelectedMoodsTags}
                 postType={postType}
+                postInsertedCaption={postInsertedCaption}
               />
             )}
           </LinearGradient>

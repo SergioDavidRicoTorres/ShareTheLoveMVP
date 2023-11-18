@@ -40,7 +40,7 @@ export default function PostCard ({ post }: PostCardProps) {
                 width: normalize(50),
                 height: normalize(50),
                 right: normalize(21),
-                bottom: normalize(386),
+                bottom: normalize(442),
                 position: "absolute",
                 zIndex: 1,
                 // top: normalize(33),
@@ -71,7 +71,7 @@ export default function PostCard ({ post }: PostCardProps) {
                 width: normalize(50),
                 height: normalize(50),
                 right: normalize(21),
-                bottom: normalize(386),
+                bottom: normalize(442),
                 position: "absolute",
                 zIndex: 1,
                 // top: normalize(33),
@@ -105,7 +105,7 @@ export default function PostCard ({ post }: PostCardProps) {
                 width: normalize(50),
                 height: normalize(50),
                 right: normalize(21),
-                bottom: normalize(561),
+                bottom: normalize(592),
                 position: "absolute",
                 zIndex: 1,
                 // top: normalize(33),
@@ -135,7 +135,7 @@ export default function PostCard ({ post }: PostCardProps) {
                 width: normalize(50),
                 height: normalize(50),
                 right: normalize(21),
-                bottom: normalize(561),
+                bottom: normalize(592),
                 position: "absolute",
                 zIndex: 1,
                 // top: normalize(33),
@@ -169,7 +169,7 @@ export default function PostCard ({ post }: PostCardProps) {
                 width: normalize(50),
                 height: normalize(50),
                 right: normalize(21),
-                bottom: normalize(428),
+                bottom: normalize(442),
                 position: "absolute",
                 zIndex: 1,
                 // top: normalize(33),
@@ -200,7 +200,7 @@ export default function PostCard ({ post }: PostCardProps) {
                 width: normalize(50),
                 height: normalize(50),
                 right: normalize(21),
-                bottom: normalize(428),
+                bottom: normalize(442),
                 position: "absolute",
                 zIndex: 1,
                 // top: normalize(33),
@@ -229,7 +229,7 @@ export default function PostCard ({ post }: PostCardProps) {
                 width: normalize(50),
                 height: normalize(50),
                 right: normalize(21),
-                bottom: normalize(386),
+                bottom: normalize(442),
                 position: "absolute",
                 zIndex: 1,
                 // top: normalize(33),
@@ -323,15 +323,15 @@ export default function PostCard ({ post }: PostCardProps) {
         data={post.moods}
         ItemSeparatorComponent={() => (
           <View
-            style={{
-              width: normalize(10),
-            }}
+          style={{
+            width: normalize(10),
+          }}
           />
-        )}
-        horizontal
-        renderItem={({ item: mood }) => (
-          // Mood
-          <View
+          )}
+          horizontal
+          renderItem={({ item: mood }) => (
+            // Mood
+            <View
             // moodContainer
             style={{
               paddingHorizontal: normalize(25),
@@ -341,20 +341,21 @@ export default function PostCard ({ post }: PostCardProps) {
               height: normalize(25),
               backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(post.domainId)),
             }}
-          >
+            >
             <Text
               style={{
                 fontWeight: "600",
                 fontSize: normalize(18),
                 color: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
               }}
-            >
-              {mood}
+              >
+              {mood.name}
               {/* should be mood.name */}
             </Text>
           </View>
         )}
-      />
+        keyExtractor={(item, index) => index.toString()}        
+        />
 
       <View
         // captionContainer

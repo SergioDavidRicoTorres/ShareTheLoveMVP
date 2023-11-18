@@ -42,7 +42,7 @@ export default function PlaylistCard ({
   // };
   const playlistId = getPlaylistId(playlist); 
   // const playlistsPosts = getPlaylistsPostsData(playlistId);
-
+  // console.log("PLAYLISTID", playlistId)
   return (
     <ImageBackground
       // playlistBackgroundImage
@@ -99,14 +99,15 @@ export default function PlaylistCard ({
                     color: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
                   }}
                 >
-                  {mood}
+                  {mood.name}
                 </Text>
               </View>
             )}
-          />
+            keyExtractor={(mood) => mood.id.toString()}
+            />
           <FlatList
             style={{ marginTop: normalize(12), marginLeft: normalize(10) }}
-            data={getPosts()}
+            data={getPlaylistsPostsData(playlistId)}
             horizontal
             renderItem={({ item }) =>
               getPlaylistsMediaItemComponent({
@@ -116,7 +117,7 @@ export default function PlaylistCard ({
                 user,
               })
             }
-            keyExtractor={(index) => index.toString()}
+            keyExtractor={(post, index) => index.toString()}
           />
 
           <View

@@ -36,9 +36,9 @@ function PostCaption({
   visible,
   onClose,
   onCloseAll,
-  selectedMedia,
+  postSelectedMedia,
   postType,
-  selectedMoodsTags,
+  postSelectedMoodsTags,
 }: PostCaptionProps) {
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (SearchPlaylist) -----------------------------
@@ -157,10 +157,10 @@ function PostCaption({
                   numberOfLines={1}
                   style={styles.mediaItemTitle}
                 >
-                  {getItemTitle(selectedMedia, postType)}
+                  {getItemTitle(postSelectedMedia, postType)}
                 </Text>
                 {/* mediaItemSubtitle */}
-                {getItemSubTitle(selectedMedia, postType)}
+                {getItemSubTitle(postSelectedMedia, postType)}
               </View>
               {/* mediaItemImage */}
               <View
@@ -175,7 +175,7 @@ function PostCaption({
               >
                 <Image
                   // mediaItemImage
-                  source={getItemImage(selectedMedia, postType)}
+                  source={getItemImage(postSelectedMedia, postType)}
                   style={{
                     borderRadius: normalize(5),
                     width: getImageWidth(postType),
@@ -195,7 +195,7 @@ function PostCaption({
                   // outerMoodsContainer
                   style={styles.outerMoodsContainer}
                 >
-                  {selectedMoodsTags.map((mood) => (
+                  {postSelectedMoodsTags.map((mood) => (
                     // Mood
                     <View
                       // moodContainer
@@ -274,9 +274,9 @@ function PostCaption({
                   onCloseAll();
                 }}
                 onClose={toggleSearchPlaylistModal}
-                selectedMoodsTags={selectedMoodsTags}
-                selectedMedia={selectedMedia}
-                insertedCaption={caption}
+                postSelectedMoodsTags={postSelectedMoodsTags}
+                postSelectedMedia={postSelectedMedia}
+                postInsertedCaption={caption}
                 postType={postType}
               />
             )}

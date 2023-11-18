@@ -165,7 +165,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
                     -{" "}
                   </Text>
                 )}
-                renderItem={({ item }) => (
+                renderItem={({ item: mood }) => (
                   <Text
                     numberOfLines={1}
                     style={{
@@ -174,7 +174,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
                       fontWeight: "400",
                     }}
                   >
-                    {item}
+                    {mood.name}
                   </Text>
                 )}
               />

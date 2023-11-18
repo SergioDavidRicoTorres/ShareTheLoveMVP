@@ -43,10 +43,13 @@ export interface MoodsAndTagsCategory {
   moodsTagsList: Mood[];
 }
 
+// export interface MoodsAndTagsCatalogue {
+//   Music: MoodsAndTagsCategory[]; 
+//   FilmsAndTVShows: MoodsAndTagsCategory[]; 
+//   PodcastsEpisodes: MoodsAndTagsCategory[];
+// }
 export interface MoodsAndTagsCatalogue {
-  Music: MoodsAndTagsCategory[]; 
-  FilmsAndTVShows: MoodsAndTagsCategory[]; 
-  PodcastsEpisodes: MoodsAndTagsCategory[];
+  [key: string]: MoodsAndTagsCategory[];
 }
 
 export interface Post {
@@ -172,7 +175,7 @@ export interface Post {
       visible: boolean; 
       onClose: () => void;
       onCloseAll: () => void;
-      selectedMedia: any; 
+      postSelectedMedia: any; 
       postType: string; 
     }
     export type AddMoodProps = {
@@ -184,27 +187,33 @@ export interface Post {
       visible: boolean; 
       onClose: () => void;
       onCloseAll: () => void;
-      selectedMedia: any; 
+      postSelectedMedia: any; 
       postType: string; 
-      selectedMoodsTags: Mood[];
+      postSelectedMoodsTags: Mood[];
     }
 
     export type SearchPlaylistProps = {
       visible: boolean; 
       onClose: () => void;
       onCloseAll: () => void;
-      selectedMedia: any; 
+      postSelectedMedia: any; 
       postType: string; 
-      selectedMoodsTags: Mood[]; 
-      insertedCaption: string ;
+      postSelectedMoodsTags: Mood[]; 
+      postInsertedCaption: string ;
     }
 
     export type AddPlaylistProps = {
       visible: boolean; 
       onClose: () => void;
       onCloseAll: () => void;
-      selectedMedia: any; 
+      postSelectedMedia: any; 
+      postSelectedMoodsTags: Mood[];
       postType: string; 
+      postInsertedCaption: string; 
+    }
+
+    export type SpotifyAuthComponentProp = {
+      authType: string;
     }
 
 

@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import allMoods from "../../DummyData/AllMoods.json";
+import MOODSANDTAGS from "../../Database/moodsAndTags.json"
 import AddMood from "./AddMood";
 import {
   getGradientsFirstColor,
@@ -21,31 +22,42 @@ import {
   getMoodTextColor,
   normalize
 } from "../../utils";
-import { AddPlaylistProps } from "../../types";
+import { AddPlaylistProps, Mood, MoodsAndTagsCatalogue } from "../../types";
+import { getAllMoodsAndTagsArray } from "../../utilsData";
 
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
-const handleTitleChange = (value) => {
-  setPlaylistTitle(value);
-};
 
-const getCarouselNumColumns = (listLength) => listLength / 5;
+const getCarouselNumColumns = (listLength: number) => listLength / 5;
 function AddPlaylist({
   visible,
   onClose,
   onCloseAll,
-  selectedMedia,
+  postSelectedMedia,
+  postSelectedMoodsTags,
   postType,
+  postInsertedCaption
 }: AddPlaylistProps) {
+  
   // search states (input, results)
+  const allMoodsObject: MoodsAndTagsCatalogue = {"AllMoods": [{
+    "categoryId": 0, 
+    "name": "AllMoods",
+    "moodsTagsList": getAllMoodsAndTagsArray()
+  }]}
+  const allMoods: Mood[] = getAllMoodsAndTagsArray();
+  getAllMoodsAndTagsArray();;
   const [playlistTitle, setPlaylistTitle] = useState("");
+  const handleTitleChange = (value: string) => {
+    setPlaylistTitle(value);
+  };
   const [hasCover, setHasCover] = useState(false);
   // select Item state
   // Initialize selectedMoodsTags with initially selected moods
   const getInitiallySelectedMoods = () => {
     const initiallySelectedMoods = [];
-    for (const mood of allMoods[0].list) {
+    for (const mood of allMoods) {
       if (mood.isSelected) {
         initiallySelectedMoods.push(mood);
       }
@@ -66,18 +78,20 @@ function AddPlaylist({
   // ----------------------- OPTIONAL MODAL (AddMood) ----------------------------
   //---------------------------------------------------------------------------------
 
-  const handleElementSelection = (categoryId, itemId) => {
+  const handleElementSelection = (itemId: number) => {
     const modifiedData = [...allMoods];
 
     // Toggle the isSelected attribute of the selected element
-    modifiedData[categoryId].list[itemId].isSelected =
-      !modifiedData[categoryId].list[itemId].isSelected;
+    modifiedData[itemId].isSelected =
+      !modifiedData[itemId].isSelected;
 
     // Update the selectedMoodsTags array based on the isSelected attribute
-    const updatedselectedMoodsTags = modifiedData.reduce((acc, category) => {
-      const selectedItems = category.list.filter((item) => item.isSelected);
-      return [...acc, ...selectedItems];
-    }, []);
+    const updatedselectedMoodsTags = allMoods.filter((item) => item.isSelected);
+
+    // const updatedselectedMoodsTags = modifiedData.reduce((acc, category) => {
+    //   const selectedItems = category.list.filter((item) => item.isSelected);
+    //   return [...acc, ...selectedItems];
+    // }, []);
 
     setselectedMoodsTags(updatedselectedMoodsTags);
   };
@@ -237,7 +251,7 @@ function AddPlaylist({
               >
                 <Text
                   style={{
-                    fontWeight: 700,
+                    fontWeight: "700",
                     fontSize: normalize(24),
                     color: "white",
                     left: "-5%",
@@ -250,55 +264,55 @@ function AddPlaylist({
                   data={allMoods}
                   horizontal
                   renderItem={({ item: category, index: categoryIndex }) => (
-                    <View style={styles.horizontalContainer}>
+                    <View 
+                    // style={styles.horizontalContainer} // HERE THERE MIGHT BE AN ERROR
+                    >
                       <FlatList
                         scrollEnabled={false}
                         columnWrapperStyle={
-                          getCarouselNumColumns(allMoods[0].list.length) > 1
+                          getCarouselNumColumns(allMoods.length) > 1
                             ? { flexWrap: "wrap" }
                             : undefined
                         }
                         numColumns={Math.ceil(
-                          getCarouselNumColumns(allMoods[0].list.length)
+                          getCarouselNumColumns(allMoods.length)
                         )}
-                        data={allMoods[0].list}
+                        data={allMoods}
                         style={{ paddingTop: normalize(10) }}
                         renderItem={({ item, index: itemIndex }) => {
-                          const isSelected = item.isSelected || false;
-
-                          const itemStyle = isSelected
-                            ? {
-                                paddingVertical: normalize(2),
-                                paddingHorizontal: normalize(20),
-                                backgroundColor:
-                                  getMoodContainerColor(postType),
-                                justifyContent: "center",
-                                alignItems: "center",
-                                borderRadius: normalize(10),
-                                marginVertical: normalize(8),
-                                marginHorizontal: normalize(10),
-                              }
-                            : {
-                                paddingVertical: normalize(2),
-                                paddingHorizontal: normalize(20),
-                                backgroundColor: "rgba(58, 17, 90, 0.4)",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                borderRadius: normalize(10),
-                                marginVertical: normalize(8),
-                                marginHorizontal: normalize(10),
-                              };
+                          // 
 
                           return (
                             <TouchableOpacity
-                              style={itemStyle}
+                              style={item.isSelected
+                                ? {
+                                    paddingVertical: normalize(2),
+                                    paddingHorizontal: normalize(20),
+                                    backgroundColor:
+                                      getMoodContainerColor(postType),
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    borderRadius: normalize(10),
+                                    marginVertical: normalize(8),
+                                    marginHorizontal: normalize(10),
+                                  }
+                                : {
+                                    paddingVertical: normalize(2),
+                                    paddingHorizontal: normalize(20),
+                                    backgroundColor: "rgba(58, 17, 90, 0.4)",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    borderRadius: normalize(10),
+                                    marginVertical: normalize(8),
+                                    marginHorizontal: normalize(10),
+                                  }}
                               onPress={() =>
-                                handleElementSelection(categoryIndex, itemIndex)
+                                handleElementSelection(itemIndex)
                               }
                             >
                               <Text
                                 style={{
-                                  fontWeight: 600,
+                                  fontWeight: "600",
                                   fontSize: normalize(18),
                                   color: getMoodTextColor(postType),
                                 }}
@@ -338,7 +352,7 @@ function AddPlaylist({
                 >
                   <Text
                     style={{
-                      fontWeight: 700,
+                      fontWeight: "700",
                       fontSize: normalize(18),
                       color: "white",
                     }}
@@ -352,14 +366,7 @@ function AddPlaylist({
             {isAddMoodModalVisible && (
               <AddMood
                 visible={isAddMoodModalVisible}
-                onCloseAll={() => {
-                  setIsAddMoodModalVisible(false);
-                  onCloseAll();
-                }}
                 onClose={toggleAddMoodModal}
-                selectedMedia={selectedMedia}
-                selectedMoodsTags={selectedMoodsTags}
-                postType={postType}
               />
             )}
           </LinearGradient>
@@ -435,7 +442,7 @@ const styles = StyleSheet.create({
     marginBottom: normalize(10),
   },
   chooseButtonText: {
-    fontWeight: 700,
+    fontWeight: "700",
     fontSize: normalize(18),
     lineHeight: normalize(21),
     color: "white",

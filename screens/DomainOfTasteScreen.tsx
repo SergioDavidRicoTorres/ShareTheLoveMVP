@@ -56,8 +56,9 @@ export default function DomainOfTaste() {
   const navigation = useNavigation<ProfileNavigationProp>();
   const route = useRoute<DomainOfTasteScreenRouteProp>();
   const { domainOfTaste, user } = route.params;
-
-  const playlists = getDomainsPlaylistsData(domainOfTaste.domainId, getCurrentUserId());
+  console.log("DOMAIN OF TASTE: ", domainOfTaste)
+  const playlists = getDomainsPlaylistsData(getCurrentUserId(), domainOfTaste.domainId);
+  console.log("PLAYLISTS: ", playlists)
 
   return (
     <LinearGradient
@@ -107,7 +108,7 @@ export default function DomainOfTaste() {
               ItemSeparatorComponent={() => (
                 <View style={{ height: normalize(20) }} />
               )}
-              renderItem={({ item: playlist }) => (
+              renderItem={({ item: playlist, index }) => (
                 <PlaylistCard
                   playlist={playlist}
                   domainOfTaste={domainOfTaste}
@@ -115,6 +116,7 @@ export default function DomainOfTaste() {
                   user={user}
                 />
               )}
+              keyExtractor={(playlist, index) => index.toString()}
             />
           </View>
         </ScrollView>

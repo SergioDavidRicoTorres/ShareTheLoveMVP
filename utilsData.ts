@@ -1,8 +1,10 @@
 import untypedUsers from "./Database/users.json";
 import untypedPlaylists from "./Database/playlists.json";
 import untypedPosts from "./Database/posts.json";
-import { Playlist, User, Post, Mood, MoodsAndTagsCatalogue} from "./types";
+import { Playlist, User, Post, Mood, MoodsAndTagsCatalogue, MoodsAndTagsCategory} from "./types";
 import untypedMoodsAndTags from "./Database/moodsAndTags.json"
+import { getAuthSpotifyUserData, checkTokenValidity } from "./AuthorizationSpotify";
+
 
 const USERS: User[] = untypedUsers;
 const PLAYLISTS: Playlist[] = untypedPlaylists;
@@ -34,13 +36,16 @@ export const getDomainsPlaylistsData = (userId: number, domainId?: number) => {
     if (domainId === undefined) {
       return [];
     }
+    // console.log("DOMAINID: ", domainId); 
     return PLAYLISTS.filter(playlist => playlist.userId === userId && playlist.domainId === domainId);
   }
   
 
 export const getPlaylistsPostsData = (playlistId: number) =>{
     try{
-        return POSTS.filter(post => post.playlistId === playlistId);
+        console.log("PLAYLISTID: ", playlistId); 
+        const filteredPosts = POSTS.filter(post => { return post.playlistId === playlistId});
+        return filteredPosts; 
     } catch (error) {
         console.error("Error fetching current user data:", error);
         return [];
@@ -90,3 +95,90 @@ export const getMoodsAndTagsCategories = (postType: string) =>  {
             return [];
     }
 }
+
+export const getAllMusicMoodAndTags = () =>  {
+    let allMusicMoods: Mood[] = [];
+    const musicMoodsCategories = MOODSANDTAGS.Music; 
+    for (const category  of musicMoodsCategories) {
+        allMusicMoods = allMusicMoods.concat(category.moodsTagsList); 
+    }
+    return allMusicMoods;
+}
+
+export const getAllFilmsTVShowsMoodAndTags = () =>  {
+    let allFilmsTVShowsMoods: Mood[] = [];
+    const filmsTVShowsMoodsCategories = MOODSANDTAGS.FilmsAndTVShows; 
+    for (const category  of filmsTVShowsMoodsCategories) {
+        allFilmsTVShowsMoods = allFilmsTVShowsMoods.concat(category.moodsTagsList); 
+    }
+    return allFilmsTVShowsMoods;
+}
+
+export const getAllPodcastsEpisodesMoodAndTags = () =>  {
+    let allPodcastsEpisodesMoods: Mood[] = [];
+    const podcastsEpisodesMoodsCategories = MOODSANDTAGS.PodcastsEpisodes; 
+    for (const category  of podcastsEpisodesMoodsCategories) {
+        allPodcastsEpisodesMoods = allPodcastsEpisodesMoods.concat(category.moodsTagsList); 
+    }
+    return allPodcastsEpisodesMoods;
+}
+
+
+
+export const getAllMoodsAndTagsArray = () =>{
+    let allMoods: Mood[] = [];
+    allMoods = allMoods.concat(getAllMusicMoodAndTags());
+    allMoods = allMoods.concat(getAllFilmsTVShowsMoodAndTags()); 
+    allMoods = allMoods.concat(getAllPodcastsEpisodesMoodAndTags());
+    return allMoods; 
+}
+
+export const searchPodcastEpisode = async (searchName: string) => {
+    try {
+      checkTokenValidity();
+      const accessToken = await getAuthSpotifyUserData("accessToken"); 
+      const response = await fetch(
+        `https://api.spotify.com/v1/search?q=${searchName}&type=episode&limit=50`,
+        {
+          method: "GET",
+          headers: {
+            "Conten-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Response.status: ", response.status);
+      const data = await response.json();
+      return data.episodes.items;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }  
+  }
+
+  export const searchSong = async (searchName: string) => {
+    try {
+      checkTokenValidity();
+      const accessToken = await getAuthSpotifyUserData("accessToken"); 
+      // fetch list of results from the search
+      const response = await fetch(
+        `https://api.spotify.com/v1/search?q=${searchName}&type=track&limit=50`,
+        {
+          method: "GET",
+          headers: {
+            "Conten-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Response.status: ", response.status);
+      const data = await response.json();
+      console.log("[DATA]: ", data);
+
+      console.log("[DATA]: ", data.tracks.items)
+      return data.tracks.items;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }  
+  }

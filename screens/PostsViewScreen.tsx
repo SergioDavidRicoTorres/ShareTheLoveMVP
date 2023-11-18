@@ -174,9 +174,9 @@ export default function PostsViewScreen() {
 
         <View
           style={{
-            width,
+            width: normalize(325),
             alignItems: "center",
-
+            backgroundColor: getPlaylistAccentColor(domainOfTaste),
             //   height: 660,
             shadowColor: getPlaylistAccentColor(domainOfTaste),
             shadowOffset: {
@@ -186,7 +186,7 @@ export default function PostsViewScreen() {
             shadowOpacity: 1,
             shadowRadius: normalize(8),
 
-            // borderRadius: normalize(15),
+            borderRadius: normalize(15),
             //   overflow: "hidden", // Clip the shadow if needed
           }}
         >
@@ -270,10 +270,11 @@ export default function PostsViewScreen() {
                             color: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
                           }}
                         >
-                          {mood}
+                          {mood.name}
                         </Text>
                       </View>
                     )}
+                    keyExtractor={(mood) => mood.id.toString()}
                   />
                 </View>
                 <View

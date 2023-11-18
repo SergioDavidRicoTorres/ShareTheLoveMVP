@@ -37,7 +37,7 @@ function MoodsTags({
   visible,
   onClose,
   onCloseAll,
-  selectedMedia,
+  postSelectedMedia,
   postType,
 }: MoodsTagsProps) {
 
@@ -86,7 +86,7 @@ function MoodsTags({
   //---------------------------------------------------------------------------------
   // ---------------------- STATES CURRENT MODAL (MoodsTags)--------------------------
   //---------------------------------------------------------------------------------
-  // Initialize selectedMoodsTags with initially selected moods
+  // Initialize postSelectedMoodsTags with initially selected moods
   const getInitiallySelectedMoods = () => {
     const initiallySelectedMoods = [];
     for (const category of MOODSANDTAGS) {
@@ -100,7 +100,7 @@ function MoodsTags({
   };
 
   // selected Items (array):
-  const [selectedMoodsTags, setSelectedMoodsTags] = useState(
+  const [postSelectedMoodsTags, setPostSelectedMoodsTags] = useState(
     getInitiallySelectedMoods()
   );
   //---------------------------------------------------------------------------------
@@ -120,12 +120,12 @@ function MoodsTags({
       !modifiedData[categoryId].moodsTagsList[itemId].isSelected;
 
     // Update the selectedMoodsTags array based on the isSelected attribute
-    const updatedselectedMoodsTags = modifiedData.reduce((acc: Mood[], category: MoodsAndTagsCategory) => {
+    const updatedPostSelectedMoodsTags = modifiedData.reduce((acc: Mood[], category: MoodsAndTagsCategory) => {
       const selectedItems = category.moodsTagsList.filter((item) => item.isSelected);
       return [...acc, ...selectedItems];
     }, []);
 
-    setSelectedMoodsTags(updatedselectedMoodsTags);
+    setPostSelectedMoodsTags(updatedPostSelectedMoodsTags);
   };
 
   //---------------------------------------------------------------------------------
@@ -233,7 +233,7 @@ function MoodsTags({
                     //       uri: `https://image.tmdb.org/t/p/original/${selectedMedia.poster_path}`,
                     //     }
                     //   : require("../assets/default/image.png") // default image source
-                    getItemImage(selectedMedia, postType)
+                    getItemImage(postSelectedMedia, postType)
                   }
                   style={{
                     width: normalize(50),
@@ -251,9 +251,9 @@ function MoodsTags({
                     numberOfLines={1}
                     style={styles.mediaItemText}
                   >
-                    {getItemTitle(selectedMedia, postType)}
+                    {getItemTitle(postSelectedMedia, postType)}
                   </Text>
-                  {getItemSubTitle(selectedMedia, postType)}
+                  {getItemSubTitle(postSelectedMedia, postType)}
                 </View>
               </View>
 
@@ -291,8 +291,8 @@ function MoodsTags({
                       numColumns={6}
                       data={category.moodsTagsList}
                       style={styles.moodsCategoryContainer}
-                      renderItem={({ item, index: itemIndex }) => {
-                        const isSelected = item.isSelected || false;
+                      renderItem={({ item: mood, index: itemIndex }) => {
+                        const isSelected = mood.isSelected || false;
                         return (
                           // {Mood}
                           <TouchableOpacity
@@ -317,7 +317,7 @@ function MoodsTags({
                                 color: getMoodTextColor(postType),
                               }}
                             >
-                              {item.name}
+                              {mood.name}
                             </Text>
                           </TouchableOpacity>
                         );
@@ -338,8 +338,8 @@ function MoodsTags({
                   onCloseAll();
                 }}
                 onClose={togglePostCaptionModal}
-                selectedMedia={selectedMedia}
-                selectedMoodsTags={selectedMoodsTags}
+                postSelectedMedia={postSelectedMedia}
+                postSelectedMoodsTags={postSelectedMoodsTags}
                 postType={postType}
               />
             )}
@@ -352,12 +352,12 @@ function MoodsTags({
                 // }}
                 onClose={toggleAddMoodModal}
                 // selectedMedia={selectedMedia}
-                // selectedMoodsTags={selectedMoodsTags}
+                // postSelectedMoodsTags={postSelectedMoodsTags}
                 // postType={postType}
               />
             )}
           </LinearGradient>
-          {selectedMoodsTags.length !== 0 ? (
+          {postSelectedMoodsTags.length !== 0 ? (
             <TouchableOpacity
               style={{
                 ...styles.touchableChooseButtonContainer,

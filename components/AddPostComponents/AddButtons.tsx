@@ -106,11 +106,11 @@ function AddButtons() {
       )}
       <TouchableOpacity
         onPress={() => setOpened(!opened)}
-        style={{
-          shadowColor: "black",
-          shadowOpacity: 0.3,
-          shadowOffset: { width: 0, height: 2 },
-        }}
+        // style={{
+          // shadowColor: "black",
+          // shadowOpacity: 0.3,
+          // shadowOffset: { width: 0, height: 2 },
+        // }}
       >
         <View
           style={{

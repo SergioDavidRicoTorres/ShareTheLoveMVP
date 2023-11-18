@@ -365,7 +365,7 @@ export default function ProfileScreen({}) {
                               <FlatList
                                 data={playlist.moods}
                                 scrollEnabled={false}
-                                keyExtractor={(index) => index.toString()} 
+                                keyExtractor={(playlist, index) => index.toString()} 
                                 style={{
                                   marginTop: normalize(7),
                                   width: normalize(186),
@@ -373,9 +373,8 @@ export default function ProfileScreen({}) {
                                   gap: normalize(3),
                                   flexDirection: "row",
                                 }}
-                                renderItem={({ index, item }) => (
+                                renderItem={({ item: mood }) => (
                                   <View
-                                    key={index}
                                     style={{
                                       paddingVertical: normalize(2),
                                       paddingHorizontal: normalize(10),
@@ -397,7 +396,7 @@ export default function ProfileScreen({}) {
                                         ),
                                       }}
                                     >
-                                      {item}
+                                      {mood.name}
                                     </Text>
                                   </View>
                                 )}
@@ -405,7 +404,7 @@ export default function ProfileScreen({}) {
                             </View>
                           </View>
                         )}
-                        keyExtractor={(index) => index.toString()}  //fetch and use element id from firestore
+                        keyExtractor={(domain, index) => index.toString()}  //fetch and use element id from firestore
                       />
                     </LinearGradient>
                   </TouchableOpacity>

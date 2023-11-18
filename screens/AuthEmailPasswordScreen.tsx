@@ -17,6 +17,8 @@ import { LinearGradient } from "expo-linear-gradient";
 // import { useRoute } from "@react-navigation/native";
 import { normalize } from "../utils";
 import { AuthEmailPasswordScreenRouteProp, AuthNavigationProp, MainNavigationProp } from "../types";
+// import { authenticateSpotify } from "../AuthorizationSpotify";
+import { SpotifyAuthComponent } from "../SpotifyAuthComponent";
 
 // import { getAuth } from "firebase/auth";
 // import { firebaseApp } from "../App"; // Ensure the path matches your file structure
@@ -107,21 +109,22 @@ const AuthEmailPassword = () => {
   //   }
   // };
 
-  const handleButtonPress = async () => {
-    try {
-      if (authType === "Sign Up") {
-        // await signUpWithEmailAndPassword(email, password);
-        navigation.navigate("SignUpPersonalInfoScreen");
-      } else {
-        // await signInWithEmailAndPassword(email, password);
-        mainNavigation.navigate("Tabs");
-      }
-    } catch (error) {
-      // Handle authentication error
-      // setErrorMessage(error.message); // Set an error message to display to the user
-      console.error("Authentication error:", error);
-    }
-  };
+  // const handleButtonPress = async () => {
+  //   try {
+  //     if (authType === "Sign Up") {
+  //       // await signUpWithEmailAndPassword(email, password);
+  //       navigation.navigate("SignUpPersonalInfoScreen");
+  //     } else {
+  //       // await signInWithEmailAndPassword(email, password);
+  //       authenticateSpotify();
+  //       mainNavigation.navigate("Tabs");
+  //     }
+  //   } catch (error) {
+  //     // Handle authentication error
+  //     // setErrorMessage(error.message); // Set an error message to display to the user
+  //     console.error("Authentication error:", error);
+  //   }
+  // };
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
@@ -302,11 +305,9 @@ const AuthEmailPassword = () => {
             </TouchableOpacity>
           </View>
         </View>
+{/* 
         {email !== "" && password !== "" ? (
           <>
-            {/* {errorMessage && (
-              <Text style={{ color: "red" }}>{errorMessage}</Text>
-            )} */}
             <TouchableOpacity
               onPress={handleButtonPress}
               style={{
@@ -359,6 +360,48 @@ const AuthEmailPassword = () => {
             </Text>
           </View>
         )}
+         */}
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+          }}
+        >
+        {email !== "" && password !== "" ? (
+
+            <SpotifyAuthComponent authType={authType} />
+            ) : (
+              <View
+              style={{
+                paddingHorizontal: normalize(15),
+                paddingVertical: normalize(5),
+                justifyContent: "center",
+                alignItems: "center",
+                gap: normalize(10),
+                borderRadius: normalize(20),
+                backgroundColor: "rgba(203, 203, 203, 0.5)",
+                flexDirection: "row",
+                marginTop: normalize(90),
+                bottom: normalize(34)
+              }}
+              >
+            <Image
+              style={{ width: 35, height: 35 }}
+              source={require("../assets/icons/SpotifyIcon.png")}
+              />
+            <Text
+              style={{
+                color: "white",
+                fontSize: normalize(20),
+                fontWeight: "800",
+                // letterSpacing: -1,
+              }}
+              >
+              Link with Spotify
+            </Text>
+          </View>
+        )}
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   View,
@@ -12,10 +12,9 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-
 // Spotify Authorization data
 import axios from "axios";
-import { getUserData, refreshTokens } from "../AuthorizationSpotify";
+// import { getUserData, refreshTokens } from "../AuthorizationSpotify";
 // TMDB credentials
 import { TMDBCredentials } from "../../secrets";
 // Next Modal Component
@@ -29,13 +28,17 @@ import {
   getItemTitle,
   normalize
 } from "../../utils";
+import { searchSong, searchPodcastEpisode } from "../../utilsData";
 import { SearchMediaProps } from "../../types";
+import { checkTokenValidity } from "../../AuthorizationSpotify";
 
 // const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
 function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
-
+  useEffect(() => {
+    checkTokenValidity();
+  }, [])
   // Media Search Input (string):
   const [searchInput, setSearchInput] = useState("");
   // Media Search Results (array):
@@ -43,102 +46,114 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
   // Selected Media Item (object):
   const [selectedItem, setSelectedItem] = useState(null);
   // First Search (boolean):
-  const [isFirstSearch, setIsFirstSearch] = useState(true);
+  // const [isFirstSearch, setIsFirstSearch] = useState(true);
 
-  // SEARCH PodcastEpisode FUNCTION::::::::::::::::::::::
-  const searchPodcastEpisode = async (searchTerm: string) => {
-    try {
-      if (isFirstSearch) {
-        // Refresh tokens only on the first search
-        await refreshTokens();
-        setIsFirstSearch(false); // Set to false after the first search
-      }
 
-      const accessToken = await getUserData("accessToken");
-      const tokenExpirationTime = JSON.parse(
-        await getUserData("expirationTime")
-      );
 
-      if (
-        !accessToken ||
-        !tokenExpirationTime ||
-        new Date().getTime() >= tokenExpirationTime
-      ) {
-        await refreshTokens();
-      }
+  // // SEARCH PodcastEpisode FUNCTION::::::::::::::::::::::
+  // const searchPodcastEpisode = async (searchTerm: string) => {
+  //   try {
+  //     if (isFirstSearch) {
+  //       // Refresh tokens only on the first search
+  //       await refreshToken();
+  //       setIsFirstSearch(false); // Set to false after the first search
+  //     }
 
-      const response = await fetch(
-        `https://api.spotify.com/v1/search?q=${searchTerm}&type=episode&limit=50`,
-        {
-          method: "GET",
-          headers: {
-            "Conten-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+  //     const accessToken = await getUserData("accessToken");
+  //     const expirationTime = await getUserData("expirationTime");
+  //     let tokenExpirationTime = null;
+  //     if (expirationTime !== null) {
+  //       tokenExpirationTime = JSON.parse(expirationTime);
+  //     }
+  //     // const tokenExpirationTime = JSON.parse(
+  //     //   await getUserData("expirationTime")
+  //     // );
 
-      console.log("Response.status: ", response.status);
+  //     if (
+  //       !accessToken ||
+  //       !tokenExpirationTime ||
+  //       new Date().getTime() >= tokenExpirationTime
+  //     ) {
+  //       await refreshToken();
+  //     }
 
-      if (response.status === 403) {
-        console.log(
-          "403 Forbidden: You don't have permission to access this resource."
-        );
-      } else if (!response.ok) {
-        console.error(`HTTP Error: ${response.status} ${response.statusText}`);
-      }
-      const data = await response.json();
-      // console.log("Response data: ", data); // Log the actual response data
-      // console.log("Fetch result: ", data.episodes.items);
-      return data.episodes.items;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  };
+  //     const response = await fetch(
+  //       `https://api.spotify.com/v1/search?q=${searchTerm}&type=episode&limit=50`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Conten-Type": "application/json",
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       }
+  //     );
+
+  //     console.log("Response.status: ", response.status);
+
+  //     if (response.status === 403) {
+  //       console.log(
+  //         "403 Forbidden: You don't have permission to access this resource."
+  //       );
+  //     } else if (!response.ok) {
+  //       console.error(`HTTP Error: ${response.status} ${response.statusText}`);
+  //     }
+  //     const data = await response.json();
+  //     // console.log("Response data: ", data); // Log the actual response data
+  //     // console.log("Fetch result: ", data.episodes.items);
+  //     return data.episodes.items;
+  //   } catch (error) {
+  //     console.error(error);
+  //     return [];
+  //   }
+  // };
 
   // SEARCH SONG FUNCTION:::::::::::::::::::::::::::::
-  const searchSong = async (searchTerm: string) => {
-    try {
-      if (isFirstSearch) {
-        // Refresh tokens only on the first search
-        await refreshTokens();
-        setIsFirstSearch(false); // Set to false after the first search
-      }
-      const accessToken = await getUserData("accessToken");
-      // check if token is valid
-      const tokenExpirationTime = JSON.parse(
-        await getUserData("expirationTime")
-      );
-      if (
-        !accessToken ||
-        !tokenExpirationTime ||
-        new Date().getTime() >= tokenExpirationTime
-      ) {
-        // token is not valid, so it will be refreshed
-        await refreshTokens();
-      }
+  // const searchSong = async (searchTerm: string) => {
+  //   try {
+  //     if (isFirstSearch) {
+  //       // Refresh tokens only on the first search
+  //       await refreshToken();
+  //       setIsFirstSearch(false); // Set to false after the first search
+  //     }
+  //     const accessToken = await getUserData("accessToken");
+  //     // check if token is valid
+  //     const expirationTime = await getUserData("expirationTime");
+  //     let tokenExpirationTime = null;
+  //     if (expirationTime !== null) {
+  //       tokenExpirationTime = JSON.parse(expirationTime);
+  //     }
+  //     // const tokenExpirationTime = JSON.parse(
+  //     //   await getUserData("expirationTime")
+  //     // );
+  //     if (
+  //       !accessToken ||
+  //       !tokenExpirationTime ||
+  //       new Date().getTime() >= tokenExpirationTime
+  //     ) {
+  //       // token is not valid, so it will be refreshed
+  //       await refreshToken();
+  //     }
 
-      // fetch list of results from the search
-      const response = await fetch(
-        `https://api.spotify.com/v1/search?q=${searchTerm}&type=track&limit=50`,
-        {
-          method: "GET",
-          headers: {
-            "Conten-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log("Response.status: ", response.status); //status of the fetch statement
-      const data = await response.json(); // parse response into json format
-      return data.tracks.items;
-    } catch (error) {
-      // console.log("THERE WAS AN ERROR");
-      console.error(error);
-      return [];
-    }
-  };
+  //     // fetch list of results from the search
+  //     const response = await fetch(
+  //       `https://api.spotify.com/v1/search?q=${searchTerm}&type=track&limit=50`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Conten-Type": "application/json",
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       }
+  //     );
+  //     console.log("Response.status: ", response.status); //status of the fetch statement
+  //     const data = await response.json(); // parse response into json format
+  //     return data.tracks.items;
+  //   } catch (error) {
+  //     // console.log("THERE WAS AN ERROR");
+  //     console.error(error);
+  //     return [];
+  //   }
+  // };
 
   // SEARCH FILM AND TVSHOW FUNCTION::::::::::::::::::::
   const searchFilmAndTVShow = async (query: string) => {
@@ -364,7 +379,7 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
                     </TouchableWithoutFeedback>
                   );
                 }}
-                keyExtractor={(media) => media.id}
+                keyExtractor={(media, index) => index.toString()}
               />
             </View>
             {/* Next Modal (Moods/Tags) */}
@@ -377,7 +392,7 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
                   onClose();
                 }}
                 onClose={toggleMoodsTagsModal}
-                selectedMedia={selectedItem}
+                postSelectedMedia={selectedItem}
                 postType={postType}
               />
             )}

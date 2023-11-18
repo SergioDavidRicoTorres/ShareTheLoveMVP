@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "ShareTheLoveMVP",
     "name": "ShareTheLoveMVP",
     "slug": "ShareTheLoveMVP",
     "version": "1.0.0",
@@ -25,6 +26,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e49a9ea5-4a8c-4c93-9c67-66408c04e811"
+      }
     }
   }
 }

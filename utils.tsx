@@ -8,6 +8,7 @@ import {
   FlatList,
 } from "react-native";
 import React from "react";
+// import * as Crypto from 'expo-crypto';
 import { Domain, Mood, PlaylistsMediaItemComponentProps } from "./types";
 // import { Song, FilmOrTVShow, PodcastEpisode } from "./types";
 
@@ -21,7 +22,7 @@ export const getItemSubTitle = (item: any, postType?: string) => {
     case "Song" : {
       return (
         <View style={{ flexDirection: "row" }}>
-          {item.artists.map((artist: any, index: number) => (
+          {item.artists?.map((artist: any, index: number) => (
             <React.Fragment key={index}>
               {/* itemArtistName */}
               {index !== item.artists.length - 1 ? (
@@ -478,7 +479,7 @@ export const getDomainOfTasteScoreIcon = (domain: Domain) => {
     }
   } catch (error) {
     console.error(error);
-    return require("./assets/icons/DefaultIcon.png"); // Replace with your default icon
+    return require("./assets/icon.png"); // Replace with your default icon
   }
 };
 
@@ -497,7 +498,7 @@ export const getPlaylistScoreIcon = (domain: Domain) => {
     }
   } catch (error) {
     console.error(error);
-    return require("./assets/icons/DefaultIcon.png"); // Replace with your default icon
+    return require("./assets/icon.png"); // Replace with your default icon
   }
 };
 
@@ -610,12 +611,12 @@ export const getPlaylistsMediaItemComponent = ({
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent:
-                      post.mediaItem.artists.length > 1
+                      post.mediaItem?.artists?.length > 1
                         ? "flex-start"
                         : "center",
                     maxWidth: normalize(165),
                     overflow: "hidden",
-                    marginHorizontal: normalize(5),
+                    marginHorizontal: normalize(5)
                     //   numberOfLines: 1,
                   }}
                   // keyExtractor={(item) => item.domainId.toString()} // Change this to your key extractor function
@@ -806,6 +807,31 @@ export const getPlaylistsMediaItemComponent = ({
 export const transformMoodsToStringArray = (moods: Mood[]): string[] => {
   return moods.map(mood => mood.name);
 };
+
+// export const generateRandomString = (length: number) => {
+//   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//   const values = Crypto.getRandomValues(new Uint8Array(length));
+//   const returnValue = values.reduce((acc, x) => acc + possible[x % possible.length], "");
+//   console.log ("code_verifier: ", returnValue) ;
+//   return   returnValue;
+// };
+
+// export const generateCodeChallenge = async (codeVerifier: string) => {
+//   try{
+//   const hashed = await Crypto.digestStringAsync(
+//       Crypto.CryptoDigestAlgorithm.SHA256,
+//       codeVerifier,
+//       { encoding: Crypto.CryptoEncoding.BASE64 }
+//   );
+//   const returnValue = hashed.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+//   console.log ("code_challenge: ", returnValue) ;
+//   return returnValue;
+
+// } catch (error) {
+//   console.error("Error at Crypto.digestStringAsync(): ", error); 
+//   return "Error at generateCodeChallenge()"
+// }
+// };
 
 const styles = StyleSheet.create({
   itemSubtitle: {

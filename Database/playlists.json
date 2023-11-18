@@ -36,7 +36,7 @@
         "userId": 0, 
         "domainId": 2,
         "name":"Mundanities",
-        "moods":[{ "id": 125, "name": "On My Way Home", "isSelected": false, "creator": "Share The Love" }, { "id": 125, "name": "Indulging in my emotions", "isSelected": false, "creator": "Share The Love" }, { "id": 127, "name": "Easy to Digest", "isSelected": false, "creator": "Share The Love" }],
+        "moods":[{ "id": 125, "name": "On My Way Home", "isSelected": false, "creator": "Share The Love" }, { "id": 126, "name": "Indulging in my emotions", "isSelected": false, "creator": "Share The Love" }, { "id": 127, "name": "Easy to Digest", "isSelected": false, "creator": "Share The Love" }],
         "score":7.8
     }, 
     {
@@ -44,7 +44,7 @@
         "domainId": 2,
         "name":"Beautiful Science",
         "image":"https://images.ctfassets.net/k3n74unfin40/74p5R8EwRhs2Mu0XBHIcUB/bb5cfe92a57fa4bb08d68e97ebcea89d/cosmos3.jpg",
-        "moods":[{ "id": 128, "name": "Adventure is out there!", "isSelected": false, "creator": "Share The Love" }, { "id": 38, "name": "Mind blown", "isSelected": false, "creator": "Share The Love" }, { "id": 129, "name": "Food for Thought", "isSelected": false, "creator": "Share The Love" }, { "id": 130, "name": "The Sky is the limit", "isSelected": false, "creator": "Share The Love" }, { "id": 65, "name": "Hopeful", "isSelected": false, "creator": "Share The Love" }, { "id": 131, "name": "Exciting", "isSelected": false, "creator": "Share The Love" }, { "id": 129, "name": "Pondering", "isSelected": false, "creator": "Share The Love" }],
+        "moods":[{ "id": 128, "name": "Adventure is out there!", "isSelected": false, "creator": "Share The Love" }, { "id": 38, "name": "Mind blown", "isSelected": false, "creator": "Share The Love" }, { "id": 129, "name": "Food for Thought", "isSelected": false, "creator": "Share The Love" }, { "id": 130, "name": "The Sky is the limit", "isSelected": false, "creator": "Share The Love" }, { "id": 65, "name": "Hopeful", "isSelected": false, "creator": "Share The Love" }, { "id": 131, "name": "Exciting", "isSelected": false, "creator": "Share The Love" }, { "id": 132, "name": "Pondering", "isSelected": false, "creator": "Share The Love" }],
         "score":7.8
     }
 ]

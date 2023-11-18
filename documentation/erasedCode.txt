@@ -688,3 +688,329 @@ const styles = StyleSheet.create({
 });
 
 export default Tabs;
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+AuthorizationSpotify.js: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// ::::::::::::::::: BEGIN AUTHORIZATION CODE FLOW: STEP 1 :::::::::::::::::::::::::::::::::
+// import * as AuthSession from "expo-auth-session";
+import * as AppAuth from "expo-app-auth";
+import { encode as btoa } from "base-64"; // AUTHORIZATION CODE FLOW: STEP 2
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { spotifyCredentials } from "../secrets";
+
+const setUserData = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getUserData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    return value;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+const scopesArr = [
+  "user-modify-playback-state",
+  "user-read-currently-playing",
+  "user-read-playback-state",
+  "user-library-modify",
+  "user-library-read",
+  "playlist-read-private",
+  "playlist-read-collaborative",
+  "playlist-modify-public",
+  "playlist-modify-private",
+  "user-read-recently-played",
+  "user-top-read",
+];
+const scopes = scopesArr.join(" ");
+
+const getAuthorizationCode = async () => {
+  let result;
+  try {
+    const config = {
+      issuer: "https://accounts.spotify.com",
+      scopes: scopesArr,
+      clientId: spotifyCredentials.clientId,
+      redirectUrl: spotifyCredentials.redirectUri,
+      additionalParameters: {
+        show_dialog: "true", // Optional, for example purposes
+      },
+    };
+
+    result = await AppAuth.authAsync(config);
+
+    // The result object will contain authorizationCode in case of success
+    if (result && result.authorizationCode) {
+      return result.authorizationCode;
+    } else {
+      console.error("No authorization code returned");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+import * as AppAuth from "expo-app-auth";
+
+const signInWithSpotify = async () => {
+  try {
+    const authState = await AppAuth.authAsync(spotifyConfig);
+    console.log(authState);
+    // Save the authState (access token, etc.) for making API requests
+  } catch (error) {
+    console.error("Spotify login error", error);
+  }
+};
+
+// const getAuthorizationCode = async () => {
+//   let result;
+//   try {
+//     // const credentials = await getSpotifyCredentials() //we wrote this function above
+//     // const redirectUrl = AuthSession.getRedirectUrl(); //this will be something like https://auth.expo.io/@your-username/your-app-slug
+//     result = await AuthSession.startAsync({
+//       authUrl:
+//         "https://accounts.spotify.com/authorize" +
+//         "?response_type=code" +
+//         `&client_id=${spotifyCredentials.clientId}${
+//           scopes ? `&scope=${encodeURIComponent(scopes)}` : ""
+//         }&redirect_uri=${encodeURIComponent(spotifyCredentials.redirectUri)}`,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//   }
+//   return result.params.code;
+// };
+
+// ::::::::::::::::: END AUTHORIZATION CODE FLOW: STEP 1 :::::::::::::::::::::::::::::::::
+// ::::::::::::::::: BEGIN AUTHORIZATION CODE FLOW: STEP 2 :::::::::::::::::::::::::::::::::
+
+// temporary user
+
+const getTokens = async () => {
+  try {
+    const authorizationCode = await getAuthorizationCode(); // we wrote this function above
+    // const credentials = await getSpotifyCredentials() //we wrote this function above (could also run this outside of the functions and store the credentials in local scope)
+    const credsB64 = btoa(
+      `${spotifyCredentials.clientId}:${spotifyCredentials.clientSecret}`
+    );
+    const response = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${credsB64}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `grant_type=authorization_code&code=${authorizationCode}&redirect_uri=${spotifyCredentials.redirectUri}`,
+    });
+    const responseJson = await response.json();
+    // destructure the response and rename the properties to be in camelCase to satisfy my linter ;)
+    const {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      expires_in: expiresIn,
+    } = responseJson;
+
+    const expirationTime = new Date().getTime() + expiresIn * 1000;
+    await setUserData("accessToken", accessToken);
+    await setUserData("refreshToken", refreshToken);
+    await setUserData("expirationTime", JSON.stringify(expirationTime));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// ::::::::::::::::: END AUTHORIZATION CODE FLOW: STEP 2 :::::::::::::::::::::::::::::::::
+// ::::::::::::::::: BEGIN AUTHORIZATION CODE FLOW: STEP 3 :::::::::::::::::::::::::::::::::
+
+const refreshTokens = async () => {
+  console.log("REFRESH TOKEN");
+  try {
+    // const credentials = await getSpotifyCredentials(); //we wrote this function above
+    const credsB64 = btoa(
+      `${spotifyCredentials.clientId}:${spotifyCredentials.clientSecret}`
+    );
+    const refreshToken = await getUserData("refreshToken");
+    const response = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${credsB64}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
+    });
+    const responseJson = await response.json();
+    if (responseJson.error) {
+      await getTokens();
+    } else {
+      const {
+        access_token: newAccessToken,
+        refresh_token: newRefreshToken,
+        expires_in: expiresIn,
+      } = responseJson;
+
+      const expirationTime = new Date().getTime() + expiresIn * 1000;
+      await setUserData("accessToken", newAccessToken);
+      if (newRefreshToken) {
+        await setUserData("refreshToken", newRefreshToken);
+      }
+      await setUserData("expirationTime", JSON.stringify(expirationTime));
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+// ::::::::::::::::: END AUTHORIZATION CODE FLOW: STEP 3 :::::::::::::::::::::::::::::::::
+
+export {
+  setUserData,
+  getUserData,
+  getAuthorizationCode,
+  getTokens,
+  refreshTokens,
+};
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+SpotifyAuthentificationComponent.ts: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+import React, { useEffect, useState } from 'react';
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
+import { spotifyCredentials } from '../secrets';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { AuthNavigationProp, MainNavigationProp, SpotifyAuthComponentProp } from '../types';
+import { normalize } from '../utils';
+import { Image, Text } from 'react-native';
+import { generateRandomString, generateCodeChallenge } from '../utils';
+
+
+WebBrowser.maybeCompleteAuthSession();
+
+const spotifyDiscovery = {
+    authorizationEndpoint: 'https://accounts.spotify.com/authorize',
+    tokenEndpoint: 'https://accounts.spotify.com/api/token',
+  };
+
+export const SpotifyAuthComponent = ({authType}: SpotifyAuthComponentProp) => {
+    const navigation = useNavigation<AuthNavigationProp>();
+    const mainNavigation = useNavigation<MainNavigationProp>();
+    const [codeVerifier, setCodeVerifier] = useState('');
+    const [codeChallenge, setCodeChallenge] = useState('');
+    
+    
+    useEffect(() => {
+        const initAuth = async () => {
+            const verifier = generateRandomString(64);
+            const challenge = await generateCodeChallenge(verifier);
+            setCodeVerifier(verifier);
+            setCodeChallenge(challenge);
+            // await AsyncStorage.setItem('codeVerifier', codeVerifier);
+        };
+    
+        initAuth();
+    }, []);
+    
+
+    const [request, response, promptAsync] = AuthSession.useAuthRequest({
+        clientId: spotifyCredentials.clientId,
+        redirectUri: spotifyCredentials.redirectUri,
+        scopes: ['user-read-email', 'playlist-modify-public'], // Add other scopes as needed
+        usePKCE: true,
+        codeChallenge: codeChallenge, // Assuming you have a function to generate this
+        codeChallengeMethod: AuthSession.CodeChallengeMethod.S256,
+        // Additional configuration if needed
+    }, spotifyDiscovery);
+    
+
+    useEffect(() => {
+        const exchangeCodeForToken = async (code: string) => {
+            // Exchange the authorization code for an access token
+        try {
+            const tokenResponse = await AuthSession.exchangeCodeAsync({
+                code: code,
+                clientId: spotifyCredentials.clientId,
+                redirectUri: spotifyCredentials.redirectUri,
+                // code: codeVerifier,
+                extraParams: {
+                   code_verifier: codeVerifier
+                },
+            }, spotifyDiscovery);
+            console.log("WE'RE GETTING THIS FAR!!!");
+            
+            console.log("Token Response", tokenResponse);
+            
+            if (tokenResponse.accessToken) {
+                await AsyncStorage.setItem('accessToken', tokenResponse.accessToken);
+                if (tokenResponse.expiresIn == null) {
+                    throw new Error("tokenResponse.expiresIn was not found");
+                }
+                const expirationDate = new Date(new Date().getTime() + tokenResponse.expiresIn * 1000).getTime();
+                await AsyncStorage.setItem('expirationDate', expirationDate.toString());
+                if (tokenResponse.refreshToken) {
+                    await AsyncStorage.setItem('refreshToken', tokenResponse.refreshToken);
+                }
+            }
+        } catch (error) {
+            console.error("Error at AuthSession.exchangeCodeAsync(): ", error); 
+        }
+        };
+
+        if (response?.type === 'success') {
+            console.log("WE'RE GETTING HERE!!");
+            console.log("response.params.code: ", response.params.code)
+            exchangeCodeForToken(response.params.code);
+        }
+    }, [response]);
+
+    return (
+        <TouchableOpacity
+        disabled={!request}
+        onPress={() => {
+            promptAsync()
+            .then(() => {
+                if (authType === "Sign Up") {
+                    navigation.navigate("SignUpEndScreen");
+                } else {
+                    mainNavigation.navigate("Tabs");
+                }
+            })
+            .catch((error) => {
+                console.error("Error during authorization:", error);
+            });
+        }}
+            style={{
+              paddingHorizontal: normalize(15),
+              paddingVertical: normalize(5),
+              justifyContent: "center",
+              alignItems: "center",
+              gap: normalize(10),
+              borderRadius: normalize(20),
+              backgroundColor: "rgba(29, 185, 84, 1)",
+              flexDirection: "row",
+              marginTop: normalize(90),
+              bottom: normalize (34),
+            }}
+          >
+            <Image
+              style={{ width: 35, height: 35 }}
+              source={require("./assets/icons/SpotifyIcon.png")}
+            />
+            <Text
+              style={{
+                color: "white",
+                fontSize: normalize(20),
+                fontWeight: "800",
+                // letterSpacing: -1,
+              }}
+            >
+              Link with Spotify
+            </Text>
+          </TouchableOpacity>
+    );
+};

@@ -9,6 +9,7 @@ import {
   Text,
 } from "react-native";
 import { useState } from "react";
+import * as AuthSession from 'expo-auth-session';
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import AuthOptions from "../components/AuthOptions";
@@ -18,6 +19,8 @@ const { width } = Dimensions.get("window"); // Window Dimensions
 const normalize = (value: number) => width * (value / 390);
 
 export default function Auth() {
+  const redirectUri = AuthSession.makeRedirectUri();
+  console.log("redirectUri", redirectUri);
   const navigation = useNavigation<AuthNavigationProp>();
   const [authType, setAuthType] = useState("");
   const [isAuthOptionsModalVisible, setIsAuthOptionsModalVisible] =
