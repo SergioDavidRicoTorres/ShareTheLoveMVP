@@ -40,24 +40,55 @@ function AddPlaylist({
   postInsertedCaption
 }: AddPlaylistProps) {
   
-  // search states (input, results)
-  const allMoodsObject: MoodsAndTagsCatalogue = {"AllMoods": [{
-    "categoryId": 0, 
-    "name": "AllMoods",
-    "moodsTagsList": getAllMoodsAndTagsArray()
-  }]}
-  const allMoods: Mood[] = getAllMoodsAndTagsArray();
-  getAllMoodsAndTagsArray();;
   const [playlistTitle, setPlaylistTitle] = useState("");
   const handleTitleChange = (value: string) => {
     setPlaylistTitle(value);
   };
   const [hasCover, setHasCover] = useState(false);
-  // select Item state
-  // Initialize selectedMoodsTags with initially selected moods
+  // console.log("[postSelectedMoodsTags]: ", postSelectedMoodsTags)
+  
+  // const allMoodsObject: MoodsAndTagsCatalogue = {"AllMoods": [{
+  //   "categoryId": 0, 
+  //   "name": "AllMoods",
+  //   "moodsTagsList": allMoods
+  // }]}
+
+  
+  // search states (input, results)
+  const allMoods = getAllMoodsAndTagsArray();
+  const [allMoodsObject, setAllMoodsObject] = useState({
+    "AllMoods": [{
+      "categoryId": 0, 
+      "name": "AllMoods",
+      "moodsTagsList": allMoods
+    }]
+  });
+
+  const resetMoodsSelection = () => {
+    setAllMoodsObject(prevState => {
+      const updatedMoods = prevState.AllMoods[0].moodsTagsList.map(mood => ({
+        ...mood,
+        isSelected: false
+      }));
+
+      return {
+        ...prevState,
+        AllMoods: [
+          { ...prevState.AllMoods[0], moodsTagsList: updatedMoods }
+        ]
+      };
+    });
+  };
+
+  // Call resetMoodsSelection to set all moods isSelected to false
+  useEffect(() => {
+    resetMoodsSelection();
+  }, []);
+
+  
   const getInitiallySelectedMoods = () => {
     const initiallySelectedMoods = [];
-    for (const mood of allMoods) {
+    for (const mood of allMoodsObject.AllMoods[0].moodsTagsList) {
       if (mood.isSelected) {
         initiallySelectedMoods.push(mood);
       }
@@ -66,38 +97,64 @@ function AddPlaylist({
   };
   const [selectedMoodsTags, setselectedMoodsTags] = useState(
     getInitiallySelectedMoods()
-  );
-  const [isAnyElementSelected, setIsAnyElementSelected] = useState(false);
+    );
+    
+    const [isAddMoodModalVisible, setIsAddMoodModalVisible] = useState(false);
+    // Optional Modal show Function
+    const toggleAddMoodModal = () => {
+      setIsAddMoodModalVisible(!isAddMoodModalVisible);
+    };
+    //---------------------------------------------------------------------------------
+    // ----------------------- OPTIONAL MODAL (AddMood) ----------------------------
+    //---------------------------------------------------------------------------------
+    
+    // const handleElementSelection = (itemId: number) => {
+    //   const modifiedData = [...allMoodsObject.AllMoods[0].moodsTagsList];
+      
+    //   // Toggle the isSelected attribute of the selected element
+    //   modifiedData[itemId].isSelected =
+    //   !modifiedData[itemId].isSelected;
+      
+    //   // Update the selectedMoodsTags array based on the isSelected attribute
+    //   // const updatedselectedMoodsTags = allMoodsObject.AllMoods[0].moodsTagsList.filter((item) => item.isSelected);
+    //   const updatedselectedMoodsTags = [...selectedMoodsTags, modifiedData[itemId]];
 
-  const [isAddMoodModalVisible, setIsAddMoodModalVisible] = useState(false);
-  // Optional Modal show Function
-  const toggleAddMoodModal = () => {
-    setIsAddMoodModalVisible(!isAddMoodModalVisible);
-  };
-  //---------------------------------------------------------------------------------
-  // ----------------------- OPTIONAL MODAL (AddMood) ----------------------------
-  //---------------------------------------------------------------------------------
-
-  const handleElementSelection = (itemId: number) => {
-    const modifiedData = [...allMoods];
-
-    // Toggle the isSelected attribute of the selected element
-    modifiedData[itemId].isSelected =
-      !modifiedData[itemId].isSelected;
-
-    // Update the selectedMoodsTags array based on the isSelected attribute
-    const updatedselectedMoodsTags = allMoods.filter((item) => item.isSelected);
-
-    // const updatedselectedMoodsTags = modifiedData.reduce((acc, category) => {
-    //   const selectedItems = category.list.filter((item) => item.isSelected);
-    //   return [...acc, ...selectedItems];
-    // }, []);
-
-    setselectedMoodsTags(updatedselectedMoodsTags);
-  };
-
-  return (
-    <View style={{ flex: 1 }}>
+    //   // console.log("[updatedselectedMoodsTags]", updatedselectedMoodsTags);
+      
+    //   // const updatedselectedMoodsTags = modifiedData.reduce((acc, category) => {
+    //     //   const selectedItems = category.list.filter((item) => item.isSelected);
+    //     //   return [...acc, ...selectedItems];
+    //     // }, []);
+        
+    //     setselectedMoodsTags(updatedselectedMoodsTags);
+    //   };
+    const handleElementSelection = (itemId: number) => {
+      // Copy and modify the moodsTagsList
+      const modifiedData = allMoodsObject.AllMoods[0].moodsTagsList.map((mood, index) => {
+        if (index === itemId) {
+          return { ...mood, isSelected: !mood.isSelected };
+        }
+        return mood;
+      });
+    
+      // Update the allMoodsObject state
+      setAllMoodsObject(prevState => ({
+        ...prevState,
+        AllMoods: [
+          { ...prevState.AllMoods[0], moodsTagsList: modifiedData }
+        ]
+      }));
+    
+      // Update the selectedMoodsTags array based on the isSelected attribute
+      const updatedselectedMoodsTags = modifiedData.filter(mood => mood.isSelected);
+    
+      // Update the selectedMoodsTags state
+      setselectedMoodsTags(updatedselectedMoodsTags);
+    };
+      console.log("[selectedMoodsTags]: ", selectedMoodsTags)
+      console.log("[selectedMoodsTags.length]: ", selectedMoodsTags.length)
+      return (
+        <View style={{ flex: 1 }}>
       {/* Modal(MoodsTags) */}
       <Modal visible={visible} animationType="slide" transparent>
         {/* Modal Container */}
@@ -106,7 +163,7 @@ function AddPlaylist({
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
             style={styles.backgroundGradient}
-          >
+            >
             {/* Modal Content */}
             <View style={styles.modalContent}>
               {/* <TouchableOpacity> */}
@@ -261,7 +318,7 @@ function AddPlaylist({
                   How does it make you feel:
                 </Text>
                 <FlatList
-                  data={allMoods}
+                  data={allMoodsObject.AllMoods}
                   horizontal
                   renderItem={({ item: category, index: categoryIndex }) => (
                     <View 
@@ -277,7 +334,7 @@ function AddPlaylist({
                         numColumns={Math.ceil(
                           getCarouselNumColumns(allMoods.length)
                         )}
-                        data={allMoods}
+                        data={category.moodsTagsList}
                         style={{ paddingTop: normalize(10) }}
                         renderItem={({ item, index: itemIndex }) => {
                           // 
@@ -326,7 +383,7 @@ function AddPlaylist({
                       />
                     </View>
                   )}
-                  keyExtractor={(category) => category.id.toString()}
+                  keyExtractor={(category, index) => index.toString()}
                 />
                 <TouchableOpacity
                   onPress={() => {

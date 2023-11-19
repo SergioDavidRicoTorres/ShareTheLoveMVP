@@ -390,7 +390,7 @@ function SearchPlaylist({
                     </TouchableWithoutFeedback>
                   );
                 }}
-                keyExtractor={(index) => index.toString()}
+                keyExtractor={(playlist, index) => index.toString()}
               />
             </View>
             {isAddPlaylistModalVisible && (

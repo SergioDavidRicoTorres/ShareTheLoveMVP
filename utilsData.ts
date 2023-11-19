@@ -37,7 +37,9 @@ export const getDomainsPlaylistsData = (userId: number, domainId?: number) => {
       return [];
     }
     // console.log("DOMAINID: ", domainId); 
-    return PLAYLISTS.filter(playlist => playlist.userId === userId && playlist.domainId === domainId);
+    const filteredPlaylists = PLAYLISTS.filter(playlist => playlist.userId === userId && playlist.domainId === domainId);
+    // console.log("[filteredPlaylists]: ", filteredPlaylists); 
+    return filteredPlaylists; 
   }
   
 
@@ -130,6 +132,7 @@ export const getAllMoodsAndTagsArray = () =>{
     allMoods = allMoods.concat(getAllMusicMoodAndTags());
     allMoods = allMoods.concat(getAllFilmsTVShowsMoodAndTags()); 
     allMoods = allMoods.concat(getAllPodcastsEpisodesMoodAndTags());
+    // console.log(allMoods)
     return allMoods; 
 }
 
@@ -173,9 +176,7 @@ export const searchPodcastEpisode = async (searchName: string) => {
       );
       console.log("Response.status: ", response.status);
       const data = await response.json();
-      console.log("[DATA]: ", data);
-
-      console.log("[DATA]: ", data.tracks.items)
+    //   console.log("[DATA]: ", data.tracks.items)
       return data.tracks.items;
     } catch (error) {
       console.error(error);
