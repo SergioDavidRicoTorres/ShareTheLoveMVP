@@ -26,20 +26,25 @@ import {
   getItemSubTitle,
   getItemImage,
   getItemTitle,
-  normalize
+  normalize,
+  getMoodTextColor,
+  getMoodContainerColor
 } from "../../utils";
 import { searchSong, searchPodcastEpisode } from "../../utilsData";
 import { SearchMediaProps } from "../../types";
 import { checkTokenValidity } from "../../AuthorizationSpotify";
+import { sharedStyles } from "../../sharedStyles";
 
 // const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
-function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
-  useEffect(() => {
-    checkTokenValidity();
-  }, [])
+function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps) {
   // Media Search Input (string):
+  useEffect(() => {
+    if (visible) {
+      checkTokenValidity();
+    }
+  }, [visible]);
   const [searchInput, setSearchInput] = useState("");
   // Media Search Results (array):
   const [searchResults, setSearchResults] = useState([]);
@@ -230,7 +235,10 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
           {/* Modal Background Gradient */}
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
-            style={styles.backgroundGradient}
+            style={{...styles.backgroundGradient, 
+            borderColor: getButtonsAccentColor(postType),
+            borderWidth: normalize(3), 
+            }}
           >
             {/* Modal Content */}
             <View style={styles.modalContent}>
@@ -260,7 +268,9 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
                 >
                   <View
                     // achievedProgressState(1.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // followingProgressState(2.)
@@ -295,6 +305,8 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
                 style={{
                   ...styles.searchContainer,
                   backgroundColor: getSearchBarColor(postType),
+                  borderColor: getMoodContainerColor(postType),
+                  borderWidth: normalize(3), 
                 }}
               >
                 <Image
@@ -347,13 +359,17 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
                         style={[
                           !isSelected
                             ? styles.searchResultItemContainer
-                            : styles.selectedSearchResultItemContainer, // Change style if selected
+                            : {... sharedStyles.selectedMediaItemContainer,
+                              backgroundColor: getMoodContainerColor(postType),
+                              borderColor: getMoodContainerColor(postType),
+                              borderWidth: normalize(3), 
+                            }, // Change style if selected
                         ]}
                       >
-                        {getItemImage(item, postType) && (
+                        {getItemImage(item, domainId) && (
                           <Image
                             // searchResultItemImage
-                            source={getItemImage(item, postType)}
+                            source={getItemImage(item, domainId)}
                             style={{
                               width: normalize(50),
                               height: normalize(50),
@@ -371,9 +387,9 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
                             numberOfLines={1}
                             style={styles.searchResultItemText}
                           >
-                            {getItemTitle(item, postType)}
+                            {getItemTitle(item, domainId)}
                           </Text>
-                          {getItemSubTitle(item, postType)}
+                          {getItemSubTitle(item, domainId)}
                         </View>
                       </View>
                     </TouchableWithoutFeedback>
@@ -394,6 +410,7 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
                 onClose={toggleMoodsTagsModal}
                 postSelectedMedia={selectedItem}
                 postType={postType}
+                domainId={domainId}
               />
             )}
           </LinearGradient>
@@ -408,7 +425,9 @@ function SearchMedia({ visible, onClose, postType }: SearchMediaProps) {
             <TouchableOpacity
               style={{
                 ...styles.touchableChooseButtonContainer,
-                backgroundColor: getButtonsAccentColor(postType),
+                backgroundColor: getGradientsFirstColor(postType),
+                borderColor: getButtonsAccentColor(postType),
+                borderWidth: normalize(4), 
                 shadowColor: getButtonsAccentColor(postType),
               }}
               onPress={() => {
@@ -452,10 +471,6 @@ const styles = StyleSheet.create({
     gap: normalize(20),
     marginTop: normalize(10),
   },
-  // backButtonImage: {
-  //   width: normalize(14),
-  //   height: normalize(23),
-  // },
   progressTrackerContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -465,7 +480,7 @@ const styles = StyleSheet.create({
   achievedProgressState: {
     width: normalize(50),
     height: normalize(7),
-    backgroundColor: "rgba(105, 51, 172, 0.79)",
+    // backgroundColor: "rgba(105, 51, 172, 0.79)",
     borderRadius: normalize(30),
   },
   followingProgressState: {
@@ -522,12 +537,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(10),
     marginTop: normalize(12),
   },
-  // searchIcon: {
-  //   width: normalize(20),
-  //   height: normalize(20),
-  //   top: normalize(5),
-  //   marginRight: normalize(5),
-  // },
   searchInput: {
     color: "white",
     marginRight: normalize(25),
@@ -554,20 +563,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "rgba(203, 203, 203, 0.5)",
   },
-  selectedSearchResultItemContainer: {
-    width: normalize(339),
-    height: normalize(50),
-    borderRadius: normalize(6),
-    flexDirection: "row",
-    backgroundColor: "rgba(84, 42, 146, 1)",
-    shadowColor: "#6933AC",
-    shadowOffset: {
-      width: 0,
-      height: normalize(4),
-    },
-    shadowOpacity: normalize(1),
-    shadowRadius: normalize(20),
-  },
+  // selectedMediaItemContainer: {
+  //   width: normalize(339),
+  //   paddingVertical: 0,
+  //   borderRadius: normalize(6),
+  //   flexDirection: "row",
+  // },
   searchResultItemImage: {
     width: normalize(50),
     height: normalize(50),

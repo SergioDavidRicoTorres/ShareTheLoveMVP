@@ -17,10 +17,14 @@ import { LinearGradient } from "expo-linear-gradient";
 // import { useRoute } from "@react-navigation/native";
 import { normalize } from "../utils";
 import { AuthEmailPasswordScreenRouteProp, AuthNavigationProp, MainNavigationProp } from "../types";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { authenticateSpotify } from "../AuthorizationSpotify";
 import { SpotifyAuthComponent } from "../SpotifyAuthComponent";
+// import { initializeApp } from "firebase/app";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { FIREBASE_AUTH } from "../firebaseConfig";
+// import {firebaseApp} from "../App";
 
-// import { getAuth } from "firebase/auth";
 // import { firebaseApp } from "../App"; // Ensure the path matches your file structure
 
 //---------- REACT NATIVE FIREBASE ----------------------
@@ -30,47 +34,71 @@ import { SpotifyAuthComponent } from "../SpotifyAuthComponent";
 
 // const auth = getAuth(firebaseApp);
 
-// // Example: Sign up with email and password
-// const signUpWithEmailAndPassword = async (email, password) => {
-//   try {
-//     // Create a new user with email and password
-//     const userCredential = await auth.createUserWithEmailAndPassword(
-//       email,
-//       password
-//     );
-//     const user = userCredential.user;
-
-//     // Add user information to Firestore (replace 'users' with your collection name)
-//     await firestore.collection("users").doc(user.uid).set({
-//       email: user.email,
-//       // Additional user data can be added here
-//     });
-
-//     console.log("Signed up and logged in as:", user.email);
-//   } catch (error) {
-//     console.error("Error signing up:", error);
-//   }
-// };
 
 // // Example: Sign in with email/password
 // const signInWithEmailAndPassword = async (email, password) => {
-//   try {
-//     const userCredential = await auth.signInWithEmailAndPassword(
-//       email,
-//       password
-//     );
-//     const user = userCredential.user;
-//     console.log("Signed in as:", user.email);
-//   } catch (error) {
-//     console.error("Error signing in:", error);
-//   }
-// };
+  //   try {
+    //     const userCredential = await auth.signInWithEmailAndPassword(
+      //       email,
+      //       password
+      //     );
+      //     const user = userCredential.user;
+      //     console.log("Signed in as:", user.email);
+      //   } catch (error) {
+        //     console.error("Error signing in:", error);
+        //   }
+        // };
+        // const firebaseApp = initializeApp(firebaseConfig);
+        
+        // const auth = getAuth(firebaseApp);
+        // Example: Sign up with email and password
 
-const { width } = Dimensions.get("window"); // Window Dimensions
+        const signInEmailAndPassword = async (email: string, password: string) => {
+          try {
+            const userCredential = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
+            const user = userCredential.user;
+            
+            // User is successfully signed in
+            // ...
+            console.log("User has succesfully signed is!!: ")
+            console.log("[user.displayName]: ", user.displayName, ", [user.uid]: ", user.uid)
+
+            AsyncStorage.setItem("uid", user.uid); 
+            return true; 
+          } catch (error: any) {
+            console.log("ERROR at signInEmailAndPassword!")
+            console.error("Error.code: ", error.code)
+            console.error("Error.message: ", error.message)
+            return false;
+
+          }
+        }
+
+        const signUpEmailAndPassword = async (email: string, password: string) => {
+          try {
+            const userCredential = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+            const user = userCredential.user;
+            
+            // User is successfully signed up
+            // ...
+            console.log("User is succesfully signed up!!: ")
+            console.log("[user.displayName]: ", user.displayName, ", [user.uid]: ", user.uid)
+            AsyncStorage.setItem("uid", user.uid); 
+            return true; 
+          } catch (error: any) {
+            console.log("ERROR at signUpEmailAndPassword!")
+            console.error("Error.code: ", error.code)
+            console.error("Error.message: ", error.message)
+            return false;
+
+          }
+        };
+        
+// const { width } = Dimensions.get("window"); // Window Dimensions
 //const normalize = (value) => width * (value / 390);
 // modalHeaderContainer
-const modalHeaderContainerGap = width * 0.051;
-const modalHeaderContainerMarginTop = width * 0.026;
+// const modalHeaderContainerGap = width * 0.051;
+// const modalHeaderContainerMarginTop = width * 0.026;
 
 const AuthEmailPassword = () => {
   const navigation = useNavigation<AuthNavigationProp>();
@@ -80,10 +108,80 @@ const AuthEmailPassword = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(true);
+  const [isEmailPasswordAuthDone, setIsEmailPasswordAuthDone] = useState(false); 
+  const getAuthOrSpotifyButton = (isFirebaseAuthDone: boolean, hasEnteredRequiredInfo: boolean, authType: string) => {
+    if (isFirebaseAuthDone) {
+      return (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+          }}
+        >
+          <SpotifyAuthComponent authType={authType} />
+        </View>
+      );
+    } else if (hasEnteredRequiredInfo){
+      return (
+        <TouchableOpacity
+              onPress={handleButtonPress}
+              style={{
+                paddingHorizontal: normalize(25),
+                paddingVertical: normalize(8),
+                justifyContent: "center",
+                alignItems: "center",
+                gap: normalize(10),
+                borderRadius: normalize(15),
+                backgroundColor: "rgba(156, 75, 255, 1)",
+                flexDirection: "row",
+                marginTop: normalize(395),
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: normalize(20),
+                  fontWeight: "800",
+                  // letterSpacing: -1,
+                }}
+              >
+                {authType}
+              </Text>
+            </TouchableOpacity>
+      );
+    } else {
+      return (
+        <View
+            style={{
+              paddingHorizontal: normalize(25),
+              paddingVertical: normalize(8),
+              justifyContent: "center",
+              alignItems: "center",
+              gap: normalize(10),
+              borderRadius: normalize(15),
+              backgroundColor: "rgba(203, 203, 203, 0.5)",
+              flexDirection: "row",
+              marginTop: normalize(395),
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: normalize(20),
+                fontWeight: "800",
+                // letterSpacing: -1,
+              }}
+            >
+              {authType}
+            </Text>
+          </View>
+      );
+    }
+  }
 
   // const [errorMessage, setErrorMessage] = useState(null);
 
-  // const signUpWithEmailAndPassword = async (userEmail, userPassword) => {
+  // const signUpEmailAndPassword = async (userEmail, userPassword) => {
   //   try {
   //     const userCredential = await auth.createUserWithEmailAndPassword(
   //       userEmail,
@@ -109,22 +207,30 @@ const AuthEmailPassword = () => {
   //   }
   // };
 
-  // const handleButtonPress = async () => {
-  //   try {
-  //     if (authType === "Sign Up") {
-  //       // await signUpWithEmailAndPassword(email, password);
-  //       navigation.navigate("SignUpPersonalInfoScreen");
-  //     } else {
-  //       // await signInWithEmailAndPassword(email, password);
-  //       authenticateSpotify();
-  //       mainNavigation.navigate("Tabs");
-  //     }
-  //   } catch (error) {
-  //     // Handle authentication error
-  //     // setErrorMessage(error.message); // Set an error message to display to the user
-  //     console.error("Authentication error:", error);
-  //   }
-  // };
+  const handleButtonPress = async () => {
+    try {
+      if (authType === "Sign Up") {
+        const signUpSuccess = await signUpEmailAndPassword(email, password);
+        if (signUpSuccess) {
+          setIsEmailPasswordAuthDone(true);
+        }
+        // if (signUpSuccess) console.log(signUpSuccess)
+        // navigation.navigate("SignUpPersonalInfoScreen");
+      } else {
+        const signInSuccess = await signInEmailAndPassword(email, password);
+        if (signInSuccess) {
+          setIsEmailPasswordAuthDone(true);
+          // mainNavigation.navigate("Tabs");
+        }
+      } 
+      if (password.length < 6) {
+
+        Alert.alert('Invalid Password', 'The entered password is too short, it has to be at least 6 characters long.');
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+    }
+  };
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
@@ -140,7 +246,7 @@ const AuthEmailPassword = () => {
             justifyContent: "center",
             alignItems: "center",
             gap: normalize(266),
-            marginTop: modalHeaderContainerMarginTop,
+            marginTop: normalize(10),
           }}
         >
           <TouchableOpacity
@@ -304,9 +410,23 @@ const AuthEmailPassword = () => {
               />
             </TouchableOpacity>
           </View>
+          {authType === "Sign Up" && 
+          <Text
+            style={{
+              color: "rgba(177, 114, 254, 1)", 
+              textAlign: "center",
+              fontSize: normalize(15), 
+              fontWeight: "700",
+              marginTop: normalize(8),
+              alignSelf: "flex-start",
+              left: normalize (20)
+            }}
+          >
+          *at least 6 characters long
+          </Text>}
         </View>
-{/* 
-        {email !== "" && password !== "" ? (
+        {getAuthOrSpotifyButton(isEmailPasswordAuthDone, (email !== "" && password !== ""), authType)}
+        {/* {email !== "" && password !== "" ? (
           <>
             <TouchableOpacity
               onPress={handleButtonPress}
@@ -359,9 +479,9 @@ const AuthEmailPassword = () => {
               Verify my email
             </Text>
           </View>
-        )}
-         */}
-        <View
+        )} */}
+        
+        {/* <View
           style={{
             position: "absolute",
             bottom: 0,
@@ -401,7 +521,7 @@ const AuthEmailPassword = () => {
             </Text>
           </View>
         )}
-        </View>
+        </View> */}
       </SafeAreaView>
     </LinearGradient>
   );

@@ -11,10 +11,10 @@ import {
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 // import { getCurrentUserData } from "../UserData";
 import Settings from "../components/Settings";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Carousel from "react-native-snap-carousel";
 import {
   getDomainOfTasteScoreIcon,
@@ -26,18 +26,50 @@ import {
 } from "../utils";
 import { DOMAINPOSTTYPE } from "../constants";
 import { normalize } from "../utils";
-import { ProfileNavigationProp, User } from "../types";
-import { getUserData, getDomainsPlaylistsData, getUsersDomains } from "../utilsData";
+import { Domain, ProfileContentNavigationProp, ProfileNavigationProp, ProfileScreenRouteProp, User } from "../types";
+import { getUsersDomains, DEFAULT_USER } from "../utilsData";
+import { FIREBASE_AUTH } from "../firebaseConfig";
+import AddPlaylist from "../components/AddPostComponents/AddPlaylist";
+import DomainOfTasteCard from "../components/DomainOfTasteCard";
+import { fetchUserById } from "../utilsFirebase";
+import { useCurrentUser } from "../CurrentUserContext";
+
 
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
-const userId: number = 0;//getCurrentUserId();
-const user: User = getUserData(userId);
-const domainsArray = getUsersDomains(user); 
 
-export default function ProfileScreen({}) {
-  const navigation = useNavigation<ProfileNavigationProp>();
+export default function ProfileScreen() {
+  const route = useRoute<ProfileScreenRouteProp>();
+  // const selectedUserId = route.params?.selectedUserId;
+  // const { selectedUserId } = route.params;
+  // const [userId, setUserId] = useState<string>("")
+  // const userId: string = selectedUserId !== undefined ?  selectedUserId : (FIREBASE_AUTH.currentUser?.uid || "defaultUserId");
+  // const [user, setUser] = useState<User>(DEFAULT_USER); // State to store the user data
+  const { currentUser, setCurrentUser } = useCurrentUser();
+  if (!currentUser) {
+    // Handle the case where currentUser is null
+    // This could be a loading indicator, a message, or a redirect
+    return <div>Loading user data...</div>;
+  }
+  const userId = currentUser?.userId;
+  if (!userId) {
+    // Handle the case where currentUser is null
+    // This could be a loading indicator, a message, or a redirect
+    return <div>Loading userId...</div>;
+  }
+  const [domainsArray, setDomainsArray] = useState<Domain[]> ([]);
+  // const user: User = getUserDataById(userId);
+//   useEffect(() => {
+//     console.log(getUsersDomains(user));
+//     if (user) {
+//         setDomainsArray(getUsersDomains(user));
+//     }
+// }, [user]); 
+  const navigation = useNavigation();
+  // const profileNavigation = useNavigation<ProfileNavigationProp>();
+  // const profileContentNavigation = useNavigation<ProfileContentNavigationProp>();
+  
 
   // Optional Modal Boolean State
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
@@ -45,6 +77,64 @@ export default function ProfileScreen({}) {
   const toggleSettingsModal = () => {
     setIsSettingsModalVisible(!isSettingsModalVisible);
   };
+
+  // Optional Modal Visible State
+  const [isAddPlaylistModalVisible, setIsAddPlaylistModalVisible] =
+  useState(false);
+  // Optional Modal Show Function
+  const toggleAddPlaylistModal = () => {
+    setIsAddPlaylistModalVisible(!isAddPlaylistModalVisible);
+  };
+
+  // useEffect(() => {
+  //   const getUserDataById = async () => {
+  //     try {
+  //       const user: User | null = await fetchUserById(userId);
+  //       if (user) {
+  //         // User is found
+  //         console.log(user);
+  //         setUser(user);
+  //       } else {
+  //         // User is not found, throw an error
+  //         throw new Error('User not found');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching user:', error);
+  //       throw error; // Re-throw the error to be handled by the caller
+  //     }
+  //   };
+
+  //   getUserDataById();
+    
+  // }, [userId]); // The useEffect hook will run when the userId changes
+
+  useEffect(() => {
+    const getUserDataAndDomains = async () => {
+      try {
+        // Fetch user data
+        // console.log("###################### USER #########################")
+        // console.log(user);
+        // const user: User | null = await fetchUserById(userId);
+        if (currentUser !== null) {
+          // setUser(user); // Set the user
+          
+          // Now get domains
+          // console.log(":::::::::::::::::::: USER'S DOMAINS:::::::::::::::::")
+          // console.log(getUsersDomains(user));
+          setDomainsArray(getUsersDomains(currentUser));
+        } else {
+          setCurrentUser(DEFAULT_USER);
+          throw new Error('User not found');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
+    if (userId) {
+      getUserDataAndDomains();
+    }
+  }, [route]); // Depends on userId
 
   return (
     <LinearGradient
@@ -61,7 +151,7 @@ export default function ProfileScreen({}) {
                 fontWeight: "700",
               }}
             >
-              @abel
+              {currentUser.name}
             </Text>
             <View
               style={{
@@ -80,7 +170,7 @@ export default function ProfileScreen({}) {
                     letterSpacing: -1,
                   }}
                 >
-                  17.5K
+                  {currentUser.followersCount}
                 </Text>
                 <Text
                   style={{
@@ -99,8 +189,8 @@ export default function ProfileScreen({}) {
                   height: normalize(140),
                   width: normalize(140),
                   borderRadius: normalize(100),
-                  backgroundColor: "rgba(255, 184, 0, 1)",
-                  shadowColor: "rgba(255, 184, 0, 1)",
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  shadowColor: "rgba(156, 75, 255, 1)",
                   shadowOffset: {
                     width: 0,
                     height: 0,
@@ -115,11 +205,11 @@ export default function ProfileScreen({}) {
                     height: normalize(140),
                     width: normalize(140),
                     borderRadius: normalize(100),
-                    borderColor: "rgba(255, 184, 0, 1)",
+                    borderColor: "rgba(156, 75, 255, 1)",
                     borderWidth: normalize(4),
                   }}
                   source={{
-                    uri: user.profilePicture,
+                    uri: currentUser.profilePicture,
                   }}
                 />
               </View>
@@ -132,7 +222,7 @@ export default function ProfileScreen({}) {
                     letterSpacing: -1,
                   }}
                 >
-                  2K
+                  {currentUser.followingCount}
                 </Text>
                 <Text
                   style={{
@@ -161,7 +251,9 @@ export default function ProfileScreen({}) {
                   borderRadius: normalize(15),
                   justifyContent: "center",
                   alignItems: "center",
-                  backgroundColor: "rgba(255, 184, 0, 1)",
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  // borderColor: "rgba(58, 17, 90, 1)",
+                  // borderWidth: normalize(5)
                 }}
               >
                 <Text
@@ -209,7 +301,7 @@ export default function ProfileScreen({}) {
                     fontWeight: "700",
                   }}
                 >
-                  Abel Tesfaye
+                  @{currentUser.profileName}
                 </Text>
               </View>
               <View
@@ -227,7 +319,7 @@ export default function ProfileScreen({}) {
                   }}
                   numberOfLines={2}
                 >
-                  {user.profileDescription}
+                  {currentUser.profileDescription}
                 </Text>
               </View>
             </View>
@@ -237,7 +329,7 @@ export default function ProfileScreen({}) {
                 marginBottom: normalize(150),
                 alignItems: "center",
               }}
-            >
+              >
               <Carousel
                 data={domainsArray}
                 sliderWidth={width}
@@ -246,168 +338,10 @@ export default function ProfileScreen({}) {
                 itemWidth={normalize(270)} // Taking into account the horizontal margin
                 activeSlideAlignment={"center"}
                 renderItem={({ item: category }) => (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("DomainOfTaste", {
-                        domainOfTaste: category,
-                        user,
-                      })
-                    }
-                  >
-                    <LinearGradient
-                      colors={[
-                        getDomainsOfTasteGradientsFirstColor(category),
-                        "rgba(58, 17, 90, 1)",
-                      ]}
-                      style={{
-                        width: normalize(270),
-                        height: normalize(500),
-                        borderRadius: normalize(15),
-                        alignItems: "center",
-
-                        // marginHorizontal: (width - normalize(271)) / 2, // CHANGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                      }}
-                    >
-                      <View>
-                        <Text
-                          style={{
-                            marginTop: normalize(15),
-                            color: "white",
-                            fontSize: normalize(25),
-                            fontWeight: "700",
-                            textShadowColor: "black",
-                            textShadowOffset: { width: 0, height: 0 },
-                            textShadowRadius: normalize(10),
-                            paddingHorizontal: normalize(6),
-                          }}
-                        >
-                          {getDomainsName(category)}
-                        </Text>
-                        <View
-                          style={{
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexDirection: "row",
-                            gap: normalize(8),
-                          }}
-                        >
-                          <Image
-                            style={{
-                              width: normalize(22),
-                              height: normalize(22),
-                            }}
-                            source={getDomainOfTasteScoreIcon(category)}
-                          />
-                          <Text
-                            style={{
-                              color: getButtonsAccentColor(
-                                DOMAINPOSTTYPE.get(category.domainId)
-                              ),
-                              fontSize: normalize(22),
-                              fontWeight: "700",
-                            }}
-                          >
-                            {category.score}
-                          </Text>
-                        </View>
-                      </View>
-                      <FlatList
-                        style={{
-                          marginTop: normalize(18),
-                          width: normalize(251),
-                        }}
-                        // snapToAlignment={normalize(300)}
-                        scrollEnabled={false}
-                        data={getDomainsPlaylistsData(userId, category.domainId)}
-                        ItemSeparatorComponent={() => (
-                          <View style={{ height: normalize(20) }} />
-                        )}
-                        renderItem={({ item: playlist }) => (
-                          <View
-                            style={{
-                              width: normalize(251),
-                              height: normalize(50),
-                              backgroundColor: getMoodContainerColor(
-                                DOMAINPOSTTYPE.get(category.domainId)
-                              ),
-                              borderRadius: normalize(5),
-                              flexDirection: "row",
-                            }}
-                          >
-                            {playlist.image && (
-                              <Image
-                                source={{ uri: playlist.image }}
-                                style={{
-                                  width: normalize(50),
-                                  height: normalize(50),
-                                  borderTopLeftRadius: normalize(5),
-                                  borderBottomLeftRadius: normalize(5),
-                                }}
-                              />
-                            )}
-                            <View
-                              style={{
-                                width: normalize(165),
-                                height: normalize(20),
-                                marginLeft: normalize(15),
-                              }}
-                            >
-                              <Text
-                                numberOfLines={1}
-                                style={{
-                                  color: "white",
-                                  fontSize: normalize(20),
-                                  fontWeight: "700",
-                                }}
-                              >
-                                {playlist.name}
-                              </Text>
-                              <FlatList
-                                data={playlist.moods}
-                                scrollEnabled={false}
-                                keyExtractor={(playlist, index) => index.toString()} 
-                                style={{
-                                  marginTop: normalize(7),
-                                  width: normalize(186),
-                                  height: normalize(18),
-                                  gap: normalize(3),
-                                  flexDirection: "row",
-                                }}
-                                renderItem={({ item: mood }) => (
-                                  <View
-                                    style={{
-                                      paddingVertical: normalize(2),
-                                      paddingHorizontal: normalize(10),
-                                      borderRadius: normalize(10),
-                                      backgroundColor: getMoodContainerColor(
-                                        DOMAINPOSTTYPE.get(category.domainId)
-                                      ),
-                                      justifyContent: "center",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <Text
-                                      // playlistMoodItemText
-                                      style={{
-                                        fontSize: normalize(12),
-                                        fontWeight: "600",
-                                        color: getMoodTextColor(
-                                          DOMAINPOSTTYPE.get(category.domainId)
-                                        ),
-                                      }}
-                                    >
-                                      {mood.name}
-                                    </Text>
-                                  </View>
-                                )}
-                              />
-                            </View>
-                          </View>
-                        )}
-                        keyExtractor={(domain, index) => index.toString()}  //fetch and use element id from firestore
-                      />
-                    </LinearGradient>
-                  </TouchableOpacity>
+                  <DomainOfTasteCard 
+                  isCurrentUser={true}
+                  navigation = {navigation} 
+                  category = {category} user = {currentUser} toggleAddPlaylistModal = {toggleAddPlaylistModal} userId = {userId} isAddPlaylistModalVisible = {isAddPlaylistModalVisible}></DomainOfTasteCard>
                 )}
               />
             </View>

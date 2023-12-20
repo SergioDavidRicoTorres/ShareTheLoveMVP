@@ -5,11 +5,36 @@ import { getCurrentUserData } from "../UserData";
 import { ProfileNavigator } from "./ProfileStack";
 import { HomeNavigator } from "./HomeNavigator";
 import { normalize } from "../utils";
+import { fetchUserById } from "../utilsFirebase";
+import { FIREBASE_AUTH } from "../firebaseConfig";
+import { User } from "../types";
+import { useEffect, useState } from "react";
 
 const Tab = createBottomTabNavigator();
 
 
 function Tabs() {
+  const currentUserId = (FIREBASE_AUTH.currentUser?.uid || "defaultUserId")
+  const [currentUser, setCurrentUser]  = useState<User | null>(null);
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        // Fetch user data
+        const user: User | null = await fetchUserById(currentUserId);
+        if (user !== null) {
+          setCurrentUser(user); // Set the user
+        } else {
+          throw new Error('User not found');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
+    if (currentUserId) {
+      getUserData();
+    }
+  }, [currentUserId]); // Depends on userId
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -86,7 +111,8 @@ function Tabs() {
                   borderWidth: normalize(3),
                 }}
                 source={{
-                  uri: getCurrentUserData().profilePicture,
+                  uri: currentUser?.profilePicture
+                  // uri: getCurrentUserData().profilePicture,
                 }}
               />
             </View>

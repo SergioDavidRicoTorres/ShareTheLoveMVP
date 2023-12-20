@@ -39,6 +39,7 @@ function PostCaption({
   postSelectedMedia,
   postType,
   postSelectedMoodsTags,
+  domainId
 }: PostCaptionProps) {
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (SearchPlaylist) -----------------------------
@@ -91,7 +92,11 @@ function PostCaption({
           {/* Modal Gradient */}
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
-            style={styles.backgroundGradient}
+            style={{
+              ...styles.backgroundGradient, 
+              borderColor: getButtonsAccentColor(postType),
+              borderWidth: normalize(3), 
+            }}
           >
             {/* Modal Content */}
             <View style={styles.modalContent}>
@@ -121,15 +126,21 @@ function PostCaption({
                 >
                   <View
                     // achievedProgressState(1.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // achivedProgressState(2.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // followingProgressState(3.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // followingProgressState(4.)
@@ -157,31 +168,33 @@ function PostCaption({
                   numberOfLines={1}
                   style={styles.mediaItemTitle}
                 >
-                  {getItemTitle(postSelectedMedia, postType)}
+                  {getItemTitle(postSelectedMedia, domainId)}
                 </Text>
                 {/* mediaItemSubtitle */}
-                {getItemSubTitle(postSelectedMedia, postType)}
+                {getItemSubTitle(postSelectedMedia, domainId)}
               </View>
               {/* mediaItemImage */}
               <View
                 // medieItemImageContainer
                 style={{
                   ...styles.mediaItemImageContainer,
-                  shadowColor: getButtonsAccentColor(postType),
+                  // shadowColor: getMoodTextColor(postType),
                   width: getImageWidth(postType),
                   height: getImageHeight(postType),
                   backgroundColor: getGradientsFirstColor(postType),
                 }}
-              >
+                >
                 <Image
                   // mediaItemImage
-                  source={getItemImage(postSelectedMedia, postType)}
+                  source={getItemImage(postSelectedMedia, domainId)}
                   style={{
                     borderRadius: normalize(5),
                     width: getImageWidth(postType),
                     height: getImageHeight(postType),
+                    borderColor: getMoodContainerColor(postType),
+                    borderWidth: normalize(4), 
                   }}
-                />
+                  />
               </View>
 
               {/* Moods */}
@@ -226,7 +239,17 @@ function PostCaption({
                 {/* User Image */}
                 <View
                   // userImageContainer
-                  style={styles.userImageContainer}
+                  style={{
+                    ...styles.userImageContainer,
+                    backgroundColor: getButtonsAccentColor(postType),
+                    shadowColor: getButtonsAccentColor(postType),
+                    shadowOffset: {
+                      width: 0,
+                      height: 0,
+                    },
+                    shadowOpacity: 1,
+                    shadowRadius: normalize(8),
+                  }}
                 >
                   <Image
                     // userImage
@@ -234,6 +257,8 @@ function PostCaption({
                       height: normalize(70),
                       width: normalize(70),
                       borderRadius: normalize(100),
+                      borderColor: getButtonsAccentColor(postType),
+                      borderWidth: normalize(4), 
                     }}
                     source={{
                       uri: getCurrentUserData().profilePicture,
@@ -245,6 +270,7 @@ function PostCaption({
                   // CaptionBoxContainer
                   style={{
                     ...styles.CaptionBoxContainer,
+                    backgroundColor: getMoodContainerColor(postType),
                     shadowColor: getButtonsAccentColor(postType),
                     borderColor: getButtonsAccentColor(postType),
                   }}
@@ -278,6 +304,7 @@ function PostCaption({
                 postSelectedMedia={postSelectedMedia}
                 postInsertedCaption={caption}
                 postType={postType}
+                domainId={domainId}
               />
             )}
           </LinearGradient>
@@ -287,11 +314,13 @@ function PostCaption({
             </View>
           ) : (
             <TouchableOpacity
-              style={{
-                ...styles.touchableChooseButtonContainer,
-                backgroundColor: getButtonsAccentColor(postType),
-                shadowColor: getButtonsAccentColor(postType),
-              }}
+            style={{
+              ...styles.touchableChooseButtonContainer,
+              backgroundColor: getGradientsFirstColor(postType),
+              borderColor: getButtonsAccentColor(postType),
+              borderWidth: normalize(4), 
+              shadowColor: getButtonsAccentColor(postType),
+            }}
               onPress={toggleSearchPlaylistModal}
             >
               <Text style={styles.chooseButtonText}>Save Post</Text>
@@ -400,12 +429,12 @@ const styles = StyleSheet.create({
     height: normalize(298),
     borderRadius: normalize(5),
     marginTop: normalize(10),
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: normalize(10),
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 0,
+    // },
+    // shadowOpacity: 0.8,
+    // shadowRadius: normalize(10),
   },
   // mediaItemImage: {
   //   // width: normalize(298),
@@ -455,16 +484,10 @@ const styles = StyleSheet.create({
     height: normalize(70),
     width: normalize(70),
     borderRadius: normalize(100),
-    backgroundColor: "black",
+
     bottom: -normalize(20),
     zIndex: 1,
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 1,
-    shadowRadius: normalize(8),
+
   },
   // userImage: {
   //   height: normalize(70),
@@ -474,16 +497,16 @@ const styles = StyleSheet.create({
   CaptionBoxContainer: {
     paddingTop: normalize(18),
     paddingBottom: normalize(5),
-    backgroundColor: "#371C5D",
+    // backgroundColor: "#371C5D",
     width: normalize(315),
     height: normalize(114),
     borderRadius: normalize(15),
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 1,
-    shadowRadius: normalize(20),
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 0,
+    // },
+    // shadowOpacity: 0.5,
+    // shadowRadius: normalize(10),
     borderWidth: normalize(4),
     borderStyle: "solid",
     zIndex: 0,

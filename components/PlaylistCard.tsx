@@ -20,40 +20,47 @@ import {
   getPlaylistsMediaItemComponent,
   normalize,
 } from "../utils";
-import { PlaylistCardProps } from "../types";
+import { PlaylistCardProps, ProfileContentNavigationProp } from "../types";
 
 import { DOMAINPOSTTYPE } from "../constants";
 import { getPlaylistId, getPlaylistsPostsData, getPosts } from "../utilsData";
-
+import { ScrollView } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
 export default function PlaylistCard ({
   playlist,
   domainOfTaste,
-  navigation,
+  profileNavigation,
   user,
+  posts
 }: PlaylistCardProps) {
   const [score, setScore] = useState(playlist.score);
+  const profileContentNavigation = useNavigation<ProfileContentNavigationProp>();
   // const DOMAINPOSTTYPE = {
   //   0: "Song",
   //   1: "Film/TVShow",
   //   2: "PodcastEpisode",
   // };
-  const playlistId = getPlaylistId(playlist); 
+  // const playlistId = getPlaylistId(playlist); 
   // const playlistsPosts = getPlaylistsPostsData(playlistId);
-  // console.log("PLAYLISTID", playlistId)
   return (
     <ImageBackground
       // playlistBackgroundImage
       source={{ uri: playlist.image }}
-      resizeMode="cover"
+      // resizeMode="cover"
+      style={{
+        borderColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+        borderWidth: normalize(4), 
+        borderRadius: normalize(15)
+      }}
       imageStyle={{
-        opacity: 0.5,
+        opacity: 0.8,
         borderRadius: normalize(15),
         // marginBottom: normalize(10),
       }}
-      blurRadius={5}
+      blurRadius={3}
     >
       <View
         // playlistContainer
@@ -66,6 +73,9 @@ export default function PlaylistCard ({
         }}
       >
         <View>
+          <ScrollView
+          horizontal>
+
           <Text
             style={{
               marginLeft: normalize(10),
@@ -74,9 +84,11 @@ export default function PlaylistCard ({
               fontSize: normalize(35),
               fontWeight: "500",
             }}
+            // numberOfLines={1}
           >
             {playlist.name}
           </Text>
+          </ScrollView>
           <FlatList
             style={{ marginLeft: normalize(10), marginRight: normalize(5) }}
             data={playlist.moods}
@@ -107,13 +119,16 @@ export default function PlaylistCard ({
             />
           <FlatList
             style={{ marginTop: normalize(12), marginLeft: normalize(10) }}
-            data={getPlaylistsPostsData(playlistId)}
+            data={posts}
             horizontal
             renderItem={({ item }) =>
+            // <Text>
+            //   {item.toString()}
+            // </Text>
               getPlaylistsMediaItemComponent({
                 domainOfTaste,
                 item,
-                navigation,
+                profileContentNavigation: profileContentNavigation,
                 user,
               })
             }

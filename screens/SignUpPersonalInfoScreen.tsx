@@ -8,20 +8,15 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { TextInput } from "react-native-gesture-handler";
 import { normalize } from "../utils";
-// import {
-//   getAuthorizationCode,
-//   getTokens,
-// } from "../components/AuthorizationSpotify";
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigationProp } from "../types";
-// import { authenticateSpotify } from "../AuthorizationSpotify";
-import { SpotifyAuthComponent } from "../SpotifyAuthComponent";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 
@@ -32,12 +27,12 @@ const modalHeaderContainerMarginTop = width * 0.026;
 export default function SignUpPersonalInfo() {
   const navigation = useNavigation<AuthNavigationProp>();
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const [profileName, setProfileName] = useState("");
   const [dayOfBirth, setDayOfBirth] = useState("");
   const [monthOfBirth, setMonthOfBirth] = useState("");
   const [yearOfBirth, setYearOfBirth] = useState("");
   const [generalDescription, setGeneralDescription] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState();
+  const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
 
   // Optional Modal Boolean State
   const [isSignUpOptionsModalVisible, setIsSignUpOptionsModalVisible] =
@@ -46,6 +41,41 @@ export default function SignUpPersonalInfo() {
   const toggleSignUpOptionsModal = () => {
     setIsSignUpOptionsModalVisible(!isSignUpOptionsModalVisible);
   };
+
+    // minimum date 18 years ago from today
+    const minDate = new Date();
+    minDate.setFullYear(minDate.getFullYear() - 18);
+
+    const validateAge = () => {
+      const inputDate = new Date(`${yearOfBirth}-${monthOfBirth.padStart(2, '0')}-${dayOfBirth.padStart(2, '0')}`);
+  
+      if (inputDate <= minDate) {
+        // The entered date is valid and on or after the minimum date
+        // Proceed with further processing
+        setDateOfBirth(inputDate)
+        console.log("VALID DATE"); 
+        console.log("DATE OF BIRTH: ", inputDate)
+        Alert.alert('Valid Date', 'The entered date is valid.');
+        return true; 
+      } else {
+        // The entered date is before the minimum date
+        console.log("INVALID DATE"); 
+        console.log("DATE OF BIRTH: ", inputDate)
+        Alert.alert('Invalid Date', 'You must be at least 18 years old.');
+        return false; 
+      }
+    };
+
+    const handlePress = () => { 
+      if (validateAge()) {
+        navigation.navigate("SignUpEndScreen", {
+          name: name, 
+          profileName: profileName, 
+          dateOfBirth: dateOfBirth.toISOString(), 
+          generalDescription: generalDescription
+        })
+      }
+    }
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
@@ -175,7 +205,7 @@ export default function SignUpPersonalInfo() {
               marginTop: normalize(10),
             }}
           >
-            Username
+            profileName
           </Text>
           <View
             style={{
@@ -202,13 +232,8 @@ export default function SignUpPersonalInfo() {
             </Text>
             <TextInput
               // searchInput
-              value={username}
-              onChangeText={(text) => {
-                setUsername(text);
-              }}
-              // onSubmitEditing={(text) => {
-              //   setUsername(text);
-              // }}
+              value={profileName}
+              onChangeText={setProfileName}
               returnKeyType="done"
               style={{
                 color: "white",
@@ -253,20 +278,17 @@ export default function SignUpPersonalInfo() {
             >
               <TextInput
                 // searchInput
-                value={dayOfBirth}
-                onChangeText={(text) => {
-                  setDayOfBirth(text);
-                }}
-                // onSubmitEditing={(text) => {
-                //   setDayOfBirth(text);
-                // }}
+                placeholder="YYYY"
+                onChangeText={setYearOfBirth}
+                keyboardType="number-pad"
+                maxLength={4}
+                value={yearOfBirth}
                 returnKeyType="done"
                 style={{
                   color: "white",
                   marginHorizontal: normalize(5),
                   fontSize: normalize(20),
                 }}
-                placeholder={`Day`}
                 placeholderTextColor={"rgba(255, 255, 255, 0.4)"}
               />
             </View>
@@ -282,21 +304,17 @@ export default function SignUpPersonalInfo() {
               }}
             >
               <TextInput
-                // searchInput
                 value={monthOfBirth}
-                onChangeText={(text) => {
-                  setMonthOfBirth(text);
-                }}
-                // onSubmitEditing={(text) => {
-                //   setMonthOfBirth(text);
-                // }}
+                onChangeText={setMonthOfBirth}
                 returnKeyType="done"
+                placeholder="MM"
+                keyboardType="number-pad"
+                maxLength={2}
                 style={{
                   color: "white",
                   marginHorizontal: normalize(5),
                   fontSize: normalize(20),
                 }}
-                placeholder={`Month`}
                 placeholderTextColor={"rgba(255, 255, 255, 0.4)"}
               />
             </View>
@@ -312,20 +330,18 @@ export default function SignUpPersonalInfo() {
             >
               <TextInput
                 // searchInput
-                value={yearOfBirth}
-                onChangeText={(text) => {
-                  setYearOfBirth(text);
-                }}
-                // onSubmitEditing={(text) => {
-                //   setYearOfBirth(text);
-                // }}
+                value={dayOfBirth}
+                placeholder="DD"
+                onChangeText={setDayOfBirth}
+                keyboardType="number-pad"
+                maxLength={2}
+
                 returnKeyType="done"
                 style={{
                   color: "white",
                   marginHorizontal: normalize(5),
                   fontSize: normalize(20),
                 }}
-                placeholder={`Year`}
                 placeholderTextColor={"rgba(255, 255, 255, 0.4)"}
               />
             </View>
@@ -380,12 +396,36 @@ export default function SignUpPersonalInfo() {
           </View>
         </View>
         {name !== "" &&
-        username !== "" &&
-        dateOfBirth !== "" &&
+        profileName !== "" &&
+        // dateOfBirth !== null &&
         monthOfBirth !== "" &&
         yearOfBirth !== "" &&
         generalDescription !== "" ? (
-          <SpotifyAuthComponent authType="Sign Up"/>
+          <TouchableOpacity
+            onPress={handlePress}
+            style={{
+              paddingHorizontal: normalize(25),
+              paddingVertical: normalize(8),
+              justifyContent: "center",
+              alignItems: "center",
+              gap: normalize(10),
+              borderRadius: normalize(15),
+              backgroundColor: "rgba(156, 75, 255, 1)",
+              flexDirection: "row",
+              marginTop: normalize(90),
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: normalize(20),
+                fontWeight: "800",
+                // letterSpacing: -1,
+              }}
+            >
+              Continue
+            </Text>
+          </TouchableOpacity>
         ) : (
           <View
             style={{
@@ -400,10 +440,7 @@ export default function SignUpPersonalInfo() {
               marginTop: normalize(90),
             }}
           >
-            <Image
-              style={{ width: 35, height: 35 }}
-              source={require("../assets/icons/SpotifyIcon.png")}
-            />
+
             <Text
               style={{
                 color: "white",
@@ -412,7 +449,7 @@ export default function SignUpPersonalInfo() {
                 // letterSpacing: -1,
               }}
             >
-              Link with Spotify
+              Continue
             </Text>
           </View>
         )}

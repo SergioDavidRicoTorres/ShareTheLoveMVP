@@ -4,16 +4,55 @@ import untypedPosts from "./Database/posts.json";
 import { Playlist, User, Post, Mood, MoodsAndTagsCatalogue, MoodsAndTagsCategory} from "./types";
 import untypedMoodsAndTags from "./Database/moodsAndTags.json"
 import { getAuthSpotifyUserData, checkTokenValidity } from "./AuthorizationSpotify";
+import { FIRESTORE_DB } from "./firebaseConfig";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 
+const convertUsersToDateObjects = (untypedUsers: any[]): User[] => {
+  return untypedUsers.map((user) => {
+    return {
+      ...user,
+      dateOfBirth: new Date(user.dateOfBirth), // Convert dateOfBirth string to Date
+    };
+  });
+};
 
-const USERS: User[] = untypedUsers;
+const USERS: User[] = convertUsersToDateObjects(untypedUsers);
 const PLAYLISTS: Playlist[] = untypedPlaylists;
 const POSTS: Post[] = untypedPosts;
 const MOODSANDTAGS: MoodsAndTagsCatalogue = untypedMoodsAndTags; 
 
-export const getCurrentUserId = () => {
-    return 0;
+export const DEFAULT_USER: User = {
+  "name":"Default User Name",
+  "profileName":"Default_User_Profile_Name",
+  "dateOfBirth": new Date("1990-04-14T00:00:00.000Z"),
+  "profilePicture":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png",
+  "profileDescription":"Default Profile Descriptino",
+  "followersCount": 0,
+  "followingCount": 0,
+  "followersUsersList": [], 
+  "followingUsersList": [],
+  "domainsOfTaste": {
+      "Music":{
+          "domainId": 0,
+          "isActive": true,
+          "score": 0
+      }, 
+      "FilmsTVShows":{
+          "domainId": 1,
+          "isActive": true,
+          "score": 0
+      },
+      "PodcastsEpisodes":{
+          "domainId": 2, 
+          "isActive": true,
+          "score": 0
+      }
+  }
 }
+
+// export const getCurrentUserId = () => {
+//     return 0;
+// }
 
 export const getUsers = () => {
     return USERS;
@@ -23,7 +62,7 @@ export const getPosts = () => {
     return POSTS;
 }
 
-export const getUserData = (userId: number): User => {
+export const getUserData = (userId: number ): User => {
     try {
       return USERS[userId];
     } catch (error) {
@@ -31,19 +70,44 @@ export const getUserData = (userId: number): User => {
       return USERS[0];
     }
 };
+// const fetchUserById = async (userId: string) => {
+//   const userRef = doc(FIRESTORE_DB, 'users', userId);
+//   const docSnap = await getDoc(userRef);
 
-export const getDomainsPlaylistsData = (userId: number, domainId?: number) => {
-    if (domainId === undefined) {
-      return [];
-    }
-    // console.log("DOMAINID: ", domainId); 
-    const filteredPlaylists = PLAYLISTS.filter(playlist => playlist.userId === userId && playlist.domainId === domainId);
-    // console.log("[filteredPlaylists]: ", filteredPlaylists); 
-    return filteredPlaylists; 
-  }
+//   if (docSnap.exists()) {
+//     console.log('User data:', docSnap.data());
+//     return docSnap.data(); // or docSnap.data() to get the data of the document
+//   } else {
+//     console.log('No such user!');
+//     return null;
+//   }
+// };
+
+
+
+
+// export const getUserDataById = async (userId: string) => {
+//   try {
+//     const user: User | null = await fetchUserById(userId);
+//     if (user) {
+//       // User is found
+//       console.log(user);
+//       return user;
+//     } else {
+//       // User is not found, throw an error
+//       throw new Error('User not found');
+//     }
+//   } catch (error) {
+//     console.error('Error fetching user:', error);
+//     throw error; // Re-throw the error to be handled by the caller
+//   }
+// };
+
+
+
   
 
-export const getPlaylistsPostsData = (playlistId: number) =>{
+export const getPlaylistsPostsData = (playlistId: string) =>{
     try{
         console.log("PLAYLISTID: ", playlistId); 
         const filteredPosts = POSTS.filter(post => { return post.playlistId === playlistId});
@@ -55,8 +119,15 @@ export const getPlaylistsPostsData = (playlistId: number) =>{
 }
 
 export const getUsersDomains = (user: User) => {
+    // console.log("|||||||||||||||||||| getUserDomains() is getting called |||||||||||||")
+    // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@ USER.DOMAINSOFTASTE"); 
+    // console.log(user.domainsOfTaste);    
     const domainEntries = Object.values(user.domainsOfTaste);
-    return domainEntries.filter((domain) => domain.isActive);
+    const fileteredDomains = domainEntries
+    .filter((domain) => domain.isActive)
+    .sort((a, b) => a.domainId - b.domainId);    // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@ FILTERED DOMAINS"); 
+    // console.log(fileteredDomains);
+    return fileteredDomains;
 }
 
 export const getPlaylistId = (playlist: Playlist) => {
@@ -80,10 +151,20 @@ export const getDomainName = (playlistId: number) => {
     }
 }
 
-export const getChronologicallySortedPosts = () => {
-    const postsCopy = [...getPosts()];
-    return postsCopy.sort((a, b) => b.creationTime - a.creationTime);
+// export const getChronologicallySortedPosts = () => {
+//     const postsCopy = [...getPosts()];
+//     return postsCopy.sort((a, b) => b.creationTime - a.creationTime);
+// };
+export const getChronologicallySortedPosts = (posts: Post[]) => {
+  if (!Array.isArray(posts)) {
+      console.error('Invalid input: posts should be an array');
+      return [];
+  }
+
+  // Clone and sort the posts array
+  return [...posts].sort((a, b) => b.creationTime - a.creationTime);
 };
+
 
 export const getMoodsAndTagsCategories = (postType: string) =>  {
     switch (postType) {
@@ -183,3 +264,22 @@ export const searchPodcastEpisode = async (searchName: string) => {
       return [];
     }  
   }
+
+  export const clusterPostsByPlaylistId = (posts: Post[]): Map<string, Post[]> => {
+    const clusters = new Map<string, Post[]>();
+    // console.log("==================================================")
+    // console.log("================= UNCLUSTERED POSTS ===================")
+    // console.log(posts);
+    // console.log("==================================================")
+
+    posts.forEach(post => {
+      const playlistPosts = clusters.get(post.playlistId) || [];
+      // console.log("@@@@@@@@@@@@@@@@@@@@@")
+      // console.log("post", post)
+      // console.log("post.playlistId", post.playlistId)
+      playlistPosts.push(post);
+      clusters.set(post.playlistId, playlistPosts);
+    });
+  
+    return clusters;
+  };

@@ -24,9 +24,10 @@ import {
   normalize
 } from "../../utils";
 import { getCurrentUserData } from "../../UserData";
-import { getCurrentUserId, getDomainsPlaylistsData } from "../../utilsData";
 import { DOMAINID } from "../../constants";
-import { Playlist, SearchPlaylistProps } from "../../types";
+import { Playlist, Post, SearchPlaylistProps } from "../../types";
+import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { addPostToDB, getDomainsPlaylistsData } from "../../utilsFirebase";
 
 // screen WIDTH constant:
 const { width } = Dimensions.get("window");
@@ -149,9 +150,30 @@ function SearchPlaylist({
   postType,
   postSelectedMoodsTags,
   postInsertedCaption,
+  domainId
 }: SearchPlaylistProps) {
-  const userId = getCurrentUserId();
-  const domainPlaylists = getDomainsPlaylistsData(userId, DOMAINID.get(postType));
+  const userId = FIREBASE_AUTH.currentUser?.uid;
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          if(userId === undefined) {
+            return [];
+          }
+          // console.log("[userId]: ", userId); 
+          // console.log("[domainId]: ", domainId); 
+          const data = await getDomainsPlaylistsData(userId, domainId);
+          // console.log("[playlists]: ", data);
+          setPlaylists(data);
+        } catch (error) {
+          console.error('Error fetching playlists data:', error);
+          // Handle the error appropriately
+        }
+      };
+    
+      fetchData();
+    }, [userId, domainId]); // Dependencies
+  // const domainPlaylists = getDomainsPlaylistsData(userId, DOMAINID.get(postType));
 
   // Optional Modal Visible State
   const [isAddPlaylistModalVisible, setIsAddPlaylistModalVisible] =
@@ -165,7 +187,7 @@ function SearchPlaylist({
   // search states (input)
   const [searchInput, setSearchInput] = useState("");
   // search results
-  const [searchResults, setSearchResults] = useState(domainPlaylists);
+  const [searchResults, setSearchResults] = useState(playlists);
   // const handleSearch = (text: string) => {
   //   setSearchInput(text);
   
@@ -192,12 +214,36 @@ function SearchPlaylist({
       PodcastEpisode: 2,
     };
   
-    const filteredData = domainPlaylists.filter((item) =>
+    const filteredData = playlists.filter((item) =>
       item.name.toLowerCase().includes(text.toLowerCase())
     );
   
     setSearchResults(filteredData);
   };
+
+  const handlePress = async () => {
+    const currentUserId = FIREBASE_AUTH.currentUser?.uid; 
+    if (currentUserId === undefined || domainId == undefined || selectedPlaylist?.playlistId == undefined) {
+      // Handle the case where signedUpUID is null
+      console.error('No "currentUserId" or "domaindId" or "selectedPlaylist?.playlistId" found');
+      return; // Exit the function or handle this case appropriately
+    }
+
+    const postObject: Post = {
+        userId: currentUserId,
+        domainId: domainId,
+        playlistId: selectedPlaylist?.playlistId, 
+        moods: postSelectedMoodsTags,
+        caption: postInsertedCaption,
+        likesCount: 0,
+        creationTime: Date.now(),
+        mediaItem: postSelectedMedia
+    }
+
+    await addPostToDB(postObject);
+    console.log("[USER]: ", postObject);
+    onCloseAll();
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -208,7 +254,10 @@ function SearchPlaylist({
           {/* Modal Gradient */}
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
-            style={styles.backgroundGradient}
+            style={{...styles.backgroundGradient, 
+              borderColor: getButtonsAccentColor(postType),
+              borderWidth: normalize(3), 
+              }}
           >
             {/* Modal Content */}
             <View style={styles.modalContent}>
@@ -239,19 +288,27 @@ function SearchPlaylist({
                 >
                   <View
                     // achievedProgressState(1.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // achivedProgressState(2.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // followingProgressState(3.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // followingProgressState(4.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                 </View>
                 {/* Cancel Button */}
@@ -273,6 +330,8 @@ function SearchPlaylist({
                 style={{
                   ...styles.searchContainer,
                   backgroundColor: getSearchBarColor(postType),
+                  borderColor: getMoodContainerColor(postType),
+                  borderWidth: normalize(3), 
                 }}
               >
                 <Image
@@ -291,7 +350,7 @@ function SearchPlaylist({
                   value={searchInput}
                   onChangeText={(text) => {
                     if (searchInput !== "" && text == "") {
-                      setSearchResults(domainPlaylists)}
+                      setSearchResults(playlists)}
                     setSearchInput(text);
                   }}
                   onSubmitEditing={() => handleSearch(searchInput)}
@@ -403,8 +462,10 @@ function SearchPlaylist({
                 onClose={toggleAddPlaylistModal}
                 postSelectedMedia={postSelectedMedia}
                 postSelectedMoodsTags={postSelectedMoodsTags}
-                postType={postType}
                 postInsertedCaption={postInsertedCaption}
+                domainId={domainId}
+                postType={postType}
+                hasNewPost={true}
               />
             )}
           </LinearGradient>
@@ -423,10 +484,7 @@ function SearchPlaylist({
                 shadowColor: getButtonsAccentColor(postType),
               }}
               onPress={() => {
-                //= ===============================================
-                //= ========FIREBASE CODE MISSING==================
-                //= ===============================================
-                onCloseAll();
+                handlePress();
               }}
             >
               <Text style={styles.chooseButtonText}>Choose Playlist</Text>

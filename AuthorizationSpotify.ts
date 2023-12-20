@@ -17,15 +17,17 @@ const getAuthSpotifyUserData = async (key: string) => {
 
 
 const checkTokenValidity = async () => {
+  try{
+    
     const accessToken = await AsyncStorage.getItem("accessToken");
     const tokenExpirationDate = await AsyncStorage.getItem("expirationDate");
 
     if (accessToken && tokenExpirationDate) {
-        const currentTime = Date.now();
-        if (currentTime < parseInt(tokenExpirationDate)) {
-            // Token is still valid
-            return;
-        } else {
+      const currentTime = Date.now();
+      if (currentTime < parseInt(tokenExpirationDate)) {
+        // Token is still valid
+        return;
+      } else {
             // Token is expired, attempt to refresh it
             await refreshToken();
         }
@@ -34,9 +36,13 @@ const checkTokenValidity = async () => {
         return null; // in order to know when to send back the user to the login screen
         // No access token or expiration date, redirect to login
     }
+  } catch (error) {
+    console.error("Error at checkTokenValidity(): ", error)
+  }
 };
 
 const refreshToken = async () => {
+  try{
     const refreshToken = await AsyncStorage.getItem("refreshToken");
     if (!refreshToken) throw new Error("Refresh token not available");
 
@@ -52,15 +58,19 @@ const refreshToken = async () => {
       },
       {
         tokenEndpoint: 'https://accounts.spotify.com/api/token',
-        }
-    );
-        if (tokenResult.accessToken && tokenResult.expiresIn) {
-            const expirationDate = Date.now() + tokenResult.expiresIn * 1000;
-            await AsyncStorage.setItem("accessToken", tokenResult.accessToken);
-            await AsyncStorage.setItem("expirationDate", expirationDate.toString());
-        } else {
-            throw new Error("accessToken or accessTokenExpirationDate was not found");
-        }
+      }
+      );
+      console.log("We're getting here!!!!!!!!!!!!!!!!!!")
+      if (tokenResult.accessToken && tokenResult.expiresIn) {
+          const expirationDate = Date.now() + tokenResult.expiresIn * 1000;
+          await AsyncStorage.setItem("accessToken", tokenResult.accessToken);
+          await AsyncStorage.setItem("expirationDate", expirationDate.toString());
+      } else {
+          throw new Error("accessToken or accessTokenExpirationDate was not found");
+      }
+  } catch (error){
+    console.error("Error at refreshToken(): ", error)
+  }
 
   };
 

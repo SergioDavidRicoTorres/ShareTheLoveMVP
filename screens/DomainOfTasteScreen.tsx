@@ -16,10 +16,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getCurrentUserData } from "../UserData";
 import PlaylistCard from "../components/PlaylistCard";
-import { getScreenGradientFirstColor } from "../utils";
+import { getMoodContainerColor, getMoodTextColor, getScreenGradientFirstColor } from "../utils";
 import { normalize } from "../utils";
-import { ProfileNavigationProp, DomainOfTasteScreenRouteProp } from "../types";
-import { getCurrentUserId, getDomainName, getDomainsPlaylistsData } from "../utilsData";
+import { ProfileNavigationProp, DomainOfTasteScreenRouteProp, Playlist, Post, ProfileContentNavigationProp } from "../types";
+import { clusterPostsByPlaylistId, getDomainName } from "../utilsData";
+import { FIREBASE_AUTH } from "../firebaseConfig";
+import { useEffect, useState } from "react";
+import { DOMAINPOSTTYPE } from "../constants";
+import { getDomainsPlaylistsData, getDomainsPostsData } from "../utilsFirebase";
+import { useCurrentUser } from "../CurrentUserContext";
 
 const { width } = Dimensions.get("window"); // screen width constant
 
@@ -49,16 +54,44 @@ const backButtonImageHeight = width * 0.059;
 //   }
 // };
 
-export default function DomainOfTaste() {
-  const handleButtonPress = () => {
-    // Handle button press event
-  };
-  const navigation = useNavigation<ProfileNavigationProp>();
+export default function DomainOfTasteScreen() {
+  const { currentUser } = useCurrentUser();
   const route = useRoute<DomainOfTasteScreenRouteProp>();
-  const { domainOfTaste, user } = route.params;
-  console.log("DOMAIN OF TASTE: ", domainOfTaste)
-  const playlists = getDomainsPlaylistsData(getCurrentUserId(), domainOfTaste.domainId);
-  console.log("PLAYLISTS: ", playlists)
+  const { domainOfTaste, user, selectedUserId } = route.params;
+  const isCurrentUser = user.userId === currentUser?.userId;
+  const profileNavigation = useNavigation<ProfileNavigationProp>();
+  const profileContentNavigation = useNavigation<ProfileContentNavigationProp>();
+  const userId = user.userId !== undefined ? user.userId : "Cannot define userId: no user was passed";
+  console.log("userId: ", userId)
+  // const userId = isCurrentUser ? selectedUserId : (FIREBASE_AUTH.currentUser?.uid || "defaultUserId");
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [clusteredPlaylistsPosts, setClusteredPlaylistsPosts] = useState<Map<string, Post[]>>();
+
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const playlistsData = await getDomainsPlaylistsData(userId, domainOfTaste.domainId);
+          setPlaylists(playlistsData);
+          const postsData = await getDomainsPostsData(userId, domainOfTaste.domainId);
+    // console.log("==================================================")
+    // console.log("================= UNCLUSTERED POSTS ===================")
+    // console.log(postsData);
+    // console.log("==================================================")
+          const clusteredPosts = clusterPostsByPlaylistId(postsData);
+          setClusteredPlaylistsPosts(clusteredPosts);
+        } catch (error) {
+          console.error('Error fetching playlists data:', error);
+          // Handle the error appropriately
+        }
+      };
+      fetchData();
+    }, [userId, domainOfTaste.domainId]); // Dependencies
+  // console.log("DOMAIN OF TASTE: ", domainOfTaste)
+  // if (userId === null) {
+  
+  // }
+  // const playlists = getDomainsPlaylistsData(userId, domainOfTaste.domainId);
+  // console.log("PLAYLISTS: ", playlists)
 
   return (
     <LinearGradient
@@ -76,7 +109,7 @@ export default function DomainOfTaste() {
           <TouchableOpacity
             // backButtonContainer
             style={{ left: normalize(10), top: 0 }}
-            onPress={() => navigation.goBack()}
+            onPress={() => profileNavigation.goBack()}
           >
             {/* Back Button Image */}
             <Image
@@ -91,7 +124,7 @@ export default function DomainOfTaste() {
             {/* Back Button */}
             <Text
               style={{
-                marginBottom: normalize(20),
+                marginBottom: normalize(10),
                 color: "white",
                 fontSize: normalize(40),
                 fontWeight: "700",
@@ -100,6 +133,37 @@ export default function DomainOfTaste() {
               {getDomainName(domainOfTaste.domainId)}
             </Text>
             {/* {console.log(domainOfTaste)} */}
+            {isCurrentUser && 
+            <TouchableOpacity
+                          style={{
+                              paddingVertical: normalize(4), 
+                              paddingHorizontal: normalize(5), 
+                              justifyContent: "center", 
+                              alignItems: "center", 
+                              borderRadius: normalize(10), 
+                              borderWidth: normalize(6),
+                              borderColor: getMoodTextColor(
+                                DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                              ), 
+                              backgroundColor: getMoodContainerColor(
+                                DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                              ),
+                              marginBottom: normalize(20)
+                            }}
+                            onPress={() => profileNavigation.navigate("AddPlaylistScreen", {domainId: domainOfTaste.domainId})}
+                            // onPress={toggleAddPlaylistModal}
+                            >
+                          <Text
+                            style={{
+                                color: getMoodTextColor(
+                                  DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                                ), 
+                                fontSize: normalize(20), 
+                                fontWeight: "700"
+                            }}
+                            >Add Playlist</Text>
+                        </TouchableOpacity>
+            }
 
             <FlatList
               scrollEnabled={false}
@@ -109,12 +173,15 @@ export default function DomainOfTaste() {
                 <View style={{ height: normalize(20) }} />
               )}
               renderItem={({ item: playlist, index }) => (
-                <PlaylistCard
-                  playlist={playlist}
-                  domainOfTaste={domainOfTaste}
-                  navigation={navigation}
-                  user={user}
-                />
+                // <View>
+                //   <Text>{playlist.playlistId}</Text>
+                  <PlaylistCard
+                    playlist={playlist}
+                    domainOfTaste={domainOfTaste}
+                    profileNavigation={isCurrentUser ? profileNavigation : undefined}
+                    user={user}
+                    posts={clusteredPlaylistsPosts?.get(playlist.playlistId || 'defaultPlaylistId') || []}
+                  />
               )}
               keyExtractor={(playlist, index) => index.toString()}
             />

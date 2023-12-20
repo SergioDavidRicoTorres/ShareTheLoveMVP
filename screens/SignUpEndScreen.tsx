@@ -1,36 +1,212 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   View,
   SafeAreaView,
   Image,
-  FlatList,
-  Dimensions,
   TouchableOpacity,
   Text,
 } from "react-native";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { normalize } from "../utils";
-import { AuthNavigationProp, MainNavigationProp } from "../types";
+import { AuthNavigationProp, MainNavigationProp, SignUpEndScreenRouteProp, User } from "../types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from 'expo-file-system'; 
+import { setDoc, doc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL  } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker'; 
+
+import { FIREBASE_STORAGE, FIRESTORE_DB } from "../firebaseConfig";
+import { addUserToDB, pickImage, uploadImage } from "../utilsFirebase";
+
+const imgDir = FileSystem.documentDirectory + 'images/'; 
+
+const ensureDirExists = async () => {
+  const dirInfo = await FileSystem.getInfoAsync(imgDir); 
+  if (!dirInfo.exists) {
+    await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true }); 
+  }
+}
 
 export default function SignUpEnd() {
   const navigation = useNavigation<AuthNavigationProp>();
   const mainNavigation = useNavigation<MainNavigationProp>();
-  const [profileImage, setProfileImage] = useState(true);
+  const route = useRoute<SignUpEndScreenRouteProp>();
+  const { name, profileName, dateOfBirth, generalDescription } = route.params;
+  const [SignedUpUID, setSignedUpUID] = useState(""); 
+  const [profileImageUrl, setProfileImageUrl] = useState("");
+  const [selectedImageUri, setSelectedImageUri] = useState(""); 
   const [musicIsSelected, setMusicIsSelected] = useState(false);
   const [filmsTVShowsIsSelected, setFilmsTVShowsIsSelected] = useState(false);
   const [podcastsEpisodesIsSelected, setPodcastsEpisodesIsSelected] =
     useState(false);
   const [profileIsReady, setProfileIsReady] = useState(false);
-  // Optional Modal Boolean State
   const [isSignUpOptionsModalVisible, setIsSignUpOptionsModalVisible] =
     useState(false);
-  // Optional Modal show Function
-  const toggleSignUpOptionsModal = () => {
-    setIsSignUpOptionsModalVisible(!isSignUpOptionsModalVisible);
-  };
+  const [hasSelectedImage, setHasSelectedImage] = useState(false); 
+
+// useEffect (() => {
+//   loadImage();
+// }, [])
+
+  // const toggleSignUpOptionsModal = () => {
+  //   setIsSignUpOptionsModalVisible(!isSignUpOptionsModalVisible);
+  // };
+
+  // const selectImage = async (useLibrary: boolean) => {
+  //   let result;
+  //   const options: ImagePicker.ImagePickerOptions = {
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 0.75,
+  //   };
+  
+  //   if (useLibrary) {
+  //     await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     result = await ImagePicker.launchImageLibraryAsync(options);
+  //   } else {
+  //     await ImagePicker.requestCameraPermissionsAsync();
+  //     result = await ImagePicker.launchCameraAsync(options);
+  //   }
+  
+  //   if (!result.canceled) {
+  //     // console.log(result.assets[0].uri); 
+  //     saveImage(result.assets[0].uri)
+  //   }
+  // };
+
+  // const saveImage = async (uri: string) => {
+  //   await ensureDirExists(); 
+  //   const filename = new Date().getTime() + '.jpg'; 
+  //   const dest = imgDir + filename; 
+  //   await FileSystem.copyAsync({ from: uri, to: dest}); 
+  // }
+  
+  
+  
+  // const loadImage = async () => {
+  //   await ensureDirExists();
+  //   const files = await FileSystem.readDirectoryAsync(imgDir);
+  //   if (files.length > 0) {
+  //     const fullPath = imgDir + files[0];
+  //     setSelectedImageUri(fullPath);
+  //     setHasSelectedImage(true);
+  //   }
+  // };
+
+  // const uploadImage = async (uri: string) => {
+  //   try {
+  //     const response = await fetch(uri);
+  //     const blob = await response.blob();
+  
+  //     const imageRef = ref(FIREBASE_STORAGE, `images/${new Date().getTime()}`); // Unique name for the image
+  
+  //     await uploadBytes(imageRef, blob);
+  
+  //     // Get download URL
+  //     const downloadURL = await getDownloadURL(imageRef);
+  
+  //     console.log('Image uploaded successfully!');
+  //     console.log('Download URL:', downloadURL);
+  //     return downloadURL;
+  //   } catch (error) {
+  //     console.error('Error uploading image: ', error);
+  //   }
+  // };
+  
+
+  // const pickImage = async (setSelectedImageUri: (uri: string) => void) => {
+  //   // Request permission
+  //   try {
+
+  //   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //   if (!permissionResult.granted) {
+  //     alert('Permission to access camera roll is required!');
+  //     return;
+  //   }
+  
+  //   // Launch the image picker
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
+  
+  //   if (!result.canceled) {
+  //     setSelectedImageUri(result.assets[0].uri); // This is the local URI of the image
+  //   }
+  // } catch (error) {
+  //   console.error('Error picking the image: ', error);
+  // }
+  // };
+
+  // const addUserToDB = async (user: User, uid: string) => {
+  //   try {
+  //   console.log("ALL GOOD AT addUserToDB()!")
+  //       // Add additional user data to Firestore
+  //       const userDocRef = doc(FIRESTORE_DB, 'users', uid);
+  //       await setDoc(userDocRef, user);
+
+  //     } catch (error) {
+  //       console.error('Error adding the user to the database: ', error);
+  //     }
+  // }
+
+  // const handleImageUpload = async () => {
+  //   const uri = selectedImageUri; 
+  //   if (uri) {
+  //     await uploadImage(uri);
+  //   }
+  // };
+  
+
+
+  const handlePress = async () => {
+    const uploadedImageUrl = await uploadImage(selectedImageUri); 
+    const signedUpUID = await AsyncStorage.getItem("uid"); 
+
+    if (signedUpUID === null) {
+      // Handle the case where signedUpUID is null
+      console.error("No UID found");
+      return; // Exit the function or handle this case appropriately
+    }
+
+    const userObject: User = {
+      name: name, 
+      profileName: profileName,
+      profilePicture: uploadedImageUrl,
+      dateOfBirth: new Date(dateOfBirth),
+      profileDescription: generalDescription,
+      followersCount: 0, 
+      followingCount: 0, 
+      domainsOfTaste: {
+          Music: {
+            isActive: musicIsSelected,
+            domainId: 0,
+            score: 0
+          },
+          FilmsTVShows: {
+            isActive: filmsTVShowsIsSelected,
+            domainId: 1,
+            score: 0
+          }, 
+          PodcastsEpisodes: {
+            isActive: podcastsEpisodesIsSelected,
+            domainId: 2,
+            score: 0
+          }
+      },
+      followersUsersList: [], 
+      followingUsersList: [], 
+    }
+    await addUserToDB(userObject, signedUpUID);
+    console.log("[USER]: ", userObject);
+    mainNavigation.navigate("Tabs");
+  }
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
@@ -97,7 +273,21 @@ export default function SignUpEnd() {
             marginTop: normalize(24),
           }}
         >
-          <TouchableOpacity>
+          {selectedImageUri ? 
+          (
+            <Image source={{uri: selectedImageUri}} style={{
+              width: normalize(328) ,
+              height: normalize(320),
+              borderRadius: normalize(15),
+              borderWidth: normalize(8),
+              borderColor: "rgba(156, 75, 255, 1)",
+            }} />) :
+            (<TouchableOpacity
+              onPress={()=> {
+                pickImage(setSelectedImageUri)
+              }
+            }
+            >
             <Image
               source={require("../assets/icons/AddImageIconPurple.png")}
               style={{
@@ -105,7 +295,7 @@ export default function SignUpEnd() {
                 height: normalize(76),
               }}
             />
-          </TouchableOpacity>
+          </TouchableOpacity>)}
         </View>
 
         <TouchableOpacity
@@ -118,6 +308,7 @@ export default function SignUpEnd() {
             backgroundColor: "rgba(156, 75, 255, 1)",
             marginTop: normalize(20),
           }}
+          onPress={() => pickImage(setSelectedImageUri)}
         >
           <Text
             style={{
@@ -264,13 +455,15 @@ export default function SignUpEnd() {
           </TouchableOpacity>
         </View>
 
-        {profileImage &&
+        { 
+        selectedImageUri &&
         (musicIsSelected ||
           filmsTVShowsIsSelected ||
           podcastsEpisodesIsSelected) ? (
           <TouchableOpacity
             onPress={() => {
-              mainNavigation.navigate("Tabs");
+              handlePress();
+              // mainNavigation.navigate("Tabs");
             }}
             style={{
               paddingVertical: normalize(10),
@@ -324,7 +517,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
-    // backgroundColor: "blue",
+
   },
 });

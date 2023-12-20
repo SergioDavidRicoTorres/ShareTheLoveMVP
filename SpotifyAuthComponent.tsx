@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigationProp, MainNavigationProp, SpotifyAuthComponentProp } from './types';
 import { normalize } from './utils';
+import { useSpotifyAuth } from './SpotifyAuthContext';
 
 
   
@@ -18,7 +19,9 @@ import { normalize } from './utils';
 
   export const SpotifyAuthComponent = ({authType}: SpotifyAuthComponentProp) => {
     const navigation = useNavigation<AuthNavigationProp>();
-    const mainNavigation = useNavigation<MainNavigationProp>();
+    // const mainNavigation = useNavigation<MainNavigationProp>();
+    const { setIsSpotifyAuthenticated } = useSpotifyAuth();
+
 
   
     const login = async () => {
@@ -55,18 +58,19 @@ import { normalize } from './utils';
                 },
                 spotifyDiscovery
               );
-              AsyncStorage.setItem("accessToken", tokenResult.accessToken)
-              AsyncStorage.setItem("refreshToken", tokenResult.accessToken)
+              AsyncStorage.setItem("accessToken", tokenResult.accessToken as string)
+              AsyncStorage.setItem("refreshToken", tokenResult.refreshToken as string)
               if (tokenResult.expiresIn) {
                     const expirationDate = Date.now() + tokenResult.expiresIn * 1000;
                     AsyncStorage.setItem("expirationDate", expirationDate.toString())
                 } else {
                     throw new Error("[tokenResult.expiresIn] was not found");
                 }
-
+              setIsSpotifyAuthenticated(true); 
             }
         } catch (error) {
             console.error("Spotify login error: ", error);
+            setIsSpotifyAuthenticated(false);
         }
       };
   
@@ -78,9 +82,7 @@ import { normalize } from './utils';
             .then(() => {
                 if (authType === "Sign Up") {
                     navigation.navigate("SignUpPersonalInfoScreen");
-                } else {
-                    mainNavigation.navigate("Tabs");
-                }
+                } 
             })
             .catch((error) => {
                 console.error("Error during authorization:", error);

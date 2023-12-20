@@ -29,6 +29,7 @@ import {
 } from "../../utils";
 import { Mood, MoodsAndTagsCategory, MoodsTagsProps } from "../../types";
 import { getMoodsAndTagsCategories } from "../../utilsData";
+import { sharedStyles } from "../../sharedStyles";
 
 // screen WIDTH constant:
 const { width } = Dimensions.get("window");
@@ -39,6 +40,7 @@ function MoodsTags({
   onCloseAll,
   postSelectedMedia,
   postType,
+  domainId
 }: MoodsTagsProps) {
 
   const MOODSANDTAGS = getMoodsAndTagsCategories(postType);
@@ -141,7 +143,11 @@ function MoodsTags({
           {/* Modal Gradient */}
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
-            style={styles.backgroundGradient}
+            style={{
+              ...styles.backgroundGradient, 
+              borderColor: getButtonsAccentColor(postType),
+              borderWidth: normalize(3), 
+            }}
           >
             {/* Modal Content */}
             <View style={styles.modalContent}>
@@ -171,11 +177,15 @@ function MoodsTags({
                 >
                   <View
                     // achievedProgressState(1.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // achivedProgressState(2.)
-                    style={styles.achievedProgressState}
+                    style={{...styles.achievedProgressState, 
+                      backgroundColor: getMoodContainerColor(postType)
+                    }}
                   />
                   <View
                     // followingProgressState(3.)
@@ -218,7 +228,12 @@ function MoodsTags({
               {/* Media Item */}
               <View
                 // mediaItemContainer
-                style={styles.selectedMediaItemContainer}
+                style={{... sharedStyles.selectedMediaItemContainer,
+                  backgroundColor: getMoodContainerColor(postType),
+                  borderColor: getMoodContainerColor(postType),
+                  borderWidth: normalize(3), 
+                  marginTop: normalize(10),
+                }}
               >
                 <Image
                   // mediaItemImage
@@ -233,7 +248,7 @@ function MoodsTags({
                     //       uri: `https://image.tmdb.org/t/p/original/${selectedMedia.poster_path}`,
                     //     }
                     //   : require("../assets/default/image.png") // default image source
-                    getItemImage(postSelectedMedia, postType)
+                    getItemImage(postSelectedMedia, domainId)
                   }
                   style={{
                     width: normalize(50),
@@ -251,9 +266,9 @@ function MoodsTags({
                     numberOfLines={1}
                     style={styles.mediaItemText}
                   >
-                    {getItemTitle(postSelectedMedia, postType)}
+                    {getItemTitle(postSelectedMedia, domainId)}
                   </Text>
-                  {getItemSubTitle(postSelectedMedia, postType)}
+                  {getItemSubTitle(postSelectedMedia, domainId)}
                 </View>
               </View>
 
@@ -341,6 +356,7 @@ function MoodsTags({
                 postSelectedMedia={postSelectedMedia}
                 postSelectedMoodsTags={postSelectedMoodsTags}
                 postType={postType}
+                domainId={domainId}
               />
             )}
             {isAddMoodModalVisible && (
@@ -361,7 +377,9 @@ function MoodsTags({
             <TouchableOpacity
               style={{
                 ...styles.touchableChooseButtonContainer,
-                backgroundColor: getButtonsAccentColor(postType),
+                backgroundColor: getGradientsFirstColor(postType),
+                borderColor: getButtonsAccentColor(postType),
+                borderWidth: normalize(4), 
                 shadowColor: getButtonsAccentColor(postType),
               }}
               onPress={() => {
@@ -481,15 +499,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: normalize(20),
     paddingVertical: normalize(5),
-    backgroundColor: "rgba(255, 184, 0, 1)",
+    backgroundColor: "rgba(199, 144, 4, 1)",
     borderRadius: normalize(10),
-    shadowColor: "#6933AC",
+    shadowColor: "rgba(105, 51, 172, 1)",
     shadowOffset: {
       width: 0,
       height: normalize(4),
     },
     shadowOpacity: 1,
     shadowRadius: normalize(5),
+    borderColor: "rgba(105, 51, 172, 1)", 
+    borderWidth: normalize(3)
   },
   addMoodButtonText: {
     fontWeight: "700",
@@ -499,7 +519,8 @@ const styles = StyleSheet.create({
   selectedMediaItemContainer: {
     marginTop: 15,
     width: normalize(339),
-    height: normalize(50),
+    // height: normalize(50),
+    paddingVertical: 0,
     borderRadius: normalize(6),
     flexDirection: "row",
     backgroundColor: "rgba(84, 42, 146, 1)",

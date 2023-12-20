@@ -11,13 +11,30 @@ import {
 
 import { LinearGradient } from "expo-linear-gradient";
 import { normalize } from "../utils";
-import { SettingsProps } from "../types";
+import { AuthNavigationProp, MainNavigationProp, ProfileNavigationProp, SettingsProps } from "../types";
+import { useNavigation } from "@react-navigation/native";
+import { useSpotifyAuth } from "../SpotifyAuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handleFirebaseSignOut } from "../utilsFirebase";
 
 const { width, height } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
 export default function Settings({ visible, onClose }: SettingsProps) {
-  // const navigation = useNavigation();
+  const navigation = useNavigation<ProfileNavigationProp>();
+  const { isSpotifyAuthenticated, setIsSpotifyAuthenticated } = useSpotifyAuth();
+
+  
+  const onSignOutPress = async () => {
+    await AsyncStorage.removeItem("accessToken");
+    await AsyncStorage.removeItem("refreshToken");
+    await AsyncStorage.removeItem("expirationDate");
+    setIsSpotifyAuthenticated(false);
+    console.log("isSpotifyAuthenticated is now: ", isSpotifyAuthenticated)
+    await handleFirebaseSignOut();
+
+  };
+
   return (
     <View>
       <Modal
@@ -114,7 +131,9 @@ export default function Settings({ visible, onClose }: SettingsProps) {
                 backgroundColor: "rgba(156, 75, 255, 0.5)",
               }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity
+              onPress={onSignOutPress}
+              >
                 <Text
                   style={{
                     color: "white",

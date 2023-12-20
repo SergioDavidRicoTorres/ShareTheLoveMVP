@@ -1,8 +1,8 @@
 [
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 0,
-      "playlistId": 0,
+      "playlistId": "0",
       "creationTime": 123,
       "likesCount": 29,
       "moods": [
@@ -23,9 +23,9 @@
       }
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 0,
-      "playlistId": 0,
+      "playlistId": "0",
       "creationTime": 60,
       "likesCount": 40,
       "mediaItem": {
@@ -45,9 +45,9 @@
       "caption": "Embrace the soulful rhythm and let your worries fade away."
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 0,
-      "playlistId": 0,
+      "playlistId": "0",
       "creationTime": 200,
       "likesCount": 10,
       "mediaItem": {
@@ -67,9 +67,9 @@
       "caption": "Get your groove on and dance like nobody's watching!"
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 0,
-      "playlistId": 0,
+      "playlistId": "0",
       "creationTime": 100,
       "likesCount": 40,
       "mediaItem": {
@@ -89,9 +89,9 @@
       "caption": "Take a musical journey around the world with electrifying beats."
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 0,
-      "playlistId": 1,
+      "playlistId": "1",
       "creationTime": 100,
       "likesCount": 40,
       "moods": [
@@ -115,9 +115,9 @@
       }
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 0,
-      "playlistId": 1,
+      "playlistId": "1",
       "creationTime": 230,
       "likesCount": 80,
       "moods": [
@@ -139,9 +139,9 @@
       }
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 0,
-      "playlistId": 1,
+      "playlistId": "1",
       "creationTime": 120,
       "likesCount": 75,
       "moods": [
@@ -162,9 +162,9 @@
       }
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 0,
-      "playlistId": 1,
+      "playlistId": "1",
       "creationTime": 97,
       "likesCount": 63,
       "moods": [
@@ -186,9 +186,9 @@
       }
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 1,
-      "playlistId": 2,
+      "playlistId": "2",
       "creationTime": 97,
       "likesCount": 63,
       "mediaItem": {
@@ -205,9 +205,9 @@
       "caption": "Prepare for belly laughs! Borat is back to mock the world in this uproarious film."
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 1,
-      "playlistId": 2,
+      "playlistId": "2",
       "creationTime": 300,
       "likesCount": 120,
       "mediaItem": {
@@ -224,9 +224,9 @@
       "caption": "Welcome to the wild world of tech startups! Silicon Valley is a riotous TV show filled with coding, comedy, and chaos."
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 1,
-      "playlistId": 2,
+      "playlistId": "2",
       "creationTime": 210,
       "likesCount": 70,
       "mediaItem": {
@@ -243,9 +243,9 @@
       "caption": "This film is a cosmic comedy with a serious message. Get ready for a hilarious and thought-provoking ride!"
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 1,
-      "playlistId": 3,
+      "playlistId": "3",
       "creationTime": 210,
       "likesCount": 70,
       "mediaItem": {
@@ -263,9 +263,9 @@
       "caption": "Get ready for an ogre-sized adventure! Shrek is a hilarious fairy tale with a twist."
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 1,
-      "playlistId": 3,
+      "playlistId": "3",
       "creationTime": 320,
       "likesCount": 150,
       "mediaItem": {
@@ -282,9 +282,9 @@
       "caption": "Befriend a giant robot from space in this heartwarming tale of unlikely friendship."
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 1,
-      "playlistId": 3,
+      "playlistId": "3",
       "creationTime": 110,
       "likesCount": 112,
       "mediaItem": {
@@ -301,9 +301,9 @@
       "caption": "When the parents are away, the pranks will play! Home Alone is a hilarious holiday classic."
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 2,
-      "playlistId": 4,
+      "playlistId": "4",
       "creationTime": 86,
       "likesCount": 56,
       "mediaItem": {
@@ -319,9 +319,9 @@
       "caption": "Tune in to unravel the secrets of biology and discover the truth about aliens with Michael Levin!"
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 2,
-      "playlistId": 4,
+      "playlistId": "4",
       "creationTime": 20,
       "likesCount": 87,
       "mediaItem": {
@@ -338,9 +338,9 @@
       "caption": "Join us on a journey of self-discovery through meditation, where we'll explore inner peace and mindfulness. Is it life-changing or just hot air?"
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 2,
-      "playlistId": 5,
+      "playlistId": "5",
       "creationTime": 56,
       "likesCount": 63,
       "mediaItem": {
@@ -357,9 +357,9 @@
       "caption": "Reexamine life's fundamental aspects - work, play, and rest - with TED speakers. It's disorienting yet enlightening!"
     },
     {
-      "userId": 0,
+      "userId": "0",
       "domainId": 2,
-      "playlistId": 5,
+      "playlistId": "5",
       "creationTime": 20,
       "likesCount": 87,
       "mediaItem": {

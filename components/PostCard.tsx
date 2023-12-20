@@ -15,7 +15,9 @@ import {
   getMoodTextColor,
   getMoodContainerColor,
   getItemSubTitle,
-  normalize
+  normalize,
+  getItemImage,
+  getItemTitle
 } from "../utils";
 import { PostCardProps } from "../types";
 import { DOMAINPOSTTYPE } from "../constants";
@@ -25,7 +27,7 @@ const { width } = Dimensions.get("window"); // Window Dimensions
 
 export default function PostCard ({ post }: PostCardProps) {
   const [isLiked, setIsLiked] = useState(false);
-  const user = getUserData(post.userId);
+  const user = getUserData(0);    //const user = getUserData(post.userId);
 
   const getLikeComponent = (postType?: string) => {
       switch (postType) {
@@ -39,17 +41,16 @@ export default function PostCard ({ post }: PostCardProps) {
               style={{
                 width: normalize(50),
                 height: normalize(50),
-                right: normalize(21),
-                bottom: normalize(442),
+                // right: normalize(21),
+                // bottom: normalize(442),
                 position: "absolute",
-                zIndex: 1,
+                // zIndex: 1,
                 // top: normalize(33),
                 backgroundColor: "rgba(153, 255, 218, 1)",
                 shadowColor: "black",
                 shadowOffset: { width: 0, height: 0 },
                 shadowRadius: normalize(10),
                 shadowOpacity: 0.6,
-
                 borderRadius: normalize(15),
                 alignItems: "center",
                 justifyContent: "center",
@@ -70,22 +71,29 @@ export default function PostCard ({ post }: PostCardProps) {
               style={{
                 width: normalize(50),
                 height: normalize(50),
-                right: normalize(21),
-                bottom: normalize(442),
+                // right: normalize(21),
+                // bottom: normalize(425),
                 position: "absolute",
-                zIndex: 1,
-                // top: normalize(33),
+                // zIndex: 1,
                 backgroundColor: "rgba(105, 51, 172, 1)",
                 shadowColor: "black",
                 shadowOffset: { width: 0, height: 0 },
                 shadowRadius: normalize(10),
                 shadowOpacity: 0.6,
-
                 borderRadius: normalize(15),
                 alignItems: "center",
                 justifyContent: "center",
+                borderColor: getMoodTextColor(postType),
+                borderWidth: normalize(3), 
               }}
             >
+              {/* <View
+                style={{
+                  backgroundColor: "white",
+                  width: normalize(1), 
+                  height: normalize(50), 
+                }}
+              ></View> */}
               <Image
                 source={require("../assets/icons/MusicLikeNotSelectedIcon.png")}
                 style={{ width: normalize(29), height: normalize(26) }}
@@ -104,10 +112,10 @@ export default function PostCard ({ post }: PostCardProps) {
               style={{
                 width: normalize(50),
                 height: normalize(50),
-                right: normalize(21),
-                bottom: normalize(592),
+                // right: normalize(21),
+                // bottom: normalize(592),
                 position: "absolute",
-                zIndex: 1,
+                // zIndex: 1,
                 // top: normalize(33),
                 backgroundColor: "rgba(253, 153, 255, 1)",
                 shadowColor: "black",
@@ -134,20 +142,19 @@ export default function PostCard ({ post }: PostCardProps) {
               style={{
                 width: normalize(50),
                 height: normalize(50),
-                right: normalize(21),
-                bottom: normalize(592),
+                // right: normalize(21),
+                // bottom: normalize(592),
                 position: "absolute",
-                zIndex: 1,
-                // top: normalize(33),
                 backgroundColor: "rgba(105, 51, 172, 1)",
                 shadowColor: "black",
                 shadowOffset: { width: 0, height: 0 },
                 shadowRadius: normalize(10),
                 shadowOpacity: 0.6,
-
                 borderRadius: normalize(15),
                 alignItems: "center",
                 justifyContent: "center",
+                borderColor: getMoodTextColor(postType),
+                borderWidth: normalize(3), 
               }}
             >
               <Image
@@ -168,10 +175,9 @@ export default function PostCard ({ post }: PostCardProps) {
               style={{
                 width: normalize(50),
                 height: normalize(50),
-                right: normalize(21),
-                bottom: normalize(442),
+                // right: normalize(21),
+                // bottom: normalize(442),
                 position: "absolute",
-                zIndex: 1,
                 // top: normalize(33),
                 backgroundColor: "rgba(197, 238, 182, 1)",
                 shadowColor: "black",
@@ -199,10 +205,9 @@ export default function PostCard ({ post }: PostCardProps) {
               style={{
                 width: normalize(50),
                 height: normalize(50),
-                right: normalize(21),
-                bottom: normalize(442),
+                // right: normalize(21),
+                // bottom: normalize(442),
                 position: "absolute",
-                zIndex: 1,
                 // top: normalize(33),
                 backgroundColor: "rgba(105, 51, 172, 1)",
                 shadowColor: "black",
@@ -213,6 +218,8 @@ export default function PostCard ({ post }: PostCardProps) {
                 borderRadius: normalize(15),
                 alignItems: "center",
                 justifyContent: "center",
+                borderColor: getMoodTextColor(postType),
+                borderWidth: normalize(3), 
               }}
             >
               <Image
@@ -228,10 +235,10 @@ export default function PostCard ({ post }: PostCardProps) {
               style={{
                 width: normalize(50),
                 height: normalize(50),
-                right: normalize(21),
-                bottom: normalize(442),
+                // right: normalize(21),
+                // bottom: normalize(442),
                 position: "absolute",
-                zIndex: 1,
+                // zIndex: 1,
                 // top: normalize(33),
                 backgroundColor: "rgba(105, 51, 172, 1)",
                 shadowColor: "black",
@@ -257,17 +264,34 @@ export default function PostCard ({ post }: PostCardProps) {
         gap: normalize(7),
       }}
     >
-      {getLikeComponent(DOMAINPOSTTYPE.get(post.domainId))}
-      {/* POST TITLE */}
-
       <View
+      style={{
+        zIndex: 1,
+        alignItems: "center",
+        justifyContent: "center", 
+        alignSelf: "flex-end",
+        top: normalize(74), 
+        right: normalize(46)
+      }}
+      >
+
+      {getLikeComponent(DOMAINPOSTTYPE.get(post.domainId))}
+      </View>
+{/* 
+      <ScrollView
+        horizontal
+      > */}
+      <ScrollView
         // postTitleContainer
         // style={styles.postTitleContainer}
         style={{
-          width: normalize(300),
-          alignItems: "center",
-          justifyContent: "center",
+          maxWidth: normalize(300),
+          // borderColor: "white", 
+          // borderWidth: normalize(4), 
+          // alignItems: "center",
+          // justifyContent: "center",
         }}
+        horizontal
       >
         <Text
           // postTitleText
@@ -277,16 +301,21 @@ export default function PostCard ({ post }: PostCardProps) {
           //     ? styles.textTitleMusic
           //     : styles.textTitleFilms_TV,
           // ]}
+          numberOfLines={1}
           style={{
-            color: getButtonsAccentColor(DOMAINPOSTTYPE.get(post.domainId)),
+            color: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
             fontSize: normalize(25),
             fontWeight: "500",
             textAlign: "center",
+            // borderColor: "white", 
+            // borderRadius: normalize(10), 
+            // borderWidth: normalize(4), 
           }}
         >
-          {post.mediaItem.name}
+          {getItemTitle(post.mediaItem, post.domainId)}
         </Text>
-      </View>
+      </ScrollView>
+      {/* </ScrollView> */}
 
       {/* POST SUBTITLE */}
 
@@ -295,11 +324,16 @@ export default function PostCard ({ post }: PostCardProps) {
           maxWidth: normalize(300),
         }}
       >
-        {getItemSubTitle(post, DOMAINPOSTTYPE.get(post.domainId))}
+        {getItemSubTitle(post.mediaItem, post.domainId)}
       </View>
 
       {/* POST IMAGE */}
-
+      <View 
+        style={{
+          backgroundColor: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+          borderRadius: normalize(15)
+        }}
+      >
       <Image
         // postImage
         resizeMethod="auto"
@@ -307,9 +341,16 @@ export default function PostCard ({ post }: PostCardProps) {
           width: normalize(300),
           height: DOMAINPOSTTYPE.get(post.domainId) === "Film/TVShow" ? normalize(450) : normalize(300),
           borderRadius: normalize(15),
+          borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+          borderWidth: normalize(2), 
+          opacity: 1
         }}
-        source={{ uri: post.mediaItem.image }}
+        // source={{ uri: post.mediaItem.image }}
+        source={getItemImage(post.mediaItem, post.domainId)}
+
       />
+      </View>
+
 
       {/* MOODS */}
 
@@ -383,6 +424,8 @@ export default function PostCard ({ post }: PostCardProps) {
             // paddingVertical: normalize(5),
             borderRadius: normalize(5),
             backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(post.domainId)),
+            // borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+            // borderWidth: normalize(2), 
           }}
         >
           <View>

@@ -19,11 +19,12 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { getCurrentUserData } from "../UserData";
 import MediaItemInfo from "../components/MediaItemInfo";
 import { Domain, PostsViewScreenRouteProp, ProfileNavigationProp } from "../types";
-import { getScreenGradientFirstColor, getMoodTextColor, getMoodContainerColor } from "../utils";
+import { getScreenGradientFirstColor, getMoodTextColor, getMoodContainerColor, getItemImage } from "../utils";
 import { DOMAINPOSTTYPE } from "../constants";
+import { normalize } from "../utils";
 
 const { width } = Dimensions.get("window"); // screen width constant
-const normalize = (value: number) => width * (value / 390);
+// const normalize = (value: number) => width * (value / 390);
 
 const user = getCurrentUserData();
 
@@ -159,6 +160,13 @@ export default function PostsViewScreen() {
             />
           </TouchableOpacity>
         </View>
+        {/* <ScrollView
+          style={{
+            maxWidth: normalize(325)
+          }}
+          horizontal
+        > */}
+
         <Text
           style={{
             marginBottom: normalize(10),
@@ -166,11 +174,13 @@ export default function PostsViewScreen() {
             fontSize: normalize(24),
             fontWeight: "700",
             textAlign: "center",
+            maxWidth: normalize(325)
           }}
           numberOfLines={1}
         >
           {post.mediaItem.name}
         </Text>
+        {/* </ScrollView> */}
 
         <View
           style={{
@@ -185,14 +195,20 @@ export default function PostsViewScreen() {
             },
             shadowOpacity: 1,
             shadowRadius: normalize(8),
-
+            bottom: normalize(2),
             borderRadius: normalize(15),
+            // borderColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+            // borderWidth: normalize(2)
             //   overflow: "hidden", // Clip the shadow if needed
           }}
         >
           <ImageBackground
-            source={{ uri: post.mediaItem.image }}
+            source={
+              // { uri: post.mediaItem.image }
+              getItemImage(post.mediaItem, domainOfTaste.domainId)
+            }
             resizeMode="cover"
+
             imageStyle={{
               opacity: 0.9,
               borderRadius: normalize(15),
@@ -216,10 +232,10 @@ export default function PostsViewScreen() {
                   borderRadius: normalize(10),
                   backgroundColor: "rgba(58, 17, 90, 0.9)",
                   backfaceVisibility: "hidden",
-                  // transform: [{ rotateY: "0deg" }], // Use a 3D transform to control visibility
-
                   marginBottom: normalize(10),
                   alignItems: "center",
+                  borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                  borderWidth: normalize(2), 
                 }}
               >
                 <View
@@ -236,6 +252,7 @@ export default function PostsViewScreen() {
                     shadowOpacity: 1,
                     shadowRadius: normalize(8),
                     bottom: normalize(50),
+                    
                   }}
                 >
                   {/* <Text>{user.name}</Text> */}
@@ -244,6 +261,8 @@ export default function PostsViewScreen() {
                       width: normalize(70),
                       height: normalize(70),
                       borderRadius: normalize(70),
+                      borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                      borderWidth: normalize(3), 
                     }}
                     source={{ uri: user.profilePicture }}
                   />
@@ -284,10 +303,11 @@ export default function PostsViewScreen() {
                     style={{
                       color: "white",
                       fontSize: normalize(18),
-                      fontWeight: "400",
+                      fontWeight: "600",
+                      marginHorizontal: normalize(2)
                     }}
                   >
-                    {user.profileName}
+                    @{user.profileName}
                   </Text>
                   <View style={{ width: normalize(280) }}>
                     <Text
@@ -295,6 +315,7 @@ export default function PostsViewScreen() {
                         color: "white",
                         fontSize: normalize(18),
                         fontWeight: "300",
+                        marginHorizontal: normalize(10)
                       }}
                       numberOfLines={4}
                     >
@@ -308,18 +329,20 @@ export default function PostsViewScreen() {
                   toggleMediaItemInfoModal();
                 }}
                 style={{
-                  backgroundColor: "rgba(255, 184, 0, 0.9)",
+                  backgroundColor:getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
                   paddingHorizontal: normalize(20),
                   paddingVertical: 5,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderRadius: normalize(20),
+                  borderRadius: normalize(10),
                   marginBottom: normalize(30),
+                  borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                  borderWidth: normalize(2), 
                 }}
               >
                 <Text
                   style={{
-                    color: "white",
+                    color: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
                     fontSize: normalize(20),
                     fontWeight: "700",
                     // marginHorizontal: normalize(20),
@@ -342,7 +365,7 @@ export default function PostsViewScreen() {
             //   onCloseAll();
             // }}
             onClose={toggleMediaItemInfoModal}
-            mediaItem={post.mediaItem}
+            post={post}
           />
         )}
         {/* </View> */}

@@ -2,9 +2,11 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 export interface User {
+    userId?: string;
     name: string;
+    dateOfBirth: Date;
     profileName: string;
-    profilePicture: string;
+    profilePicture?: string;
     profileDescription: string;
     followersCount: number; 
     followingCount: number; 
@@ -12,7 +14,9 @@ export interface User {
         Music: Domain,
         FilmsTVShows: Domain, 
         PodcastsEpisodes: Domain
-    }
+    }, 
+    followersUsersList: string[], 
+    followingUsersList: string[]
 }
 
 export interface Domain {
@@ -22,7 +26,8 @@ export interface Domain {
 }
 
 export interface Playlist {
-    userId: number;
+    playlistId?: string;
+    userId: string | number;
     domainId: number;
     name: string;
     image?: string;
@@ -52,10 +57,24 @@ export interface MoodsAndTagsCatalogue {
   [key: string]: MoodsAndTagsCategory[];
 }
 
+
+export interface MediaItem {
+  name: string,
+  image: string, 
+  album?: any, 
+  artists?: any,
+  overview?: string, 
+  description?: string, 
+  mediaType?: string, 
+  externalUrl?: string, 
+  previewUrl?: string,
+}
+
 export interface Post {
-    userId: number; 
+    postId?: string;
+    userId: string | number; 
     domainId: number; 
-    playlistId: number; 
+    playlistId: string; 
     moods: Mood[];
     caption: string;
     likesCount: number;
@@ -87,7 +106,7 @@ export interface Post {
 
 
     export type MainNavigatorParamsList = {
-    AuthNavigator: undefined; 
+    AuthNavigator: undefined;
     Tabs: undefined;
     }
     export type AuthNavigatorParamsList = {
@@ -96,29 +115,76 @@ export interface Post {
             authType: string
         }; 
         SignUpPersonalInfoScreen: undefined; 
-        SignUpEndScreen: undefined; //HAS TO BE UPDATED: Passing of parameters hasn't been setup
+        SignUpEndScreen: {
+          name: string, 
+          profileName: string, 
+          dateOfBirth: string, 
+          generalDescription: string,
+          // setHasUserDocFirestore: (value: boolean) => void;
+        }; //HAS TO BE UPDATED: Passing of parameters hasn't been setup
     }
+
+    export type TabsNavigatorParamsList = {
+      HomeNavigator: undefined; 
+      ProfileNavigator: {
+        selectedUserId?: string,
+      };
+    }
+
     export type HomeNavigatorParamsList = {
         HomeScreen: undefined;
         SearchUserScreen: undefined;
+        ExternalProfileScreen: {
+          user: User;          
+        }; 
+        ProfileContentNavigator: undefined;
     }
+    
     export type ProfileNavigatorParamsList = {
-        ProfileScreen: undefined; 
-        DomainOfTaste: {
+        ProfileScreen: {
+          selectedUserId?: string,
+          // fromTabs?:boolean,
+        }
+        ProfileContentNavigator: ProfileContentNavigatorParamsList;
+        // DomainOfTasteScreen: {
+        //   domainOfTaste: Domain, //NEEDS TO BE UPDATED BASED ON THE FIRESTORE SETUP: DOMAINS_COLLECTION
+        //   user: User //NEEDS TO BE UPDATED BASED ON THE FIRESTORE SETUP: USERS_COLLECTION
+        //   selectedUserId?: string, 
+        // }
+        // PostsViewScreen: {
+        //   domainOfTaste: Domain, 
+        //   post: Post, 
+        //   user: User, 
+        //   selectedUserId?: string,
+        // }
+        AddPlaylistScreen: {
+          domainId: number, 
+        }
+    }
+
+    export type ProfileContentNavigatorParamsList = {
+        DomainOfTasteScreen: {
           domainOfTaste: Domain, //NEEDS TO BE UPDATED BASED ON THE FIRESTORE SETUP: DOMAINS_COLLECTION
-          user: User //NEEDS TO BE UPDATED BASED ON THE FIRESTORE SETUP: USERS_COLLECTION
+          user: User, //NEEDS TO BE UPDATED BASED ON THE FIRESTORE SETUP: USERS_COLLECTION
+          selectedUserId?: string, 
         }
         PostsViewScreen: {
           domainOfTaste: Domain, 
           post: Post, 
           user: User, 
+          selectedUserId?: string,
         }
-      }
+        ExternalProfileScreen: {
+          selectedUserId?: string,
+        }
+    }
 
     export type MainNavigationProp = StackNavigationProp<MainNavigatorParamsList>;
     export type HomeNavigationProp = StackNavigationProp<HomeNavigatorParamsList>;
     export type AuthNavigationProp = StackNavigationProp<AuthNavigatorParamsList>;
     export type ProfileNavigationProp = StackNavigationProp<ProfileNavigatorParamsList>;
+    export type TabsNavigationProp = StackNavigationProp<TabsNavigatorParamsList>;
+    export type ProfileContentNavigationProp = StackNavigationProp<ProfileContentNavigatorParamsList>;
 
 
 
@@ -126,6 +192,9 @@ export interface Post {
     // export type AuthProps = {
     // navigation: AuthScreenNavigationProp;
     // };
+    export type AuthNavigatorProps = {
+      initialRouteName: keyof AuthNavigatorParamsList;
+    };
 
     export type AuthOptionsProps = {
         visible: boolean;
@@ -137,8 +206,9 @@ export interface Post {
     export type PlaylistCardProps = {
       playlist: Playlist;
       domainOfTaste: Domain;
-      navigation: ProfileNavigationProp,
+      profileNavigation?: ProfileNavigationProp,
       user: User,
+      posts: Post[]
     };
 
     export type SettingsProps = {
@@ -155,20 +225,21 @@ export interface Post {
     export type PlaylistsMediaItemComponentProps = {
         domainOfTaste: Domain,
         item: Post,
-        navigation: ProfileNavigationProp,
+        profileContentNavigation: ProfileContentNavigationProp,
         user: User,
     };
 
     export type MediaItemInfoProps = { 
       visible: boolean; 
       onClose: () => void;
-      mediaItem: any; 
+      post: Post; 
     }
 
     export type SearchMediaProps = {
       visible: boolean; 
       onClose: () => void;
       postType: string; 
+      domainId: number;
     }
 
     export type MoodsTagsProps = {
@@ -177,6 +248,7 @@ export interface Post {
       onCloseAll: () => void;
       postSelectedMedia: any; 
       postType: string; 
+      domainId: number;
     }
     export type AddMoodProps = {
       visible: boolean; 
@@ -190,6 +262,7 @@ export interface Post {
       postSelectedMedia: any; 
       postType: string; 
       postSelectedMoodsTags: Mood[];
+      domainId: number;
     }
 
     export type SearchPlaylistProps = {
@@ -200,27 +273,49 @@ export interface Post {
       postType: string; 
       postSelectedMoodsTags: Mood[]; 
       postInsertedCaption: string ;
+      domainId?: number;
     }
 
     export type AddPlaylistProps = {
       visible: boolean; 
       onClose: () => void;
       onCloseAll: () => void;
-      postSelectedMedia: any; 
-      postSelectedMoodsTags: Mood[];
-      postType: string; 
-      postInsertedCaption: string; 
+      postSelectedMedia?: any; 
+      postSelectedMoodsTags?: Mood[];
+      postType?: string; 
+      postInsertedCaption?: string; 
+      domainId?: number; 
+      hasNewPost: boolean;
     }
 
     export type SpotifyAuthComponentProp = {
       authType: string;
     }
 
+    export type DomainOfTasteCardProp = {
+      navigation: any;  
+      category: Domain; 
+      user: User; 
+      isCurrentUser: boolean;
+      toggleAddPlaylistModal?: () => void;
+      userId: string;
+      isAddPlaylistModalVisible?: boolean; 
+    }
+
+    // // Define the props for ProfileScreenWrapper
+    // export type ProfileScreenWrapperProps = {
+    //   route: ProfileScreenRouteProp;
+    // };
+
 
 
     export type AuthEmailPasswordScreenRouteProp = RouteProp<AuthNavigatorParamsList, 'AuthEmailPasswordScreen'>;
-    export type PostsViewScreenRouteProp = RouteProp<ProfileNavigatorParamsList, 'PostsViewScreen'>;
-    export type DomainOfTasteScreenRouteProp = RouteProp<ProfileNavigatorParamsList, 'PostsViewScreen'>;
+    export type PostsViewScreenRouteProp = RouteProp<ProfileContentNavigatorParamsList, 'PostsViewScreen'>;
+    export type DomainOfTasteScreenRouteProp = RouteProp<ProfileContentNavigatorParamsList, 'DomainOfTasteScreen'>;
+    export type SignUpEndScreenRouteProp = RouteProp<AuthNavigatorParamsList, 'SignUpEndScreen'>;
+    export type ProfileScreenRouteProp = RouteProp<ProfileNavigatorParamsList, 'ProfileScreen'>;
+    export type ExternalProfileScreenRouteProp = RouteProp<HomeNavigatorParamsList, 'ExternalProfileScreen'>;
+    export type AddPlaylistScreenRouteProp = RouteProp<ProfileNavigatorParamsList, 'AddPlaylistScreen'>;
 
 
     // export type AuthEmailPasswordScreenNavigationProp = StackNavigationProp<AuthNavigatorParamsList,'AuthEmailPasswordScreen'>;

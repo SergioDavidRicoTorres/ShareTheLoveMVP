@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, TouchableOpacity, Dimensions } from "react-native";
+import { View, Image, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
 import SearchMedia from "./SearchMedia";
 import { normalize } from "../../utils";
 
@@ -28,78 +28,95 @@ function AddButtons() {
     <View
       style={{
         position: "relative",
-        marginTop: -normalize(39),
+        // marginTop: -normalize(20),
+        bottom: normalize(30),
         alignItems: "center",
         flex: 1,
       }}
     >
       {opened && (
-        <View
+
+          <TouchableOpacity
           style={{
             position: "absolute",
-            top: -normalize(39),
-            left: -normalize(39),
+            bottom: normalize(55),
+            right: normalize(100),
             alignItems: "center",
             justifyContent: "center",
-            width: normalize(50),
-            height: normalize(50),
+            width: normalize(80),
+            height: normalize(80),
+            borderRadius: normalize(50),
+            backgroundColor: "rgba(75, 117, 59, 1)",
+            borderColor: "rgba(197, 238, 182, 1)", 
+            borderWidth: normalize(5)
           }}
-        >
-          <TouchableOpacity onPress={toggleEpisodePostModal}>
+          onPress={toggleEpisodePostModal}
+          >
             <Image
               resizeMode="contain"
               style={{
                 height: normalize(80),
                 width: normalize(80),
               }}
-              source={require("../../assets/icons/AddEpisodeIcon.png")}
+              source={require("../../assets/icons/AddPodcastEpisodeIcon.png")}
             />
           </TouchableOpacity>
-        </View>
+      )}
+      {opened && (
+        // <View
+        // >
+          <TouchableOpacity 
+          style={{
+            position: "absolute",
+            bottom: normalize(120),
+            alignItems: "center",
+            justifyContent: "center",
+            width: normalize(80),
+            height: normalize(80),
+            borderRadius: normalize(50),
+            backgroundColor: "rgba(0, 98, 62, 1)",
+            borderColor: "rgba(153, 255, 218, 1))", 
+            borderWidth: normalize(5)
+          }}
+          onPress={toggleMusicPostModal}
+          >
+            <Image
+              resizeMode="contain"
+              style={{
+                height: normalize(80),
+                width: normalize(80),
+              }}
+              source={require("../../assets/icons/AddSongIcon.png")}
+            />
+          </TouchableOpacity>
+        // </View>
       )}
       {opened && (
         <View
-          style={{
-            position: "absolute",
-            top: -normalize(98),
-            alignItems: "center",
-            justifyContent: "center",
-            width: normalize(50),
-            height: normalize(50),
-          }}
+        style={{
+          position: "absolute",
+          bottom: normalize(55),
+          left: normalize(100),
+          alignItems: "center",
+          justifyContent: "center",
+          width: normalize(80),
+          height: normalize(80),
+          borderRadius: normalize(50),
+          backgroundColor: "rgba(99, 0, 101, 1)",
+          borderColor: "rgba(253, 153, 255, 1)", 
+          borderWidth: normalize(5)
+        }}
         >
-          <TouchableOpacity onPress={toggleMusicPostModal}>
+          <TouchableOpacity 
+          onPress={toggleFilmTVShowPostModal}
+          >
             <Image
               resizeMode="contain"
               style={{
                 height: normalize(80),
                 width: normalize(80),
               }}
-              source={require("../../assets/icons/AddMusicIcon.png")}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
-      {opened && (
-        <View
-          style={{
-            position: "absolute",
-            top: -normalize(39),
-            right: -normalize(39),
-            alignItems: "center",
-            justifyContent: "center",
-            width: normalize(50),
-            height: normalize(50),
-          }}
-        >
-          <TouchableOpacity onPress={toggleFilmTVShowPostModal}>
-            <Image
-              resizeMode="contain"
-              style={{
-                height: normalize(80),
-                width: normalize(80),
-              }}
-              source={require("../../assets/icons/AddFilmsTVShowsIcon.png")}
+              source={require("../../assets/icons/AddFilmTVShowIcon.png")}
             />
           </TouchableOpacity>
         </View>
@@ -113,18 +130,14 @@ function AddButtons() {
         // }}
       >
         <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            top: 0,
-          }}
+          style={ opened ? styles.unselectedAddBotton : styles.selectedAddButton}
         >
           <Image
             source={require("../../assets/icons/AddButton.png")}
             resizeMode="contain"
             style={{
-              width: normalize(102),
-              height: normalize(102),
+              width: normalize(80),
+              height: normalize(80),
             }}
           />
         </View>
@@ -133,19 +146,49 @@ function AddButtons() {
         visible={isEpisodePostModalVisible}
         onClose={toggleEpisodePostModal}
         postType="PodcastEpisode"
+        domainId={2}
       />
       <SearchMedia
         visible={isMusicPostModalVisible}
         onClose={toggleMusicPostModal}
         postType="Song"
+        domainId={0}
       />
       <SearchMedia
         visible={isFilmTVShowPostModalVisible}
         onClose={toggleFilmTVShowPostModal}
         postType="Film/TVShow"
+        domainId={1}
       />
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  unselectedAddBotton: {
+      alignItems: "center",
+      justifyContent: "center",
+      top: 0,
+      width: normalize(70),
+      height: normalize(70),
+      backgroundColor: "rgba(156, 75, 255, 1)",
+      borderRadius: normalize(100),
+      shadowColor: "rgba(77, 159, 217, 1)",
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 1,
+      shadowRadius: normalize(20),
+    }, 
+    selectedAddButton: {
+      alignItems: "center",
+      justifyContent: "center",
+      top: 0,
+      width: normalize(70),
+      height: normalize(70),
+      backgroundColor: "rgba(156, 75, 255, 1)",
+      borderRadius: normalize(100),
+    }
+  });
 export default AddButtons;

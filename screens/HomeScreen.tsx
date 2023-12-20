@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -13,8 +13,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import PostCard from "../components/PostCard";
 import { normalize } from "../utils";
-import { HomeNavigationProp } from "../types";
-import { getChronologicallySortedPosts } from "../utilsData";
+import { HomeNavigationProp, Post } from "../types";
+import { getChronologicallySortedPosts, getPosts } from "../utilsData";
+import { fetchLastPosts } from "../utilsFirebase";
 
 const postCardsExamples = [
   {
@@ -75,7 +76,17 @@ const postCardsExamples = [
 // const feedItemSeparatorHeight = width * 0.089;
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavigationProp>();
-  const posts = getChronologicallySortedPosts();
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const fetchAndSetPosts = async () => {
+      const fetchedPosts = await fetchLastPosts();
+      setPosts(fetchedPosts);
+    };
+
+    fetchAndSetPosts();
+  }, []);
+
   // console.log(AuthSession.getRedirectUrl());  //outputs the redirect uri link for the spotify API
   // firestore()
   // .collection('posts')

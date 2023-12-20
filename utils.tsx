@@ -10,28 +10,30 @@ import {
 import React from "react";
 // import * as Crypto from 'expo-crypto';
 import { Domain, Mood, PlaylistsMediaItemComponentProps } from "./types";
+import { DOMAINPOSTTYPE } from "./constants";
 // import { Song, FilmOrTVShow, PodcastEpisode } from "./types";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 export const normalize = (value: number) => width * (value / 390);
 
 // get Search Result Item subtitle, depending on the media type:
-export const getItemSubTitle = (item: any, postType?: string) => {
+export const getItemSubTitle = (mediaItem: any, domainId: number) => {
   // try {
-    switch (postType){
-    case "Song" : {
+    switch (domainId){
+    case 0 : {
       return (
         <View style={{ flexDirection: "row" }}>
-          {item.artists?.map((artist: any, index: number) => (
+          {mediaItem.artists?.map((artist: any, index: number) => (
             <React.Fragment key={index}>
               {/* itemArtistName */}
-              {index !== item.artists.length - 1 ? (
+              {index !== mediaItem.artists.length - 1 ? (
                 <Text
                   // itemArtistName with "-"
                   numberOfLines={1}
                   style={styles.itemSubtitle}
                 >
                   {artist.name}-
+
                 </Text>
               ) : (
                 <Text
@@ -47,17 +49,17 @@ export const getItemSubTitle = (item: any, postType?: string) => {
         </View>
       );
     }
-    case "PodcastEpisode" : {
+    case 2 : {
       return (
         <Text numberOfLines={1} style={styles.itemSubtitle}>
-          {item.description}
+          {mediaItem.description}
         </Text>
       );
     }
-    case "Film/TVShow" : {
+    case 1 : {
       return (
         <Text numberOfLines={1} style={styles.itemSubtitle}>
-          {item.media_type}
+          {mediaItem.media_type}
         </Text>
       );
     }
@@ -293,17 +295,35 @@ export const getItemSubTitle = (item: any, postType?: string) => {
 //   }
 // };
 // };
-export const getItemImage = (item: any, postType: string) => {
+// export const getItemImage = (item: any, postType: string) => {
+//   try {
+//     switch (postType) {
+//       case "Song":
+//         return { uri: item.album.images[0].url };
+//       case "PodcastEpisode":
+//         return { uri: item.images[0].url };
+//       case "Film/TVShow":
+//         return { uri: `https://image.tmdb.org/t/p/original/${item.poster_path}` };
+//       default:
+//         throw new Error(`Invalid postType: ${postType}`);
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return { uri: 'DefaultImageURL' }; // Replace 'DefaultImageURL' with a default image url if needed
+//   }
+// };
+
+export const getItemImage = (item: any, domainId: number) => {
   try {
-    switch (postType) {
-      case "Song":
+    switch (domainId) {
+      case 0:
         return { uri: item.album.images[0].url };
-      case "PodcastEpisode":
+      case 2:
         return { uri: item.images[0].url };
-      case "Film/TVShow":
+      case 1:
         return { uri: `https://image.tmdb.org/t/p/original/${item.poster_path}` };
       default:
-        throw new Error(`Invalid postType: ${postType}`);
+        throw new Error(`Invalid domainId: ${domainId}`);
     }
   } catch (error) {
     console.error(error);
@@ -312,15 +332,28 @@ export const getItemImage = (item: any, postType: string) => {
 };
 
 
-export const getItemTitle = (item: any, postType: string) => {
-  switch (postType) {
-      case "Song":
-      case "PodcastEpisode":
+// export const getItemTitle = (item: any, postType: string) => {
+//   switch (postType) {
+//       case "Song":
+//       case "PodcastEpisode":
+//           return item.name;
+//       case "Film/TVShow":
+//           return item.media_type === "movie" ? item.title : item.name;
+//       default:
+//           console.log('Invalid "postType" was passed!');
+//           return "Unknown Title";
+//   }
+// };
+export const getItemTitle = (item: any, domainId: number) => {
+  switch (domainId) {
+      case 0:
           return item.name;
-      case "Film/TVShow":
+      case 2:
+          return item.name;
+      case 1:
           return item.media_type === "movie" ? item.title : item.name;
       default:
-          console.log('Invalid "postType" was passed!');
+          console.error('Invalid "postType" was passed!');
           return "Unknown Title";
   }
 };
@@ -339,16 +372,30 @@ export const getButtonsAccentColor = (postType?: string) => {
   }
 };
 
+// export const getGradientsFirstColor = (postType: string) => {
+//   switch (postType) {
+//       case "Song":
+//           return "rgba(0, 209, 134, 1)";
+//       case "PodcastEpisode":
+//           return "rgba(110, 212, 73, 1)";
+//       case "Film/TVShow":
+//           return "rgba(207, 0, 211, 1)";
+//       default:
+//           console.error('Invalid "postType" was passed!');
+//           return "rgba(105, 51, 172, 1)";
+//   }
+// };
+
 export const getGradientsFirstColor = (postType: string) => {
   switch (postType) {
       case "Song":
-          return "rgba(0, 209, 134, 1)";
+          return "rgba(0, 98, 62, 1)";
       case "PodcastEpisode":
-          return "rgba(110, 212, 73, 1)";
+          return "rgba(75, 117, 59, 1)";
       case "Film/TVShow":
-          return "rgba(207, 0, 211, 1)";
+          return "rgba(99, 0, 101, 1)";
       default:
-          console.log('Invalid "postType" was passed!');
+          console.error('Invalid "postType" was passed!');
           return "rgba(105, 51, 172, 1)";
   }
 };
@@ -540,15 +587,16 @@ export const getImageHeight = (postType: string) => {
 export const getPlaylistsMediaItemComponent = ({
   domainOfTaste,
   item: post,
-  navigation,
+  profileContentNavigation,
   user,
 }: PlaylistsMediaItemComponentProps) => {
   switch (domainOfTaste.domainId){
     case 0: {
       return (
+        // <Text>{post.toString()}</Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("PostsViewScreen", {
+            profileContentNavigation.navigate("PostsViewScreen", {
               domainOfTaste,
               post,
               user,
@@ -563,18 +611,23 @@ export const getPlaylistsMediaItemComponent = ({
               backgroundColor: "rgba(58, 17, 90, 0.5)",
               marginRight: normalize(15),
               alignItems: "center",
+              borderColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+              borderWidth: normalize(4), 
             }}
           >
-            <Image
-              source={{ uri: post.mediaItem.image }}
-              style={{
-                width: normalize(100),
-                height: normalize(100),
-                borderBottomLeftRadius: normalize(10),
-                borderBottomRightRadius: normalize(10),
-                //   borderRadius: normalize(10),
-              }}
-            />
+          <Image
+            source={
+              // { "uri": post.mediaItem.image}  //with implemented MediaItem Interface
+              getItemImage(post.mediaItem, domainOfTaste.domainId)
+            }
+            style={{
+              width: normalize(100),
+              height: normalize(100),
+              borderBottomLeftRadius: normalize(10),
+              borderBottomRightRadius: normalize(10),
+              //   borderRadius: normalize(10),
+            }}
+          />
             <View
               style={{
                 alignItems: "center",
@@ -591,7 +644,8 @@ export const getPlaylistsMediaItemComponent = ({
                 }}
                 numberOfLines={1}
               >
-                {post.mediaItem.name}
+                {/* {post.mediaItem.name} //with implemented MediaItem Interface*/}
+                {getItemTitle(post.mediaItem, domainOfTaste.domainId)  }
               </Text>
               <Text
                 style={{
@@ -599,12 +653,15 @@ export const getPlaylistsMediaItemComponent = ({
                   fontSize: normalize(15),
                   fontWeight: "300",
                 }}
+                numberOfLines={1}
               >
-                {post.mediaItem.album}
+                {post.mediaItem.album.name} 
               </Text>
               <View style={{ width: normalize(165) }}>
                 <FlatList
-                  data={post.mediaItem.artists}
+                  data={
+                    post.mediaItem.artists
+                  }
                   scrollEnabled={false}
                   horizontal
                   style={{
@@ -641,21 +698,21 @@ export const getPlaylistsMediaItemComponent = ({
                         fontWeight: "500",
                       }}
                     >
-                      {item}
+                      {item.name}
                     </Text>
                   )}
                 />
               </View>
             </View>
-          </View>
-        </TouchableOpacity>
+      </View>
+      </TouchableOpacity>
       );
     }
     case 1: {
       return (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("PostsViewScreen", {
+            profileContentNavigation.navigate("PostsViewScreen", {
               domainOfTaste,
               post,
               user,
@@ -675,7 +732,10 @@ export const getPlaylistsMediaItemComponent = ({
             }}
           >
             <Image
-              source={{ uri: post.mediaItem.image }}
+              source={
+                // { uri: post.mediaItem.image }
+                getItemImage(post.mediaItem, domainOfTaste.domainId)
+              }
               style={{
                 width: normalize(170),
                 height: normalize(240),
@@ -690,7 +750,7 @@ export const getPlaylistsMediaItemComponent = ({
       return (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("PostsViewScreen", {
+            profileContentNavigation.navigate("PostsViewScreen", {
               domainOfTaste,
               post,
               user,
@@ -705,13 +765,16 @@ export const getPlaylistsMediaItemComponent = ({
               backgroundColor: "rgba(58, 17, 90, 0.8)",
               marginRight: normalize(15),
               alignItems: "center",
+              borderColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+              borderWidth: normalize(5),
               // justifyContent: "center",
               // // padding: 0,
             }}
-          >
+            >
             <View
               style={{
                 flexDirection: "row",
+                paddingHorizontal: 0,
                 gap: normalize(10),
                 //   width: normalize(320),
                 //   maxWidth: normalize(320),
@@ -719,11 +782,15 @@ export const getPlaylistsMediaItemComponent = ({
               }}
             >
               <Image
-                source={{ uri: post.mediaItem.image }}
+                source={
+                  // { uri: post.mediaItem.image }
+                  getItemImage(post.mediaItem, domainOfTaste.domainId)
+                }
                 style={{
                   width: normalize(120),
                   height: normalize(120),
                   borderRadius: normalize(10),
+                  left: normalize(5) // because of the borderwidth
                   // opacity: 0.8,
                 }}
               />
@@ -745,7 +812,8 @@ export const getPlaylistsMediaItemComponent = ({
                   }}
                   numberOfLines={5}
                 >
-                  {post.mediaItem.name}
+                  {/* {post.mediaItem.name} //with implemented MediaItem Interface*/}
+                {getItemTitle(post.mediaItem, domainOfTaste.domainId)  }
                 </Text>
               </View>
             </View>
@@ -807,6 +875,9 @@ export const getPlaylistsMediaItemComponent = ({
 export const transformMoodsToStringArray = (moods: Mood[]): string[] => {
   return moods.map(mood => mood.name);
 };
+
+export const getCarouselNumColumns = (listLength: number) => listLength / 5;
+
 
 // export const generateRandomString = (length: number) => {
 //   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

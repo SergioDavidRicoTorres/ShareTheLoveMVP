@@ -4,14 +4,16 @@ import Auth from "../screens/AuthScreen";
 import SignUpPersonalInfo from "../screens/SignUpPersonalInfoScreen";
 import SignUpEnd from "../screens/SignUpEndScreen";
 import AuthEmailPassword from "../screens/AuthEmailPasswordScreen";
-import { AuthNavigatorParamsList } from "../types";
+import { AuthNavigatorParamsList, AuthNavigatorProps } from "../types";
 
 const Stack = createStackNavigator<AuthNavigatorParamsList>();
 
+// const AuthNavigator = ({initialRouteName}: AuthNavigatorProps) => {
 const AuthNavigator = () => {
+
   return (
     <Stack.Navigator
-      initialRouteName="AuthScreen"
+      // initialRouteName={initialRouteName}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="AuthScreen" component={Auth} />

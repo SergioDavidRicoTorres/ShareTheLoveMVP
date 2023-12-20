@@ -7,16 +7,19 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  FlatList
+  FlatList,
+  Linking
 } from "react-native";
-import { normalize } from "../utils";
-import { MediaItemInfoProps } from "../types";
+import { getItemTitle, normalize } from "../utils";
+import { MediaItemInfoProps, Post } from "../types";
+import { DOMAINPOSTTYPE } from "../constants";
 
 const { width } = Dimensions.get("window"); // screen width constant
 
-const getMediaInfoComponent = (mediaItem: any) => {
+const getMediaInfoComponent = (post: Post) => {
   try {
-    if (mediaItem.mediaType === "Song") {
+    switch (post.domainId) {
+      case 0: 
       return (
         <View
           style={{
@@ -35,7 +38,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
           >
             <Text
               style={{
-                color: "rgba(255, 184, 0, 1)",
+                color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(25),
                 fontWeight: "700",
               }}
@@ -48,7 +51,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
                 paddingHorizontal: normalize(21),
                 // justifyContent: "center",
                 // alignItems: "flex-start",
-                backgroundColor: "rgba(255, 184, 0, 1)",
+                backgroundColor: "rgba(156, 75, 255, 1)",
                 borderRadius: normalize(15),
                 // maxHeight: normalize(25),
                 maxWidth: normalize(260),
@@ -57,12 +60,12 @@ const getMediaInfoComponent = (mediaItem: any) => {
             >
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(18),
                   fontWeight: "400",
                 }}
               >
-                {mediaItem.name}
+                {post.mediaItem.name}
               </Text>
             </ScrollView>
           </View>
@@ -76,7 +79,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
           >
             <Text
               style={{
-                color: "rgba(255, 184, 0, 1)",
+                color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(25),
                 fontWeight: "700",
               }}
@@ -89,7 +92,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
                 paddingHorizontal: normalize(21),
                 // justifyContent: "center",
                 // alignItems: "flex-start",
-                backgroundColor: "rgba(255, 184, 0, 1)",
+                backgroundColor: "rgba(156, 75, 255, 1)",
                 borderRadius: normalize(15),
                 // maxHeight: normalize(25),
                 maxWidth: normalize(260),
@@ -98,12 +101,12 @@ const getMediaInfoComponent = (mediaItem: any) => {
             >
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(18),
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
               >
-                {mediaItem.album}
+                {post.mediaItem.album.name}
               </Text>
             </ScrollView>
           </View>
@@ -117,7 +120,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
           >
             <Text
               style={{
-                color: "rgba(255, 184, 0, 1)",
+                color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(25),
                 fontWeight: "700",
               }}
@@ -130,7 +133,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
                 paddingHorizontal: normalize(21),
                 // justifyContent: "center",
                 // alignItems: "flex-start",
-                backgroundColor: "rgba(255, 184, 0, 1)",
+                backgroundColor: "rgba(156, 75, 255, 1)",
                 borderRadius: normalize(15),
                 // maxHeight: normalize(25),
                 maxWidth: normalize(260),
@@ -138,7 +141,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
               horizontal
             >
               <FlatList
-                data={mediaItem.artists}
+                data={post.mediaItem.artists}
                 scrollEnabled={false}
                 horizontal
                 style={
@@ -158,23 +161,23 @@ const getMediaInfoComponent = (mediaItem: any) => {
                     style={{
                       color: "white",
                       fontSize: normalize(18),
-                      fontWeight: "400",
+                      fontWeight: "500",
                     }}
                   >
                     {" "}
                     -{" "}
                   </Text>
                 )}
-                renderItem={({ item: mood }) => (
+                renderItem={({ item: artist }) => (
                   <Text
                     numberOfLines={1}
                     style={{
-                      color: "rgba(58, 17, 90, 1)",
+                      color: "white",
                       fontSize: normalize(18),
-                      fontWeight: "400",
+                      fontWeight: "500",
                     }}
                   >
-                    {mood.name}
+                    {artist.name}
                   </Text>
                 )}
               />
@@ -182,8 +185,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
           </View>
         </View>
       );
-    }
-    if (mediaItem.mediaType === "Film" || mediaItem.mediaType === "TV Show") {
+      case 1: 
       return (
         <View style={{ gap: normalize(15), marginVertical: normalize(20) }}>
           <View
@@ -196,7 +198,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
           >
             <Text
               style={{
-                color: "rgba(255, 184, 0, 1)",
+                color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(25),
                 fontWeight: "700",
               }}
@@ -209,7 +211,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
                 paddingHorizontal: normalize(21),
                 // justifyContent: "center",
                 // alignItems: "flex-start",
-                backgroundColor: "rgba(255, 184, 0, 1)",
+                backgroundColor: "rgba(156, 75, 255, 1)",
                 borderRadius: normalize(15),
                 maxHeight: normalize(28),
                 // maxWidth: 300,
@@ -219,17 +221,18 @@ const getMediaInfoComponent = (mediaItem: any) => {
             >
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(18),
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
                 // numberOfLines={4}
               >
-                {mediaItem.name}
+                {/* has to be updated */}
+                {post.mediaItem.original_title}
               </Text>
             </ScrollView>
           </View>
-
+  
           <View
             style={{
               //   flexDirection: "row",
@@ -240,7 +243,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
           >
             <Text
               style={{
-                color: "rgba(255, 184, 0, 1)",
+                color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(25),
                 fontWeight: "700",
               }}
@@ -251,7 +254,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
               style={{
                 paddingVertical: 5,
                 paddingHorizontal: normalize(15),
-                backgroundColor: "rgba(255, 184, 0, 1)",
+                backgroundColor: "rgba(156, 75, 255, 1)",
                 borderRadius: normalize(15),
                 // maxWidth: 300,
                 marginHorizontal: normalize(10),
@@ -260,19 +263,18 @@ const getMediaInfoComponent = (mediaItem: any) => {
             >
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(18),
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
               >
-                {mediaItem.overview}
+                {post.mediaItem.overview}
               </Text>
             </ScrollView>
           </View>
         </View>
       );
-    }
-    if (mediaItem.mediaType === "Episodes") {
+      case 2: 
       return (
         <View style={{ gap: normalize(15), marginVertical: normalize(20) }}>
           <View
@@ -285,7 +287,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
           >
             <Text
               style={{
-                color: "rgba(255, 184, 0, 1)",
+                color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(25),
                 fontWeight: "700",
               }}
@@ -298,7 +300,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
                 paddingHorizontal: normalize(21),
                 // justifyContent: "center",
                 // alignItems: "flex-start",
-                backgroundColor: "rgba(255, 184, 0, 1)",
+                backgroundColor: "rgba(156, 75, 255, 1)",
                 borderRadius: normalize(15),
                 maxHeight: normalize(28),
                 // maxWidth: 300,
@@ -308,17 +310,17 @@ const getMediaInfoComponent = (mediaItem: any) => {
             >
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(18),
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
                 // numberOfLines={4}
               >
-                {mediaItem.name}
+                {post.mediaItem.name}
               </Text>
             </ScrollView>
           </View>
-
+  
           <View
             style={{
               //   flexDirection: "row",
@@ -329,7 +331,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
           >
             <Text
               style={{
-                color: "rgba(255, 184, 0, 1)",
+                color: "rgba(156, 75, 255, 1)",
                 fontSize: normalize(25),
                 fontWeight: "700",
               }}
@@ -340,7 +342,7 @@ const getMediaInfoComponent = (mediaItem: any) => {
               style={{
                 paddingVertical: 5,
                 paddingHorizontal: normalize(15),
-                backgroundColor: "rgba(255, 184, 0, 1)",
+                backgroundColor: "rgba(156, 75, 255, 1)",
                 borderRadius: normalize(15),
                 // maxWidth: 300,
                 marginHorizontal: normalize(10),
@@ -349,25 +351,36 @@ const getMediaInfoComponent = (mediaItem: any) => {
             >
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(18),
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
               >
-                {mediaItem.description}
+                {post.mediaItem.description}
               </Text>
             </ScrollView>
           </View>
         </View>
       );
     }
-  } catch (error) {
+    } catch (error) {
     console.error(error);
     return [];
   }
 };
 
-export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItemInfoProps) {
+export default function MediaItemInfo({ visible, onClose, post }: MediaItemInfoProps) {
+  const handleSpotifyButtonPress = () => {
+    const url = post.mediaItem.external_urls.spotify;
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        console.log("Don't know how to open URI: " + url);
+      }
+    });
+  };
+
   return (
     <View style={{ flex: 0.2 }}>
       <Modal visible={visible} animationType="slide" transparent>
@@ -386,6 +399,8 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItem
             borderRadius: normalize(20),
             paddingTop: normalize(15),
             paddingHorizontal: normalize(10),
+            borderColor: "rgba(156, 75, 255, 1)", 
+            borderWidth: normalize(4)
           }}
         >
           <View
@@ -393,11 +408,11 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItem
             style={{
               flexDirection: "row",
               alignItems: "center",
-              top: normalize(9),
+              top: normalize(12),
               position: "absolute",
               width: normalize(20),
               height: normalize(20),
-              right: normalize(9),
+              right: normalize(12),
               //   backgroundColor: "white",
             }}
           >
@@ -408,7 +423,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItem
             >
               {/* Back Button Image */}
               <Image
-                source={require("../assets/icons/CancelButtonYellow.png")}
+                source={require("../assets/icons/CancelButtonLightPurple.png")}
                 style={{
                   //   top: normalize(9),
                   //   position: "absolute",
@@ -421,15 +436,15 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItem
           </View>
           <Text
             style={{
-              color: "rgba(255, 184, 0, 1)",
+              color: "rgba(156, 75, 255, 1)",
               fontSize: normalize(30),
               fontWeight: "800",
             }}
           >
-            {mediaItem.mediaType}
+            {DOMAINPOSTTYPE.get(post.domainId)}
           </Text>
           {/* <View style={{ alignItems: "flex-start", backgroundColor: "white" }}> */}
-          {getMediaInfoComponent(mediaItem)}
+          {getMediaInfoComponent(post)}
           {/* </View> */}
           {/* <View style={{ gap: normalize(15), alignItems: "center", marginVertical: 20 }}>
             <View
@@ -442,7 +457,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItem
             >
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(25),
                   fontWeight: "700",
                 }}
@@ -473,7 +488,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItem
             >
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(25),
                   fontWeight: "700",
                 }}
@@ -497,7 +512,7 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItem
             <View style={{ flexDirection: "row" }}>
               <Text
                 style={{
-                  color: "rgba(58, 17, 90, 1)",
+                  color: "white",
                   fontSize: normalize(25),
                   fontWeight: "700",
                 }}
@@ -560,9 +575,12 @@ export default function MediaItemInfo({ visible, onClose, mediaItem }: MediaItem
               </View>
             </View>
           </View> */}
-          {mediaItem.mediaType !== "Film" &&
-            mediaItem.mediaType !== "TV Show" && (
-              <TouchableOpacity style={{ bottom: 0 }}>
+          {post.mediaItem.media_type !== "Film" &&
+            post.mediaItem.media_type !== "TV Show" && (
+              <TouchableOpacity 
+              style={{ bottom: 0, marginTop: normalize(20) }}
+              onPress={handleSpotifyButtonPress}
+              >
                 <Image
                   style={{ width: normalize(202), height: normalize(65) }}
                   source={require("../assets/icons/SpotifyButton.png")}
