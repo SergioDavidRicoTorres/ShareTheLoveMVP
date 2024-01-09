@@ -103,20 +103,27 @@ export default function DomainOfTasteScreen() {
           style={{
             // backgroundColor: getScreenGradientFirstColor(domainOfTaste),
             width,
-            paddingBottom: normalize(10),
+            paddingBottom: normalize(5),
           }}
         >
+
+          {/* Back Button */}
           <TouchableOpacity
-            // backButtonContainer
-            style={{ left: normalize(10), top: 0 }}
-            onPress={() => profileNavigation.goBack()}
-          >
-            {/* Back Button Image */}
-            <Image
-              source={require("../assets/icons/ArrowBack.png")}
-              style={styles.backButtonImage}
-            />
-          </TouchableOpacity>
+                  // backButtonContainer
+                  onPress={() => profileNavigation.goBack()}
+                  style={{
+                    left: normalize(10)
+                  }}
+                >
+                  {/* Back Button Image */}
+                  <Image
+                    source={require("../assets/icons/ArrowBack.png")}
+                    style={{
+                      width: normalize(17),
+                      height: normalize(28),
+                    }}
+                  />
+                </TouchableOpacity>
         </View>
         <ScrollView>
           <View style={{ alignItems: "center" }}>
@@ -176,7 +183,7 @@ export default function DomainOfTasteScreen() {
                 // <View>
                 //   <Text>{playlist.playlistId}</Text>
                   <PlaylistCard
-                    playlist={playlist}
+                    playlistId={playlist.playlistId !== undefined ? playlist.playlistId : "DEFAULT_PLAYLIST_ID"}
                     domainOfTaste={domainOfTaste}
                     profileNavigation={isCurrentUser ? profileNavigation : undefined}
                     user={user}

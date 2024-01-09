@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,24 +20,84 @@ import {
   getPlaylistsMediaItemComponent,
   normalize,
 } from "../utils";
-import { PlaylistCardProps, ProfileContentNavigationProp } from "../types";
+import { Playlist, PlaylistCardProps, PlaylistReview, ProfileContentNavigationProp } from "../types";
 
 import { DOMAINPOSTTYPE } from "../constants";
 import { getPlaylistId, getPlaylistsPostsData, getPosts } from "../utilsData";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { DEFAULT_PLAYLIST, updatePlaylistReview } from "../utilsFirebase";
+import { useCurrentUser } from "../CurrentUserContext";
+import { doc, onSnapshot } from "firebase/firestore";
+import { FIRESTORE_DB } from "../firebaseConfig";
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
 export default function PlaylistCard ({
-  playlist,
+  playlistId,
   domainOfTaste,
   profileNavigation,
   user,
   posts
 }: PlaylistCardProps) {
-  const [score, setScore] = useState(playlist.score);
+  const { currentUser } = useCurrentUser();
+  const [playlist, setPlaylist] = useState<Playlist>(DEFAULT_PLAYLIST);
+  const [currentReviewScore, setCurrentReviewScore] = useState<number>(0); // Original score from database
+  const [sliderScore, setSliderScore] = useState<number>(0); // Score being manipulated by slider
+  const [isScoreUpToDate, setIsScoreUpToDate] = useState (sliderScore === currentReviewScore); // true 
+  // const [isScoreUpToDate, setIsScoreUpToDate] = useState (true); // true 
   const profileContentNavigation = useNavigation<ProfileContentNavigationProp>();
+  useEffect(() => {
+    if (!playlistId) return;
+    const playlistRef = doc(FIRESTORE_DB, 'playlists', playlistId);
+
+    const unsubscribe = onSnapshot(playlistRef, (docSnap) => {
+      if (docSnap.exists()) {
+        let fetchedPlaylist = docSnap.data() as Playlist;
+        fetchedPlaylist = {...fetchedPlaylist, playlistId: playlistId}; // Adding playlistId to the fetched object
+        setPlaylist(fetchedPlaylist);
+
+        const userReview = fetchedPlaylist.reviewsList?.find(review => review.userId === currentUser?.userId);
+        const fetchedScore = userReview ? userReview.score : 0;
+        setCurrentReviewScore(fetchedScore);
+        setSliderScore(fetchedScore); // Initialize slider with the fetched score
+      } else {
+        console.error('Playlist not found');
+        setCurrentReviewScore(0);
+        setSliderScore(0);
+      }
+    }, (err) => {
+      console.error('Error fetching playlist:', err.message);
+      setCurrentReviewScore(0);
+      setSliderScore(0);
+    });
+
+    return () => unsubscribe();
+  }, [playlistId, currentUser?.userId]);
+
+
+  const handleScoreChange = (newScore: number) => {
+    const updatedScore = parseFloat(newScore.toFixed(1));
+    setSliderScore(updatedScore);
+  
+    // // Since state updates are asynchronous, directly compare newScore with playlist.score
+    setIsScoreUpToDate(updatedScore === currentReviewScore);
+  };
+
+  const handleDonePress = () => {
+    console.log("playlistId: ", playlistId)
+
+    if (playlist.playlistId && currentUser?.userId) {
+      updatePlaylistReview(playlist.playlistId, {
+        userId: currentUser.userId,
+        score: sliderScore // Replace this with the actual score you want to set
+      }).catch(error => {
+        console.error("Error updating playlist review:", error);
+      });
+    } else {
+      console.log("Playlist ID or User ID is undefined.");
+    }
+  }
   // const DOMAINPOSTTYPE = {
   //   0: "Song",
   //   1: "Film/TVShow",
@@ -143,56 +203,86 @@ export default function PlaylistCard ({
               backgroundColor: "rgba(58, 17, 90, 0.5)",
               borderRadius: normalize(10),
               marginTop: normalize(21),
+              gap: normalize(5),
+              paddingVertical: normalize(5),
+              // 80
             }}
           >
-            {/* <Slider
-              style={{ width: normalize(273), height: normalize(20) }}
-              trackStyle={{
-                height: normalize(10),
-                borderRadius: normalize(20),
-              }}
-              minimumValue={0}
-              maximumValue={10}
-              value={score}
-              onValueChange={(newScore) => setScore(parseFloat(newScore.toFixed(1)))}
-              minimumTrackTintColor={getPlaylistAccentColor(domainOfTaste)}
-              maximumTrackTintColor="rgba(58, 17, 90, 1)"
-              thumbStyle={{
-                width: width * 0.035,
-                height: width * 0.035,
-                backgroundColor: getPlaylistAccentColor(domainOfTaste),
-              }}
-            /> */}
             <Slider
-              style={{ width: normalize(273), height: normalize(20) }}
+              style={{ width: normalize(260), height: normalize(20) }}
               minimumValue={0}
               maximumValue={10}
-              value={score}
-              onValueChange={(newScore) =>
-                setScore(parseFloat(newScore.toFixed(1)))
-              }
+              value={sliderScore}
+              onValueChange={handleScoreChange}
               step={1}
               minimumTrackTintColor={getButtonsAccentColor(
                 DOMAINPOSTTYPE.get(domainOfTaste.domainId)
               )}
               maximumTrackTintColor="rgba(58, 17, 90, 1)"
-              thumbTintColor={getButtonsAccentColor(
-                DOMAINPOSTTYPE.get(domainOfTaste.domainId)
-              )}
+              // thumbTintColor={getButtonsAccentColor(
+              //   DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+              // )}
+              thumbImage={getPlaylistScoreIcon(domainOfTaste)}
             />
-            <Image
+            {/* <Image
               source={getPlaylistScoreIcon(domainOfTaste)}
               style={{ width: normalize(35), height: normalize(45) }}
-            />
+            /> */}
             <Text
               style={{
                 color: getButtonsAccentColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
-                fontSize: normalize(20),
+                fontSize: normalize(25),
                 fontWeight: "900",
               }}
             >
-              {score}
+              {sliderScore}
             </Text>
+            {isScoreUpToDate ? 
+              <View
+                style={{
+                  paddingVertical: normalize(5), 
+                  paddingHorizontal: normalize(10), 
+                  justifyContent: "center", 
+                  alignContent: "center", 
+                  borderRadius: normalize(10), 
+                  borderWidth: normalize(4), 
+                  borderColor:"rgba(105, 51, 172, 1)",
+                  backgroundColor: "rgba(53, 45, 111, 1)", 
+                }}
+              >
+                <Text
+                  style={{
+                    color: "rgba(105, 51, 172, 1)", 
+                    fontSize: normalize(18), 
+                    fontWeight: "800",
+                  }}
+                >
+                  done
+                </Text>
+              </View>
+            :
+              <TouchableOpacity
+              style={{
+                paddingVertical: normalize(5), 
+                paddingHorizontal: normalize(10), 
+                justifyContent: "center", 
+                alignContent: "center", 
+                borderRadius: normalize(10), 
+                borderWidth: normalize(4), 
+                borderColor:getButtonsAccentColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)), 
+              }}
+              onPress={handleDonePress}
+            >
+              <Text
+                style={{
+                  color: "white", 
+                  fontSize: normalize(18), 
+                  fontWeight: "800",
+                }}
+              >done</Text>
+
+            </TouchableOpacity>}
           </View>
         </View>
       </View>

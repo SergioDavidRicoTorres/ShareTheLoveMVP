@@ -23,6 +23,7 @@ import { SpotifyAuthComponent } from "../SpotifyAuthComponent";
 // import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
+import { sharedStyles } from "../sharedStyles";
 // import {firebaseApp} from "../App";
 
 // import { firebaseApp } from "../App"; // Ensure the path matches your file structure
@@ -126,15 +127,11 @@ const AuthEmailPassword = () => {
         <TouchableOpacity
               onPress={handleButtonPress}
               style={{
-                paddingHorizontal: normalize(25),
-                paddingVertical: normalize(8),
-                justifyContent: "center",
-                alignItems: "center",
-                gap: normalize(10),
-                borderRadius: normalize(15),
-                backgroundColor: "rgba(156, 75, 255, 1)",
-                flexDirection: "row",
-                marginTop: normalize(395),
+                ...sharedStyles.touchableChooseButtonContainer,
+                backgroundColor: "rgba(82, 42, 154, 1)",
+                borderColor: "rgba(156, 75, 255, 1)",
+                borderWidth: normalize(4), 
+                shadowColor: "rgba(156, 75, 255, 1)",
               }}
             >
               <Text
@@ -152,25 +149,10 @@ const AuthEmailPassword = () => {
     } else {
       return (
         <View
-            style={{
-              paddingHorizontal: normalize(25),
-              paddingVertical: normalize(8),
-              justifyContent: "center",
-              alignItems: "center",
-              gap: normalize(10),
-              borderRadius: normalize(15),
-              backgroundColor: "rgba(203, 203, 203, 0.5)",
-              flexDirection: "row",
-              marginTop: normalize(395),
-            }}
+            style={sharedStyles.chooseButtonContainer}
           >
             <Text
-              style={{
-                color: "white",
-                fontSize: normalize(20),
-                fontWeight: "800",
-                // letterSpacing: -1,
-              }}
+              style={sharedStyles.chooseButtonText}
             >
               {authType}
             </Text>

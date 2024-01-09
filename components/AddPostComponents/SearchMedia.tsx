@@ -251,13 +251,16 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
                 <TouchableOpacity
                   // backButtonContainer
                   onPress={onClose}
+                  style={{
+                    left: normalize(8)
+                  }}
                 >
                   {/* Back Button Image */}
                   <Image
                     source={require("../../assets/icons/ArrowBack.png")}
                     style={{
-                      width: normalize(14),
-                      height: normalize(23),
+                      width: normalize(20),
+                      height: normalize(33),
                     }}
                   />
                 </TouchableOpacity>
@@ -415,16 +418,16 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
             )}
           </LinearGradient>
           {selectedItem === null ? (
-            <View style={styles.chooseButtonContainer}>
-              <Text style={styles.chooseButtonText}>
+            <View style={sharedStyles.chooseButtonContainer}>
+              <Text style={sharedStyles.chooseButtonText}>
                 Choose
-                {postType}
+                {" " + postType}
               </Text>
             </View>
           ) : (
             <TouchableOpacity
               style={{
-                ...styles.touchableChooseButtonContainer,
+                ...sharedStyles.touchableChooseButtonContainer,
                 backgroundColor: getGradientsFirstColor(postType),
                 borderColor: getButtonsAccentColor(postType),
                 borderWidth: normalize(4), 
@@ -435,9 +438,9 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
                 onClose;
               }}
             >
-              <Text style={styles.chooseButtonText}>
-                Choose
-                {postType}
+              <Text style={sharedStyles.chooseButtonText}>
+              Choose
+                {" " + postType}
               </Text>
             </TouchableOpacity>
           )}
@@ -496,39 +499,41 @@ const styles = StyleSheet.create({
     lineHeight: normalize(26),
     color: "rgba(255, 255, 255, 0.75)",
   },
-  chooseButtonContainer: {
-    position: "absolute",
-    paddingHorizontal: normalize(20),
-    height: normalize(40),
-    borderRadius: normalize(15),
-    bottom: normalize(30),
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "background: rgba(152, 152, 152, 1)",
-    marginBottom: normalize(10),
-  },
-  touchableChooseButtonContainer: {
-    position: "absolute",
-    paddingHorizontal: normalize(20),
-    height: normalize(40),
-    borderRadius: normalize(15),
-    bottom: normalize(30),
-    justifyContent: "center",
-    alignItems: "center",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: normalize(10),
-    marginBottom: normalize(10),
-  },
-  chooseButtonText: {
-    fontWeight: "700",
-    fontSize: normalize(18),
-    lineHeight: normalize(21),
-    color: "white",
-  },
+  // chooseButtonContainer: {
+  //   position: "absolute",
+  //   paddingHorizontal: normalize(24),
+  //   paddingVertical: normalize(9),
+  //   // height: normalize(40),
+  //   borderRadius: normalize(15),
+  //   bottom: normalize(50),
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   backgroundColor: "background: rgba(152, 152, 152, 1)",
+  //   // marginBottom: normalize(10),
+  // },
+  // touchableChooseButtonContainer: {
+  //   position: "absolute",
+  //   paddingHorizontal: normalize(20),
+  //   paddingVertical: normalize(5),
+  //   // height: normalize(40),
+  //   borderRadius: normalize(15),
+  //   bottom: normalize(50),
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 0,
+  //   },
+  //   shadowOpacity: 0.5,
+  //   shadowRadius: normalize(10),
+  //   // marginBottom: normalize(10),
+  // },
+  // chooseButtonText: {
+  //   fontWeight: "700",
+  //   fontSize: normalize(22),
+  //   // lineHeight: normalize(21),
+  //   color: "white",
+  // },
   searchContainer: {
     flexDirection: "row",
     width: normalize(337),

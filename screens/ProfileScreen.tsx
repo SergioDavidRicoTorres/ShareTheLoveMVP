@@ -333,7 +333,7 @@ export default function ProfileScreen() {
               <Carousel
                 data={domainsArray}
                 sliderWidth={width}
-                firstItem={1}
+                firstItem={0}
                 inactiveSlideOpacity={0.5} // Sets the opacity of inactive items to 60%
                 itemWidth={normalize(270)} // Taking into account the horizontal margin
                 activeSlideAlignment={"center"}

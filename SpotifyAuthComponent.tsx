@@ -26,6 +26,7 @@ import { useSpotifyAuth } from './SpotifyAuthContext';
   
     const login = async () => {
         try {
+          console.log("CHECKPOINT 0!")
             const authRequestConfig = {
               responseType: AuthSession.ResponseType.Code,
               clientId: spotifyCredentials.clientId,
@@ -40,11 +41,11 @@ import { useSpotifyAuth } from './SpotifyAuthContext';
               authorizationEndpoint: 'https://accounts.spotify.com/authorize',
               tokenEndpoint: 'https://accounts.spotify.com/api/token',
               };
-        
+            console.log("CHECKPOINT 1!")
             const authRequest = new AuthSession.AuthRequest(authRequestConfig);
+            console.log("CHECKPOINT 2!")
             const result = await authRequest.promptAsync(spotifyDiscovery);
-            // console.log("result: ", result);
-        
+            console.log("CHECKPOINT 3!")
             if (result.type === "success") {
               const tokenResult = await AuthSession.exchangeCodeAsync(
                 {
@@ -89,16 +90,25 @@ import { useSpotifyAuth } from './SpotifyAuthContext';
             });
         }}
             style={{
-              paddingHorizontal: normalize(15),
+              paddingHorizontal: normalize(20),
               paddingVertical: normalize(5),
               justifyContent: "center",
               alignItems: "center",
               gap: normalize(10),
-              borderRadius: normalize(20),
-              backgroundColor: "rgba(29, 185, 84, 1)",
+              borderRadius: normalize(15),
               flexDirection: "row",
               marginTop: normalize(90),
-              bottom: normalize (34),
+              bottom: normalize (50),
+              shadowOffset: {
+                width: 0,
+                height: 0,
+              },
+              shadowOpacity: 0.5,
+              shadowRadius: normalize(10),
+              backgroundColor: "rgba(20, 97, 69, 1)",
+              borderColor: "rgba(29, 185, 84, 1)",
+              borderWidth: normalize(4), 
+              shadowColor: "rgba(29, 185, 84, 1)",
             }}
           >
             <Image

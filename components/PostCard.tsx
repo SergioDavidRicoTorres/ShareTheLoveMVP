@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -19,15 +19,59 @@ import {
   getItemImage,
   getItemTitle
 } from "../utils";
-import { PostCardProps } from "../types";
+import { Post, PostCardProps } from "../types";
 import { DOMAINPOSTTYPE } from "../constants";
-import { getUserData } from "../utilsData";
+import { DEFAULT_USER, getUserData } from "../utilsData";
+import { fetchUserById, toggleLikePost } from "../utilsFirebase";
+import { useCurrentUser } from "../CurrentUserContext";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 
 export default function PostCard ({ post }: PostCardProps) {
+  const { currentUser } = useCurrentUser();
+  const [currentPost, setCurrentPost] = useState<Post>(post);
   const [isLiked, setIsLiked] = useState(false);
-  const user = getUserData(0);    //const user = getUserData(post.userId);
+  const [user, setUser] = useState(DEFAULT_USER)
+  console.log("FUK YESSSSS")
+
+  useEffect(() => {
+    // Ensure currentUser and currentUser.userId are defined
+    if (currentUser && currentUser.userId && currentPost && Array.isArray(currentPost.likesUserIdsList)) {
+      // Check if the current user has liked the post
+      setIsLiked(currentPost.likesUserIdsList.includes(currentUser.userId));
+    }
+
+    const fetchUser = async () => {
+      try {
+        const user = await fetchUserById(currentPost.userId);
+        if (user !== null) {
+          setUser(user);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Handle the error appropriately
+      }
+    };
+
+    fetchUser();
+  }, [currentPost, currentUser]); // Keep currentUser as a dependency
+
+  const handleLikePress = async () => {
+    try {
+      if (currentUser !== null && currentPost !== null && Array.isArray(currentPost.likesUserIdsList)) {
+        setIsLiked(!isLiked);
+        await toggleLikePost(currentPost, currentUser, setCurrentPost);
+      } else {
+        throw new Error('currentUser === null or currentPost === null or !Array.isArray(currentPost.likedUserIdsList');
+      }
+    } catch (error) {
+      console.error("Error in handleLikePress: ", error);
+    }
+  };
+  
+
+  console.log("[USER]: ", user)
+  // const user = getUserData(0);    //const user = getUserData(currentPost.userId);
 
   const getLikeComponent = (postType?: string) => {
       switch (postType) {
@@ -35,9 +79,7 @@ export default function PostCard ({ post }: PostCardProps) {
         if (isLiked) {
           return (
             <TouchableOpacity
-              onPress={() => {
-                setIsLiked(!isLiked);
-              }}
+              onPress={handleLikePress}
               style={{
                 width: normalize(50),
                 height: normalize(50),
@@ -65,9 +107,7 @@ export default function PostCard ({ post }: PostCardProps) {
         } else {
           return (
             <TouchableOpacity
-              onPress={() => {
-                setIsLiked(!isLiked);
-              }}
+              onPress={handleLikePress}
               style={{
                 width: normalize(50),
                 height: normalize(50),
@@ -106,9 +146,7 @@ export default function PostCard ({ post }: PostCardProps) {
         if (isLiked) {
           return (
             <TouchableOpacity
-              onPress={() => {
-                setIsLiked(!isLiked);
-              }}
+              onPress={handleLikePress}
               style={{
                 width: normalize(50),
                 height: normalize(50),
@@ -136,9 +174,7 @@ export default function PostCard ({ post }: PostCardProps) {
         } else {
           return (
             <TouchableOpacity
-              onPress={() => {
-                setIsLiked(!isLiked);
-              }}
+              onPress={handleLikePress}
               style={{
                 width: normalize(50),
                 height: normalize(50),
@@ -169,9 +205,7 @@ export default function PostCard ({ post }: PostCardProps) {
         if (isLiked) {
           return (
             <TouchableOpacity
-              onPress={() => {
-                setIsLiked(!isLiked);
-              }}
+              onPress={handleLikePress}
               style={{
                 width: normalize(50),
                 height: normalize(50),
@@ -199,9 +233,7 @@ export default function PostCard ({ post }: PostCardProps) {
         } else {
           return (
             <TouchableOpacity
-              onPress={() => {
-                setIsLiked(!isLiked);
-              }}
+              onPress={handleLikePress}
               style={{
                 width: normalize(50),
                 height: normalize(50),
@@ -275,7 +307,7 @@ export default function PostCard ({ post }: PostCardProps) {
       }}
       >
 
-      {getLikeComponent(DOMAINPOSTTYPE.get(post.domainId))}
+      {getLikeComponent(DOMAINPOSTTYPE.get(currentPost.domainId))}
       </View>
 {/* 
       <ScrollView
@@ -303,7 +335,7 @@ export default function PostCard ({ post }: PostCardProps) {
           // ]}
           numberOfLines={1}
           style={{
-            color: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+            color: getMoodTextColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
             fontSize: normalize(25),
             fontWeight: "500",
             textAlign: "center",
@@ -312,7 +344,7 @@ export default function PostCard ({ post }: PostCardProps) {
             // borderWidth: normalize(4), 
           }}
         >
-          {getItemTitle(post.mediaItem, post.domainId)}
+          {getItemTitle(currentPost.mediaItem, currentPost.domainId)}
         </Text>
       </ScrollView>
       {/* </ScrollView> */}
@@ -324,13 +356,13 @@ export default function PostCard ({ post }: PostCardProps) {
           maxWidth: normalize(300),
         }}
       >
-        {getItemSubTitle(post.mediaItem, post.domainId)}
+        {getItemSubTitle(currentPost.mediaItem, currentPost.domainId)}
       </View>
 
       {/* POST IMAGE */}
       <View 
         style={{
-          backgroundColor: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+          backgroundColor: getMoodTextColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
           borderRadius: normalize(15)
         }}
       >
@@ -339,14 +371,14 @@ export default function PostCard ({ post }: PostCardProps) {
         resizeMethod="auto"
         style={{
           width: normalize(300),
-          height: DOMAINPOSTTYPE.get(post.domainId) === "Film/TVShow" ? normalize(450) : normalize(300),
+          height: DOMAINPOSTTYPE.get(currentPost.domainId) === "Film/TVShow" ? normalize(450) : normalize(300),
           borderRadius: normalize(15),
-          borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+          borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
           borderWidth: normalize(2), 
           opacity: 1
         }}
         // source={{ uri: post.mediaItem.image }}
-        source={getItemImage(post.mediaItem, post.domainId)}
+        source={getItemImage(currentPost.mediaItem, post.domainId)}
 
       />
       </View>
@@ -361,7 +393,7 @@ export default function PostCard ({ post }: PostCardProps) {
           // width: normalize(325),
           height: normalize(38),
         }}
-        data={post.moods}
+        data={currentPost.moods}
         ItemSeparatorComponent={() => (
           <View
           style={{
@@ -380,14 +412,14 @@ export default function PostCard ({ post }: PostCardProps) {
               alignItems: "center",
               borderRadius: normalize(10),
               height: normalize(25),
-              backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(post.domainId)),
+              backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
             }}
             >
             <Text
               style={{
                 fontWeight: "600",
                 fontSize: normalize(18),
-                color: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+                color: getMoodTextColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
               }}
               >
               {mood.name}
@@ -421,10 +453,10 @@ export default function PostCard ({ post }: PostCardProps) {
           style={{
             width: normalize(240),
             // height: normalize(76),
-            // paddingVertical: normalize(5),
+            paddingVertical: normalize(5),
             borderRadius: normalize(5),
-            backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(post.domainId)),
-            // borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+            backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
+            // borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
             // borderWidth: normalize(2), 
           }}
         >
@@ -436,7 +468,9 @@ export default function PostCard ({ post }: PostCardProps) {
                 fontStyle: "normal",
                 fontSize: normalize(18),
                 fontWeight: "500",
-                color: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+                color: getMoodTextColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
+                marginLeft: normalize(4), 
+                // marginTop: normalize(5)
                 // textShadowColor: "black",
                 // textShadowOffset: { width: 0, height: 0 },
                 // textShadowRadius: 15,
@@ -463,7 +497,7 @@ export default function PostCard ({ post }: PostCardProps) {
                 color: "white",
               }}
             >
-              {post.caption}
+              {currentPost.caption}
             </Text>
           </View>
         </View>

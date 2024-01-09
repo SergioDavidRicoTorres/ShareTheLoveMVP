@@ -63,7 +63,9 @@ import FollowButton from "../components/FollowButton";
       const getUserDataAndDomains = async () => {
         try {
           if (user !== null) {
-            setDomainsArray(getUsersDomains(user));
+            const userDomains = getUsersDomains(user); 
+            console.log("[ExternalProfileScreen]: this are the userDomains:", userDomains)
+            setDomainsArray(userDomains);
           } else {
             throw new Error('User not found');
           }
@@ -83,6 +85,32 @@ import FollowButton from "../components/FollowButton";
         style={styles.container}
       >
         <SafeAreaView style={styles.container}>
+          <View
+          style={{
+            // backgroundColor: getScreenGradientFirstColor(domainOfTaste),
+            width,
+            paddingBottom: normalize(5),
+          }}
+        >
+
+          {/* Back Button */}
+          <TouchableOpacity
+                  // backButtonContainer
+                  onPress={() => navigation.goBack()}
+                  style={{
+                    left: normalize(10)
+                  }}
+                >
+                  {/* Back Button Image */}
+                  <Image
+                    source={require("../assets/icons/ArrowBack.png")}
+                    style={{
+                      width: normalize(17),
+                      height: normalize(28),
+                    }}
+                  />
+                </TouchableOpacity>
+        </View>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ alignItems: "center" }}>
               <Text
@@ -312,17 +340,26 @@ import FollowButton from "../components/FollowButton";
                   marginTop: normalize(25),
                   marginBottom: normalize(150),
                   alignItems: "center",
+                  // backgroundColor: "black"
                 }}
                 >
                 <Carousel
-                  data={domainsArray}
-                  sliderWidth={width}
-                  firstItem={1}
-                  inactiveSlideOpacity={0.5} // Sets the opacity of inactive items to 60%
-                  itemWidth={normalize(270)} // Taking into account the horizontal margin
-                  activeSlideAlignment={"center"}
-                  renderItem={({ item: category }) => (
-                    <DomainOfTasteCard isCurrentUser = {false} navigation = {navigation} category = {category} user = {user} toggleAddPlaylistModal = {toggleAddPlaylistModal} userId = {userId} isAddPlaylistModalVisible = {isAddPlaylistModalVisible}></DomainOfTasteCard>
+                data={domainsArray}
+                sliderWidth={width}
+                firstItem={0}
+                inactiveSlideOpacity={0.5} // Sets the opacity of inactive items to 60%
+                itemWidth={normalize(270)} // Taking into account the horizontal margin
+                activeSlideAlignment={"center"}
+                removeClippedSubviews={false}
+                renderItem={({ item: category }) => (
+                  // <View 
+                  //   style={{
+                  //     width: 100, 
+                  //     height: 100, 
+                  //     backgroundColor: "white"
+                  //   }}
+                  // /> 
+                  <DomainOfTasteCard isCurrentUser = {false} navigation = {navigation} category = {category} user = {user} toggleAddPlaylistModal = {toggleAddPlaylistModal} userId = {userId} isAddPlaylistModalVisible = {isAddPlaylistModalVisible}></DomainOfTasteCard>
                   )}
                 />
               </View>

@@ -160,13 +160,16 @@ function MoodsTags({
                 <TouchableOpacity
                   // backButtonContainer
                   onPress={onClose}
+                  style={{
+                    left: normalize(8)
+                  }}
                 >
                   {/* Back Button Image */}
                   <Image
                     source={require("../../assets/icons/ArrowBack.png")}
                     style={{
-                      width: normalize(14),
-                      height: normalize(23),
+                      width: normalize(20),
+                      height: normalize(33),
                     }}
                   />
                 </TouchableOpacity>
@@ -376,7 +379,7 @@ function MoodsTags({
           {postSelectedMoodsTags.length !== 0 ? (
             <TouchableOpacity
               style={{
-                ...styles.touchableChooseButtonContainer,
+                ...sharedStyles.touchableChooseButtonContainer,
                 backgroundColor: getGradientsFirstColor(postType),
                 borderColor: getButtonsAccentColor(postType),
                 borderWidth: normalize(4), 
@@ -387,11 +390,11 @@ function MoodsTags({
                 onClose;
               }}
             >
-              <Text style={styles.chooseButtonText}>Choose Moods/Tags</Text>
+              <Text style={sharedStyles.chooseButtonText}>Choose Moods/Tags</Text>
             </TouchableOpacity>
           ) : (
-            <View style={styles.chooseButtonContainer}>
-              <Text style={styles.chooseButtonText}>Choose Moods/Tags</Text>
+            <View style={sharedStyles.chooseButtonContainer}>
+              <Text style={sharedStyles.chooseButtonText}>Choose Moods/Tags</Text>
             </View>
           )}
         </View>
@@ -460,39 +463,39 @@ const styles = StyleSheet.create({
     lineHeight: normalize(26),
     color: "rgba(255, 255, 255, 0.75)",
   },
-  chooseButtonContainer: {
-    position: "absolute",
-    paddingHorizontal: normalize(20),
-    height: normalize(40),
-    borderRadius: normalize(15),
-    bottom: normalize(30),
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "background: rgba(152, 152, 152, 1)",
-    marginBottom: normalize(10),
-  },
-  touchableChooseButtonContainer: {
-    position: "absolute",
-    paddingHorizontal: normalize(20),
-    height: normalize(40),
-    borderRadius: normalize(15),
-    bottom: normalize(30),
-    justifyContent: "center",
-    alignItems: "center",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: normalize(10),
-    marginBottom: normalize(10),
-  },
-  chooseButtonText: {
-    fontWeight: "700",
-    fontSize: normalize(18),
-    lineHeight: normalize(21),
-    color: "white",
-  },
+  // chooseButtonContainer: {
+  //   position: "absolute",
+  //   paddingHorizontal: normalize(20),
+  //   height: normalize(40),
+  //   borderRadius: normalize(15),
+  //   bottom: normalize(30),
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   backgroundColor: "background: rgba(152, 152, 152, 1)",
+  //   marginBottom: normalize(10),
+  // },
+  // touchableChooseButtonContainer: {
+  //   position: "absolute",
+  //   paddingHorizontal: normalize(20),
+  //   height: normalize(40),
+  //   borderRadius: normalize(15),
+  //   bottom: normalize(30),
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 0,
+  //   },
+  //   shadowOpacity: 0.5,
+  //   shadowRadius: normalize(10),
+  //   marginBottom: normalize(10),
+  // },
+  // chooseButtonText: {
+  //   fontWeight: "700",
+  //   fontSize: normalize(18),
+  //   lineHeight: normalize(21),
+  //   color: "white",
+  // },
   addMoodButtonContainer: {
     marginTop: normalize(10),
     justifyContent: "center",

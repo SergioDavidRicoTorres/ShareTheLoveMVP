@@ -17,6 +17,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { normalize } from "../utils";
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigationProp } from "../types";
+import { sharedStyles } from "../sharedStyles";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 
@@ -205,7 +206,7 @@ export default function SignUpPersonalInfo() {
               marginTop: normalize(10),
             }}
           >
-            profileName
+            Username
           </Text>
           <View
             style={{
@@ -404,50 +405,26 @@ export default function SignUpPersonalInfo() {
           <TouchableOpacity
             onPress={handlePress}
             style={{
-              paddingHorizontal: normalize(25),
-              paddingVertical: normalize(8),
-              justifyContent: "center",
-              alignItems: "center",
-              gap: normalize(10),
-              borderRadius: normalize(15),
-              backgroundColor: "rgba(156, 75, 255, 1)",
-              flexDirection: "row",
-              marginTop: normalize(90),
+              ...sharedStyles.touchableChooseButtonContainer,
+              backgroundColor: "rgba(82, 42, 154, 1)",
+              borderColor: "rgba(156, 75, 255, 1)",
+              borderWidth: normalize(4), 
+              shadowColor: "rgba(156, 75, 255, 1)",
             }}
           >
             <Text
-              style={{
-                color: "white",
-                fontSize: normalize(20),
-                fontWeight: "800",
-                // letterSpacing: -1,
-              }}
+              style={sharedStyles.chooseButtonText}
             >
               Continue
             </Text>
           </TouchableOpacity>
         ) : (
           <View
-            style={{
-              paddingHorizontal: normalize(15),
-              paddingVertical: normalize(5),
-              justifyContent: "center",
-              alignItems: "center",
-              gap: normalize(10),
-              borderRadius: normalize(20),
-              backgroundColor: "rgba(203, 203, 203, 0.5)",
-              flexDirection: "row",
-              marginTop: normalize(90),
-            }}
+            style={sharedStyles.chooseButtonContainer}
           >
 
             <Text
-              style={{
-                color: "white",
-                fontSize: normalize(20),
-                fontWeight: "800",
-                // letterSpacing: -1,
-              }}
+              style={sharedStyles.chooseButtonText}
             >
               Continue
             </Text>

@@ -9,32 +9,46 @@ import { fetchUserById } from "../utilsFirebase";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { User } from "../types";
 import { useEffect, useState } from "react";
+import { useCurrentUser } from "../CurrentUserContext";
 
 const Tab = createBottomTabNavigator();
 
 
 function Tabs() {
-  const currentUserId = (FIREBASE_AUTH.currentUser?.uid || "defaultUserId")
-  const [currentUser, setCurrentUser]  = useState<User | null>(null);
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        // Fetch user data
-        const user: User | null = await fetchUserById(currentUserId);
-        if (user !== null) {
-          setCurrentUser(user); // Set the user
-        } else {
-          throw new Error('User not found');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
+  // const currentUserId = (FIREBASE_AUTH.currentUser?.uid || "defaultUserId")
+  // const [currentUser, setCurrentUser]  = useState<User | null>(null);
+  const { currentUser } = useCurrentUser();
+  // if (!currentUser) {
+  //   // Handle the case where currentUser is null
+  //   // This could be a loading indicator, a message, or a redirect
+  //   return <div>Loading user data...</div>;
+  // }
+  // const userId = currentUser?.userId;
+  // if (!userId) {
+  //   // Handle the case where currentUser is null
+  //   // This could be a loading indicator, a message, or a redirect
+  //   return <div>Loading userId...</div>;
+  // }
+
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       // Fetch user data
+  //       const user: User | null = await fetchUserById(currentUserId);
+  //       if (user !== null) {
+  //         setCurrentUser(user); // Set the user
+  //       } else {
+  //         throw new Error('User not found');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
   
-    if (currentUserId) {
-      getUserData();
-    }
-  }, [currentUserId]); // Depends on userId
+  //   if (currentUserId) {
+  //     getUserData();
+  //   }
+  // }, [currentUserId]); // Depends on userId
   return (
     <Tab.Navigator
       initialRouteName="Home"

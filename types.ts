@@ -25,6 +25,11 @@ export interface Domain {
   score: number;
 }
 
+export interface PlaylistReview {
+  userId: string; 
+  score: number; 
+}
+
 export interface Playlist {
     playlistId?: string;
     userId: string | number;
@@ -33,6 +38,8 @@ export interface Playlist {
     image?: string;
     moods: Mood[];
     score: number;
+    reviewsList: PlaylistReview[]; 
+    reviewsCount: number;
 }
 
 export interface Mood {
@@ -72,7 +79,7 @@ export interface MediaItem {
 
 export interface Post {
     postId?: string;
-    userId: string | number; 
+    userId: string; 
     domainId: number; 
     playlistId: string; 
     moods: Mood[];
@@ -80,6 +87,7 @@ export interface Post {
     likesCount: number;
     creationTime: number; 
     mediaItem: any; // will be defined by the used media API's Item
+    likesUserIdsList: string[];
 }
 
 // export type Song = {
@@ -204,7 +212,7 @@ export interface Post {
       };
 
     export type PlaylistCardProps = {
-      playlist: Playlist;
+      playlistId: string;
       domainOfTaste: Domain;
       profileNavigation?: ProfileNavigationProp,
       user: User,

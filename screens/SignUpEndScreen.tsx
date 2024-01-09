@@ -20,6 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { FIREBASE_STORAGE, FIRESTORE_DB } from "../firebaseConfig";
 import { addUserToDB, pickImage, uploadImage } from "../utilsFirebase";
+import { sharedStyles } from "../sharedStyles";
 
 const imgDir = FileSystem.documentDirectory + 'images/'; 
 
@@ -203,6 +204,7 @@ export default function SignUpEnd() {
       followersUsersList: [], 
       followingUsersList: [], 
     }
+    console.log("WE'RE GETTING HERE");
     await addUserToDB(userObject, signedUpUID);
     console.log("[USER]: ", userObject);
     mainNavigation.navigate("Tabs");
@@ -466,21 +468,16 @@ export default function SignUpEnd() {
               // mainNavigation.navigate("Tabs");
             }}
             style={{
-              paddingVertical: normalize(10),
-              paddingHorizontal: normalize(25),
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: normalize(10),
-              backgroundColor: "rgba(156, 75, 255, 1)",
-              marginTop: normalize(20),
+              ...sharedStyles.touchableChooseButtonContainer,
+              backgroundColor: "rgba(82, 42, 154, 1)",
+              borderColor: "rgba(156, 75, 255, 1)",
+              borderWidth: normalize(4), 
+              shadowColor: "rgba(156, 75, 255, 1)",
+              bottom: normalize(40),
             }}
           >
             <Text
-              style={{
-                color: "white",
-                fontSize: normalize(20),
-                fontWeight: "800",
-              }}
+              style={sharedStyles.chooseButtonText}
             >
               ready to go!
             </Text>
@@ -488,21 +485,12 @@ export default function SignUpEnd() {
         ) : (
           <View
             style={{
-              paddingVertical: normalize(10),
-              paddingHorizontal: normalize(25),
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: normalize(10),
-              backgroundColor: "rgba(203, 203, 203, 0.5)",
-              marginTop: normalize(20),
+              ...sharedStyles.chooseButtonContainer, 
+              bottom: normalize(40),
             }}
           >
             <Text
-              style={{
-                color: "white",
-                fontSize: normalize(20),
-                fontWeight: "800",
-              }}
+              style={sharedStyles.chooseButtonText}
             >
               ready to go!
             </Text>

@@ -145,20 +145,26 @@ export default function PostsViewScreen() {
           style={{
             // backgroundColor: getGradientFirstColor(domainOfTaste),
             width,
-            paddingBottom: normalize(10),
+            // paddingBottom: normalize(2),
           }}
         >
+          {/* Back Button */}
           <TouchableOpacity
-            // backButtonContainer
-            style={{ left: normalize(10), top: 0 }}
-            onPress={() => navigation.goBack()}
-          >
-            {/* Back Button Image */}
-            <Image
-              source={require("../assets/icons/ArrowBack.png")}
-              style={styles.backButtonImage}
-            />
-          </TouchableOpacity>
+                  // backButtonContainer
+                  onPress={() => navigation.goBack()}
+                  style={{
+                    left: normalize(10)
+                  }}
+                >
+                  {/* Back Button Image */}
+                  <Image
+                    source={require("../assets/icons/ArrowBack.png")}
+                    style={{
+                      width: normalize(17),
+                      height: normalize(28),
+                    }}
+                  />
+                </TouchableOpacity>
         </View>
         {/* <ScrollView
           style={{

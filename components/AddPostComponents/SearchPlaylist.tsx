@@ -28,6 +28,7 @@ import { DOMAINID } from "../../constants";
 import { Playlist, Post, SearchPlaylistProps } from "../../types";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { addPostToDB, getDomainsPlaylistsData } from "../../utilsFirebase";
+import { sharedStyles } from "../../sharedStyles";
 
 // screen WIDTH constant:
 const { width } = Dimensions.get("window");
@@ -237,7 +238,8 @@ function SearchPlaylist({
         caption: postInsertedCaption,
         likesCount: 0,
         creationTime: Date.now(),
-        mediaItem: postSelectedMedia
+        mediaItem: postSelectedMedia, 
+        likesUserIdsList: [],
     }
 
     await addPostToDB(postObject);
@@ -270,14 +272,16 @@ function SearchPlaylist({
                 <TouchableOpacity
                   // backButtonContainer
                   onPress={onClose}
+                  style={{
+                    left: normalize(8)
+                  }}
                 >
                   {/* Back Button Image */}
                   <Image
                     source={require("../../assets/icons/ArrowBack.png")}
-                    // style={styles.backButtonImage}
-                    style = {{
-                      width: normalize(14),
-                      height: normalize(23),
+                    style={{
+                      width: normalize(20),
+                      height: normalize(33),
                     }}
                   />
                 </TouchableOpacity>
@@ -471,23 +475,32 @@ function SearchPlaylist({
           </LinearGradient>
           {selectedPlaylist === null ? (
             <TouchableOpacity
-              style={styles.touchableAddNewPlaylistButtonContainer}
+              // style={styles.touchableAddNewPlaylistButtonContainer}
+              style={{
+                ...sharedStyles.touchableChooseButtonContainer,
+                backgroundColor: "rgba(66, 31, 177, 1)",
+                borderColor: "rgba(72, 43, 255, 1)",
+                borderWidth: normalize(4), 
+                shadowColor: "rgba(72, 43, 255, 1)",
+              }}
               onPress={toggleAddPlaylistModal}
             >
-              <Text style={styles.chooseButtonText}>Add New Playlist</Text>
+              <Text style={sharedStyles.chooseButtonText}>Add New Playlist</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              style={{
-                ...styles.touchableChooseButtonContainer,
-                backgroundColor: getButtonsAccentColor(postType),
-                shadowColor: getButtonsAccentColor(postType),
-              }}
+            style={{
+              ...sharedStyles.touchableChooseButtonContainer,
+              backgroundColor: getGradientsFirstColor(postType),
+              borderColor: getButtonsAccentColor(postType),
+              borderWidth: normalize(4), 
+              shadowColor: getButtonsAccentColor(postType),
+            }}
               onPress={() => {
                 handlePress();
               }}
             >
-              <Text style={styles.chooseButtonText}>Choose Playlist</Text>
+              <Text style={sharedStyles.chooseButtonText}>Choose Playlist</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -554,39 +567,39 @@ const styles = StyleSheet.create({
     lineHeight: normalize(26),
     color: "rgba(255, 255, 255, 0.75)",
   },
-  chooseButtonContainer: {
-    position: "absolute",
-    paddingHorizontal: normalize(20),
-    height: normalize(40),
-    borderRadius: normalize(15),
-    bottom: normalize(30),
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "background: rgba(152, 152, 152, 1)",
-    marginBottom: normalize(10),
-  },
-  touchableChooseButtonContainer: {
-    position: "absolute",
-    paddingHorizontal: normalize(20),
-    height: normalize(40),
-    borderRadius: normalize(15),
-    bottom: normalize(30),
-    justifyContent: "center",
-    alignItems: "center",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: normalize(10),
-    marginBottom: normalize(10),
-  },
-  chooseButtonText: {
-    fontWeight: "700",
-    fontSize: normalize(18),
-    lineHeight: normalize(21),
-    color: "white",
-  },
+  // chooseButtonContainer: {
+  //   position: "absolute",
+  //   paddingHorizontal: normalize(20),
+  //   height: normalize(40),
+  //   borderRadius: normalize(15),
+  //   bottom: normalize(30),
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   backgroundColor: "background: rgba(152, 152, 152, 1)",
+  //   marginBottom: normalize(10),
+  // },
+  // touchableChooseButtonContainer: {
+  //   position: "absolute",
+  //   paddingHorizontal: normalize(20),
+  //   height: normalize(40),
+  //   borderRadius: normalize(15),
+  //   bottom: normalize(30),
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 0,
+  //   },
+  //   shadowOpacity: 0.5,
+  //   shadowRadius: normalize(10),
+  //   marginBottom: normalize(10),
+  // },
+  // chooseButtonText: {
+  //   fontWeight: "700",
+  //   fontSize: normalize(18),
+  //   lineHeight: normalize(21),
+  //   color: "white",
+  // },
   searchContainer: {
     flexDirection: "row",
     width: normalize(337),

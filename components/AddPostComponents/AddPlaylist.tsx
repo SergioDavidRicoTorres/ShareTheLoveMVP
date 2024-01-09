@@ -174,7 +174,8 @@ function AddPlaylist({
           caption: postInsertedCaption,
           likesCount: 0,
           creationTime: Date.now(),
-          mediaItem: postSelectedMedia
+          mediaItem: postSelectedMedia, 
+          likesUserIdsList: []
       }
   
       await addPostToDB(postObject);
@@ -198,6 +199,8 @@ function AddPlaylist({
             image: uploadedImageUrl,
             moods: selectedMoodsTags, 
             score: 0,
+            reviewsCount: 0, 
+            reviewsList: []
           }
           const newPlaylistId = await addPlaylistToDB(newPlaylist);
           return newPlaylistId; 
@@ -253,22 +256,26 @@ function AddPlaylist({
                     justifyContent: "center",
                   }}
                 >
-                  <TouchableOpacity
+                  
+                  {/* Back Button */}
+                <TouchableOpacity
+                  // backButtonContainer
+                  onPress={onClose}
+                  style={{
+                    position: "absolute",
+                    top: normalize(10),
+                    left: normalize(24),
+                  }}
+                >
+                  {/* Back Button Image */}
+                  <Image
+                    source={require("../../assets/icons/ArrowBack.png")}
                     style={{
-                      position: "absolute",
-                      top: normalize(10),
-                      left: normalize(24),
+                      width: normalize(20),
+                      height: normalize(33),
                     }}
-                    onPress={onClose}
-                  >
-                    <Image
-                      source={require("../../assets/icons/ArrowBack.png")}
-                      style={{
-                        width: normalize(14),
-                        height: normalize(23),
-                      }}
-                    />
-                  </TouchableOpacity>
+                  />
+                </TouchableOpacity>
                   <TouchableOpacity
                     style={{ left: normalize(12) }}
                     onPress={() => {

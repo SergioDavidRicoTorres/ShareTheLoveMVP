@@ -22,7 +22,7 @@ export const getItemSubTitle = (mediaItem: any, domainId: number) => {
     switch (domainId){
     case 0 : {
       return (
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", maxWidth: normalize(80) }}>
           {mediaItem.artists?.map((artist: any, index: number) => (
             <React.Fragment key={index}>
               {/* itemArtistName */}
@@ -539,7 +539,7 @@ export const getPlaylistScoreIcon = (domain: Domain) => {
       case 1:
         return require("./assets/icons/FilmsTVShowsPlaylistScoreIcon.png");
       case 2:
-        return require("./assets/icons/EpisodesPlaylistScoreIcon.png");
+        return require("./assets/icons/PodcastsEpisodesPlaylistScoreIcon.png");
       default:
         throw new Error(`Invalid domain id: ${domain.domainId}`);
     }

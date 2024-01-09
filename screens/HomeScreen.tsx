@@ -16,6 +16,7 @@ import { normalize } from "../utils";
 import { HomeNavigationProp, Post } from "../types";
 import { getChronologicallySortedPosts, getPosts } from "../utilsData";
 import { fetchLastPosts } from "../utilsFirebase";
+import { useCurrentUser } from "../CurrentUserContext";
 
 const postCardsExamples = [
   {
@@ -75,17 +76,22 @@ const postCardsExamples = [
 // feedItemSeparator
 // const feedItemSeparatorHeight = width * 0.089;
 export default function HomeScreen() {
+  const { currentUser } = useCurrentUser();
+
   const navigation = useNavigation<HomeNavigationProp>();
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     const fetchAndSetPosts = async () => {
-      const fetchedPosts = await fetchLastPosts();
+      // console.log("[HomeScreen]: posts have fetched!")
+      const followingUsersList = currentUser?.followingUsersList ?? [];
+      const fetchedPosts = await fetchLastPosts(followingUsersList, 50);
+      console.log(fetchedPosts)
       setPosts(fetchedPosts);
     };
 
     fetchAndSetPosts();
-  }, []);
+  }, [currentUser]);
 
   // console.log(AuthSession.getRedirectUrl());  //outputs the redirect uri link for the spotify API
   // firestore()

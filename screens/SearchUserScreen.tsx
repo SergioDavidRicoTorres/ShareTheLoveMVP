@@ -20,10 +20,13 @@ import { getUsers } from "../utilsData";
 import { fetchAllUsers } from "../utilsFirebase";
 
 
+
 export default function SearchUser() {
   // const USERS = getUsers();
+  const { width } = Dimensions.get("window"); // screen width constant
   const homeNavigation = useNavigation<HomeNavigationProp>();
   // const profileNavigation = useNavigation<ProfileNavigationProp>();
+  
   const [users, setUsers] = useState<User[]>([]);
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResults, setSearchResults] = useState <User[]> ([]);
@@ -33,7 +36,7 @@ export default function SearchUser() {
 
 
     const filteredData: User[] = users.filter((item) =>
-      item.profileName.toLowerCase().includes(text.toLowerCase())
+      item.name.toLowerCase().includes(text.toLowerCase())
     );
 
     setSearchResults(filteredData);
@@ -62,7 +65,36 @@ export default function SearchUser() {
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
       style={styles.container}
     >
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView 
+      style={styles.container}
+      >
+      <View
+          style={{
+            // backgroundColor: "white",
+            width,
+            marginBottom: normalize(5),
+            alignItems: "flex-end"
+          }}
+        >
+
+          {/* Back Button */}
+          <TouchableOpacity
+                  // backButtonContainer
+                  onPress={() => homeNavigation.goBack()}
+                  style={{
+                    right: normalize(8)
+                  }}
+                >
+                  {/* Back Button Image */}
+                  <Image
+                    source={require("../assets/icons/CancelButtonLightPurple.png")}
+                    style={{
+                      width: normalize(28),
+                      height: normalize(28),
+                    }}
+                  />
+                </TouchableOpacity>
+        </View>
         <View
           style={{
             // paddingVertical: 20,
@@ -82,6 +114,7 @@ export default function SearchUser() {
             bottom: normalize(50),
             alignItems: "center", 
             justifyContent: "center",
+            marginTop: normalize(50)
           }}
         >
           <LinearGradient
@@ -273,7 +306,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
   },
   backButtonImage: {
     width: normalize(14),

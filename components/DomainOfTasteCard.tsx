@@ -30,7 +30,7 @@ const [playlists, setPlaylists] = useState<Playlist[]>([]);
 useEffect(() => {
   const fetchData = async () => {
     try {
-            console.log("userId=====================", user);
+            // console.log("userId=====================", user);
             // if (user.userId !== undefined) {
               const data = await getDomainsPlaylistsData(userId, category.domainId);
             // } else {
