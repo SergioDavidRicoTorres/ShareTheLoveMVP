@@ -10,7 +10,6 @@ const Stack = createStackNavigator<AuthNavigatorParamsList>();
 
 // const AuthNavigator = ({initialRouteName}: AuthNavigatorProps) => {
 const AuthNavigator = () => {
-
   return (
     <Stack.Navigator
       // initialRouteName={initialRouteName}

@@ -22,10 +22,7 @@ import { AddMoodProps } from "../../types";
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
-function AddMood({
-  visible,
-  onClose,
-}: AddMoodProps) {
+function AddMood({ visible, onClose }: AddMoodProps) {
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (SearchPlaylist) -----------------------------
   //---------------------------------------------------------------------------------

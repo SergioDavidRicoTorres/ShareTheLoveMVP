@@ -20,7 +20,12 @@ import {
   getPlaylistsMediaItemComponent,
   normalize,
 } from "../utils";
-import { Playlist, PlaylistCardProps, PlaylistReview, ProfileContentNavigationProp } from "../types";
+import {
+  Playlist,
+  PlaylistCardProps,
+  PlaylistReview,
+  ProfileContentNavigationProp,
+} from "../types";
 
 import { DOMAINPOSTTYPE } from "../constants";
 import { getPlaylistId, getPlaylistsPostsData, getPosts } from "../utilsData";
@@ -33,77 +38,85 @@ import { FIRESTORE_DB } from "../firebaseConfig";
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
-export default function PlaylistCard ({
+export default function PlaylistCard({
   playlistId,
   domainOfTaste,
   profileNavigation,
   user,
-  posts
+  posts,
 }: PlaylistCardProps) {
   const { currentUser } = useCurrentUser();
   const [playlist, setPlaylist] = useState<Playlist>(DEFAULT_PLAYLIST);
   const [currentReviewScore, setCurrentReviewScore] = useState<number>(0); // Original score from database
   const [sliderScore, setSliderScore] = useState<number>(0); // Score being manipulated by slider
-  const [isScoreUpToDate, setIsScoreUpToDate] = useState (sliderScore === currentReviewScore); // true 
-  // const [isScoreUpToDate, setIsScoreUpToDate] = useState (true); // true 
-  const profileContentNavigation = useNavigation<ProfileContentNavigationProp>();
+  const [isScoreUpToDate, setIsScoreUpToDate] = useState(
+    sliderScore === currentReviewScore
+  ); // true
+  // const [isScoreUpToDate, setIsScoreUpToDate] = useState (true); // true
+  const profileContentNavigation =
+    useNavigation<ProfileContentNavigationProp>();
   useEffect(() => {
     if (!playlistId) return;
-    const playlistRef = doc(FIRESTORE_DB, 'playlists', playlistId);
+    const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
 
-    const unsubscribe = onSnapshot(playlistRef, (docSnap) => {
-      if (docSnap.exists()) {
-        let fetchedPlaylist = docSnap.data() as Playlist;
-        fetchedPlaylist = {...fetchedPlaylist, playlistId: playlistId}; // Adding playlistId to the fetched object
-        setPlaylist(fetchedPlaylist);
+    const unsubscribe = onSnapshot(
+      playlistRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          let fetchedPlaylist = docSnap.data() as Playlist;
+          fetchedPlaylist = { ...fetchedPlaylist, playlistId: playlistId }; // Adding playlistId to the fetched object
+          setPlaylist(fetchedPlaylist);
 
-        const userReview = fetchedPlaylist.reviewsList?.find(review => review.userId === currentUser?.userId);
-        const fetchedScore = userReview ? userReview.score : 0;
-        setCurrentReviewScore(fetchedScore);
-        setSliderScore(fetchedScore); // Initialize slider with the fetched score
-      } else {
-        console.error('Playlist not found');
+          const userReview = fetchedPlaylist.reviewsList?.find(
+            (review) => review.userId === currentUser?.userId
+          );
+          const fetchedScore = userReview ? userReview.score : 0;
+          setCurrentReviewScore(fetchedScore);
+          setSliderScore(fetchedScore); // Initialize slider with the fetched score
+        } else {
+          console.error("Playlist not found");
+          setCurrentReviewScore(0);
+          setSliderScore(0);
+        }
+      },
+      (err) => {
+        console.error("Error fetching playlist:", err.message);
         setCurrentReviewScore(0);
         setSliderScore(0);
       }
-    }, (err) => {
-      console.error('Error fetching playlist:', err.message);
-      setCurrentReviewScore(0);
-      setSliderScore(0);
-    });
+    );
 
     return () => unsubscribe();
   }, [playlistId, currentUser?.userId]);
 
-
   const handleScoreChange = (newScore: number) => {
     const updatedScore = parseFloat(newScore.toFixed(1));
     setSliderScore(updatedScore);
-  
+
     // // Since state updates are asynchronous, directly compare newScore with playlist.score
     setIsScoreUpToDate(updatedScore === currentReviewScore);
   };
 
   const handleDonePress = () => {
-    console.log("playlistId: ", playlistId)
+    console.log("playlistId: ", playlistId);
 
     if (playlist.playlistId && currentUser?.userId) {
       updatePlaylistReview(playlist.playlistId, {
         userId: currentUser.userId,
-        score: sliderScore // Replace this with the actual score you want to set
-      }).catch(error => {
+        score: sliderScore, // Replace this with the actual score you want to set
+      }).catch((error) => {
         console.error("Error updating playlist review:", error);
       });
     } else {
       console.log("Playlist ID or User ID is undefined.");
     }
-  }
+  };
   // const DOMAINPOSTTYPE = {
   //   0: "Song",
   //   1: "Film/TVShow",
   //   2: "PodcastEpisode",
   // };
-  // const playlistId = getPlaylistId(playlist); 
+  // const playlistId = getPlaylistId(playlist);
   // const playlistsPosts = getPlaylistsPostsData(playlistId);
   return (
     <ImageBackground
@@ -111,9 +124,11 @@ export default function PlaylistCard ({
       source={{ uri: playlist.image }}
       // resizeMode="cover"
       style={{
-        borderColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
-        borderWidth: normalize(4), 
-        borderRadius: normalize(15)
+        borderColor: getMoodContainerColor(
+          DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+        ),
+        borderWidth: normalize(4),
+        borderRadius: normalize(15),
       }}
       imageStyle={{
         opacity: 0.8,
@@ -133,21 +148,19 @@ export default function PlaylistCard ({
         }}
       >
         <View>
-          <ScrollView
-          horizontal>
-
-          <Text
-            style={{
-              marginLeft: normalize(10),
-              marginTop: normalize(10),
-              color: "white",
-              fontSize: normalize(35),
-              fontWeight: "500",
-            }}
-            // numberOfLines={1}
-          >
-            {playlist.name}
-          </Text>
+          <ScrollView horizontal>
+            <Text
+              style={{
+                marginLeft: normalize(10),
+                marginTop: normalize(10),
+                color: "white",
+                fontSize: normalize(35),
+                fontWeight: "500",
+              }}
+              // numberOfLines={1}
+            >
+              {playlist.name}
+            </Text>
           </ScrollView>
           <FlatList
             style={{ marginLeft: normalize(10), marginRight: normalize(5) }}
@@ -168,7 +181,9 @@ export default function PlaylistCard ({
                   // moodText
                   style={{
                     ...styles.moodText,
-                    color: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                    color: getMoodTextColor(
+                      DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                    ),
                   }}
                 >
                   {mood.name}
@@ -176,15 +191,15 @@ export default function PlaylistCard ({
               </View>
             )}
             keyExtractor={(mood) => mood.id.toString()}
-            />
+          />
           <FlatList
             style={{ marginTop: normalize(12), marginLeft: normalize(10) }}
             data={posts}
             horizontal
             renderItem={({ item }) =>
-            // <Text>
-            //   {item.toString()}
-            // </Text>
+              // <Text>
+              //   {item.toString()}
+              // </Text>
               getPlaylistsMediaItemComponent({
                 domainOfTaste,
                 item,
@@ -230,65 +245,73 @@ export default function PlaylistCard ({
             /> */}
             <Text
               style={{
-                color: getButtonsAccentColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                color: getButtonsAccentColor(
+                  DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                ),
                 fontSize: normalize(25),
                 fontWeight: "900",
               }}
             >
               {sliderScore}
             </Text>
-            {isScoreUpToDate ? 
+            {isScoreUpToDate ? (
               <View
                 style={{
-                  paddingVertical: normalize(5), 
-                  paddingHorizontal: normalize(10), 
-                  justifyContent: "center", 
-                  alignContent: "center", 
-                  borderRadius: normalize(10), 
-                  borderWidth: normalize(4), 
-                  borderColor:"rgba(105, 51, 172, 1)",
-                  backgroundColor: "rgba(53, 45, 111, 1)", 
+                  paddingVertical: normalize(5),
+                  paddingHorizontal: normalize(10),
+                  justifyContent: "center",
+                  alignContent: "center",
+                  borderRadius: normalize(10),
+                  borderWidth: normalize(4),
+                  borderColor: "rgba(105, 51, 172, 1)",
+                  backgroundColor: "rgba(53, 45, 111, 1)",
                 }}
               >
                 <Text
                   style={{
-                    color: "rgba(105, 51, 172, 1)", 
-                    fontSize: normalize(18), 
+                    color: "rgba(105, 51, 172, 1)",
+                    fontSize: normalize(18),
                     fontWeight: "800",
                   }}
                 >
                   done
                 </Text>
               </View>
-            :
+            ) : (
               <TouchableOpacity
-              style={{
-                paddingVertical: normalize(5), 
-                paddingHorizontal: normalize(10), 
-                justifyContent: "center", 
-                alignContent: "center", 
-                borderRadius: normalize(10), 
-                borderWidth: normalize(4), 
-                borderColor:getButtonsAccentColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
-                backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)), 
-              }}
-              onPress={handleDonePress}
-            >
-              <Text
                 style={{
-                  color: "white", 
-                  fontSize: normalize(18), 
-                  fontWeight: "800",
+                  paddingVertical: normalize(5),
+                  paddingHorizontal: normalize(10),
+                  justifyContent: "center",
+                  alignContent: "center",
+                  borderRadius: normalize(10),
+                  borderWidth: normalize(4),
+                  borderColor: getButtonsAccentColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
+                  backgroundColor: getMoodContainerColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
                 }}
-              >done</Text>
-
-            </TouchableOpacity>}
+                onPress={handleDonePress}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: normalize(18),
+                    fontWeight: "800",
+                  }}
+                >
+                  done
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
     </ImageBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
   moodContainer: {

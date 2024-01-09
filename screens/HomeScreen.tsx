@@ -20,52 +20,71 @@ import { useCurrentUser } from "../CurrentUserContext";
 
 const postCardsExamples = [
   {
-    "userId": 0,
-    "domainId": 0,
-    "playlistId": 1,
-    "creationTime": 230,
-    "likesCount": 80,
-    "moods": [
-      { "id": 19, "name": "Luxus", "isSelected": false, "creator": "Share The Love" },
-      { "id": 24, "name": "Turn it up", "isSelected": false, "creator": "Share The Love" },
-      { "id": 21, "name": "Unleashed", "isSelected": false, "creator": "Share The Love" }
+    userId: 0,
+    domainId: 0,
+    playlistId: 1,
+    creationTime: 230,
+    likesCount: 80,
+    moods: [
+      { id: 19, name: "Luxus", isSelected: false, creator: "Share The Love" },
+      {
+        id: 24,
+        name: "Turn it up",
+        isSelected: false,
+        creator: "Share The Love",
+      },
+      {
+        id: 21,
+        name: "Unleashed",
+        isSelected: false,
+        creator: "Share The Love",
+      },
     ],
-    "caption": "This is the kind of stuff that feeds the egomaniac inside me",
-    "mediaItem": {
-      "name": "Wake Up In The Sky",
-      "mediaType": "Song",
-      "album": "Evil Genius",
-      "artists": [
-        " Bruno Mars",
-        "Kodak Black",
-        "Gucci Mane"
-      ],
-      "image": "https://i.scdn.co/image/ab67616d0000b273b64fc7036d0fccef26f9f7e8"
-    }
+    caption: "This is the kind of stuff that feeds the egomaniac inside me",
+    mediaItem: {
+      name: "Wake Up In The Sky",
+      mediaType: "Song",
+      album: "Evil Genius",
+      artists: [" Bruno Mars", "Kodak Black", "Gucci Mane"],
+      image: "https://i.scdn.co/image/ab67616d0000b273b64fc7036d0fccef26f9f7e8",
+    },
   },
   {
-    "userId": 0,
-    "domainId": 0,
-    "playlistId": 1,
-    "creationTime": 120,
-    "likesCount": 75,
-    "moods": [
-      { "id": 16, "name": "Beast mode", "isSelected": false, "creator": "Share The Love" },
-      { "id": 13, "name": "Dancy", "isSelected": false, "creator": "Share The Love" },
-      { "id": 24, "name": "Turn it up", "isSelected": false, "creator": "Share The Love" },
-      { "id": 15, "name": "Speeding Up", "isSelected": false, "creator": "Share The Love" }
+    userId: 0,
+    domainId: 0,
+    playlistId: 1,
+    creationTime: 120,
+    likesCount: 75,
+    moods: [
+      {
+        id: 16,
+        name: "Beast mode",
+        isSelected: false,
+        creator: "Share The Love",
+      },
+      { id: 13, name: "Dancy", isSelected: false, creator: "Share The Love" },
+      {
+        id: 24,
+        name: "Turn it up",
+        isSelected: false,
+        creator: "Share The Love",
+      },
+      {
+        id: 15,
+        name: "Speeding Up",
+        isSelected: false,
+        creator: "Share The Love",
+      },
     ],
-    "caption": "I guess i'm letting it out tonight!",
-    "mediaItem": {
-      "name": "Party Monster",
-      "mediaType": "Song",
-      "album": "Starboy",
-      "artists": [
-        "The Weeknd"
-      ],
-      "image": "https://i.scdn.co/image/ab67616d0000b273df1cfe1218748681e348e763"
-    }
-  }
+    caption: "I guess i'm letting it out tonight!",
+    mediaItem: {
+      name: "Party Monster",
+      mediaType: "Song",
+      album: "Starboy",
+      artists: ["The Weeknd"],
+      image: "https://i.scdn.co/image/ab67616d0000b273df1cfe1218748681e348e763",
+    },
+  },
 ];
 
 // ELEMENT DIMENSIONS:
@@ -86,7 +105,7 @@ export default function HomeScreen() {
       // console.log("[HomeScreen]: posts have fetched!")
       const followingUsersList = currentUser?.followingUsersList ?? [];
       const fetchedPosts = await fetchLastPosts(followingUsersList, 50);
-      console.log(fetchedPosts)
+      console.log(fetchedPosts);
       setPosts(fetchedPosts);
     };
 
@@ -155,7 +174,7 @@ export default function HomeScreen() {
             renderItem={({ item: post }) => (
               // Post card
               <PostCard post={post} />
-              )}
+            )}
           />
         </View>
       </SafeAreaView>

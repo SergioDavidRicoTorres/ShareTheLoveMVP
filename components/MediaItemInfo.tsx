@@ -8,7 +8,7 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
-  Linking
+  Linking,
 } from "react-native";
 import { getItemTitle, normalize } from "../utils";
 import { MediaItemInfoProps, Post } from "../types";
@@ -19,360 +19,364 @@ const { width } = Dimensions.get("window"); // screen width constant
 const getMediaInfoComponent = (post: Post) => {
   try {
     switch (post.domainId) {
-      case 0: 
-      return (
-        <View
-          style={{
-            gap: normalize(15),
-            alignItems: "center",
-            marginVertical: normalize(20),
-          }}
-        >
+      case 0:
+        return (
           <View
             style={{
-              flexDirection: "row",
-              marginHorizontal: normalize(10),
-              justifyContent: "center",
-              gap: normalize(10),
+              gap: normalize(15),
+              alignItems: "center",
+              marginVertical: normalize(20),
             }}
           >
-            <Text
+            <View
               style={{
-                color: "rgba(156, 75, 255, 1)",
-                fontSize: normalize(25),
-                fontWeight: "700",
+                flexDirection: "row",
+                marginHorizontal: normalize(10),
+                justifyContent: "center",
+                gap: normalize(10),
               }}
-            >
-              name:
-            </Text>
-            <ScrollView
-              style={{
-                paddingVertical: normalize(2),
-                paddingHorizontal: normalize(21),
-                // justifyContent: "center",
-                // alignItems: "flex-start",
-                backgroundColor: "rgba(156, 75, 255, 1)",
-                borderRadius: normalize(15),
-                // maxHeight: normalize(25),
-                maxWidth: normalize(260),
-              }}
-              horizontal
             >
               <Text
                 style={{
-                  color: "white",
-                  fontSize: normalize(18),
-                  fontWeight: "400",
+                  color: "rgba(156, 75, 255, 1)",
+                  fontSize: normalize(25),
+                  fontWeight: "700",
                 }}
               >
-                {post.mediaItem.name}
+                name:
               </Text>
-            </ScrollView>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              marginHorizontal: normalize(10),
-              justifyContent: "center",
-              gap: normalize(10),
-            }}
-          >
-            <Text
-              style={{
-                color: "rgba(156, 75, 255, 1)",
-                fontSize: normalize(25),
-                fontWeight: "700",
-              }}
-            >
-              album:
-            </Text>
-            <ScrollView
-              style={{
-                paddingVertical: normalize(2),
-                paddingHorizontal: normalize(21),
-                // justifyContent: "center",
-                // alignItems: "flex-start",
-                backgroundColor: "rgba(156, 75, 255, 1)",
-                borderRadius: normalize(15),
-                // maxHeight: normalize(25),
-                maxWidth: normalize(260),
-              }}
-              horizontal
-            >
-              <Text
+              <ScrollView
                 style={{
-                  color: "white",
-                  fontSize: normalize(18),
-                  fontWeight: "500",
+                  paddingVertical: normalize(2),
+                  paddingHorizontal: normalize(21),
+                  // justifyContent: "center",
+                  // alignItems: "flex-start",
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  borderRadius: normalize(15),
+                  // maxHeight: normalize(25),
+                  maxWidth: normalize(260),
                 }}
-              >
-                {post.mediaItem.album.name}
-              </Text>
-            </ScrollView>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              marginHorizontal: normalize(10),
-              justifyContent: "center",
-              gap: normalize(10),
-            }}
-          >
-            <Text
-              style={{
-                color: "rgba(156, 75, 255, 1)",
-                fontSize: normalize(25),
-                fontWeight: "700",
-              }}
-            >
-              artists:
-            </Text>
-            <ScrollView
-              style={{
-                paddingVertical: normalize(2),
-                paddingHorizontal: normalize(21),
-                // justifyContent: "center",
-                // alignItems: "flex-start",
-                backgroundColor: "rgba(156, 75, 255, 1)",
-                borderRadius: normalize(15),
-                // maxHeight: normalize(25),
-                maxWidth: normalize(260),
-              }}
-              horizontal
-            >
-              <FlatList
-                data={post.mediaItem.artists}
-                scrollEnabled={false}
                 horizontal
-                style={
-                  {
-                    // flexDirection: "row",
-                    // alignItems: "center",
-                    // justifyContent:
-                    //   mediaItem.artists.length > 1 ? "flex-start" : "center",
-                    // maxWidth: 165,
-                    // overflow: "hidden",
-                    // marginHorizontal: 5,
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: normalize(18),
+                    fontWeight: "400",
+                  }}
+                >
+                  {post.mediaItem.name}
+                </Text>
+              </ScrollView>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginHorizontal: normalize(10),
+                justifyContent: "center",
+                gap: normalize(10),
+              }}
+            >
+              <Text
+                style={{
+                  color: "rgba(156, 75, 255, 1)",
+                  fontSize: normalize(25),
+                  fontWeight: "700",
+                }}
+              >
+                album:
+              </Text>
+              <ScrollView
+                style={{
+                  paddingVertical: normalize(2),
+                  paddingHorizontal: normalize(21),
+                  // justifyContent: "center",
+                  // alignItems: "flex-start",
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  borderRadius: normalize(15),
+                  // maxHeight: normalize(25),
+                  maxWidth: normalize(260),
+                }}
+                horizontal
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: normalize(18),
+                    fontWeight: "500",
+                  }}
+                >
+                  {post.mediaItem.album.name}
+                </Text>
+              </ScrollView>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                marginHorizontal: normalize(10),
+                justifyContent: "center",
+                gap: normalize(10),
+              }}
+            >
+              <Text
+                style={{
+                  color: "rgba(156, 75, 255, 1)",
+                  fontSize: normalize(25),
+                  fontWeight: "700",
+                }}
+              >
+                artists:
+              </Text>
+              <ScrollView
+                style={{
+                  paddingVertical: normalize(2),
+                  paddingHorizontal: normalize(21),
+                  // justifyContent: "center",
+                  // alignItems: "flex-start",
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  borderRadius: normalize(15),
+                  // maxHeight: normalize(25),
+                  maxWidth: normalize(260),
+                }}
+                horizontal
+              >
+                <FlatList
+                  data={post.mediaItem.artists}
+                  scrollEnabled={false}
+                  horizontal
+                  style={
+                    {
+                      // flexDirection: "row",
+                      // alignItems: "center",
+                      // justifyContent:
+                      //   mediaItem.artists.length > 1 ? "flex-start" : "center",
+                      // maxWidth: 165,
+                      // overflow: "hidden",
+                      // marginHorizontal: 5,
+                    }
                   }
-                }
-                // keyExtractor={(item) => item.id.toString()} // Change this to your key extractor function
-                ItemSeparatorComponent={() => (
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: normalize(18),
-                      fontWeight: "500",
-                    }}
-                  >
-                    {" "}
-                    -{" "}
-                  </Text>
-                )}
-                renderItem={({ item: artist }) => (
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      color: "white",
-                      fontSize: normalize(18),
-                      fontWeight: "500",
-                    }}
-                  >
-                    {artist.name}
-                  </Text>
-                )}
-              />
-            </ScrollView>
+                  // keyExtractor={(item) => item.id.toString()} // Change this to your key extractor function
+                  ItemSeparatorComponent={() => (
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: normalize(18),
+                        fontWeight: "500",
+                      }}
+                    >
+                      {" "}
+                      -{" "}
+                    </Text>
+                  )}
+                  renderItem={({ item: artist }) => (
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        color: "white",
+                        fontSize: normalize(18),
+                        fontWeight: "500",
+                      }}
+                    >
+                      {artist.name}
+                    </Text>
+                  )}
+                />
+              </ScrollView>
+            </View>
           </View>
-        </View>
-      );
-      case 1: 
-      return (
-        <View style={{ gap: normalize(15), marginVertical: normalize(20) }}>
-          <View
-            style={{
-              //   flexDirection: "row",
-              //   marginHorizontal: normalize(10),
-              justifyContent: "center",
-              gap: normalize(10),
-            }}
-          >
-            <Text
+        );
+      case 1:
+        return (
+          <View style={{ gap: normalize(15), marginVertical: normalize(20) }}>
+            <View
               style={{
-                color: "rgba(156, 75, 255, 1)",
-                fontSize: normalize(25),
-                fontWeight: "700",
-              }}
-            >
-              name:
-            </Text>
-            <ScrollView
-              style={{
-                paddingVertical: normalize(2),
-                paddingHorizontal: normalize(21),
-                // justifyContent: "center",
-                // alignItems: "flex-start",
-                backgroundColor: "rgba(156, 75, 255, 1)",
-                borderRadius: normalize(15),
-                maxHeight: normalize(28),
-                // maxWidth: 300,
-                marginHorizontal: normalize(10),
-              }}
-              horizontal
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: normalize(18),
-                  fontWeight: "500",
-                }}
-                // numberOfLines={4}
-              >
-                {/* has to be updated */}
-                {post.mediaItem.original_title}
-              </Text>
-            </ScrollView>
-          </View>
-  
-          <View
-            style={{
-              //   flexDirection: "row",
-              //   marginHorizontal: normalize(10),
-              justifyContent: "center",
-              gap: normalize(10),
-            }}
-          >
-            <Text
-              style={{
-                color: "rgba(156, 75, 255, 1)",
-                fontSize: normalize(25),
-                fontWeight: "700",
-              }}
-            >
-              overview:
-            </Text>
-            <ScrollView
-              style={{
-                paddingVertical: 5,
-                paddingHorizontal: normalize(15),
-                backgroundColor: "rgba(156, 75, 255, 1)",
-                borderRadius: normalize(15),
-                // maxWidth: 300,
-                marginHorizontal: normalize(10),
-                maxHeight: normalize(150),
+                //   flexDirection: "row",
+                //   marginHorizontal: normalize(10),
+                justifyContent: "center",
+                gap: normalize(10),
               }}
             >
               <Text
                 style={{
-                  color: "white",
-                  fontSize: normalize(18),
-                  fontWeight: "500",
+                  color: "rgba(156, 75, 255, 1)",
+                  fontSize: normalize(25),
+                  fontWeight: "700",
                 }}
               >
-                {post.mediaItem.overview}
+                name:
               </Text>
-            </ScrollView>
-          </View>
-        </View>
-      );
-      case 2: 
-      return (
-        <View style={{ gap: normalize(15), marginVertical: normalize(20) }}>
-          <View
-            style={{
-              //   flexDirection: "row",
-              //   marginHorizontal: normalize(10),
-              justifyContent: "center",
-              gap: normalize(10),
-            }}
-          >
-            <Text
-              style={{
-                color: "rgba(156, 75, 255, 1)",
-                fontSize: normalize(25),
-                fontWeight: "700",
-              }}
-            >
-              name:
-            </Text>
-            <ScrollView
-              style={{
-                paddingVertical: normalize(2),
-                paddingHorizontal: normalize(21),
-                // justifyContent: "center",
-                // alignItems: "flex-start",
-                backgroundColor: "rgba(156, 75, 255, 1)",
-                borderRadius: normalize(15),
-                maxHeight: normalize(28),
-                // maxWidth: 300,
-                marginHorizontal: normalize(10),
-              }}
-              horizontal
-            >
-              <Text
+              <ScrollView
                 style={{
-                  color: "white",
-                  fontSize: normalize(18),
-                  fontWeight: "500",
+                  paddingVertical: normalize(2),
+                  paddingHorizontal: normalize(21),
+                  // justifyContent: "center",
+                  // alignItems: "flex-start",
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  borderRadius: normalize(15),
+                  maxHeight: normalize(28),
+                  // maxWidth: 300,
+                  marginHorizontal: normalize(10),
                 }}
-                // numberOfLines={4}
+                horizontal
               >
-                {post.mediaItem.name}
-              </Text>
-            </ScrollView>
-          </View>
-  
-          <View
-            style={{
-              //   flexDirection: "row",
-              //   marginHorizontal: normalize(10),
-              justifyContent: "center",
-              gap: normalize(10),
-            }}
-          >
-            <Text
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: normalize(18),
+                    fontWeight: "500",
+                  }}
+                  // numberOfLines={4}
+                >
+                  {/* has to be updated */}
+                  {post.mediaItem.original_title}
+                </Text>
+              </ScrollView>
+            </View>
+
+            <View
               style={{
-                color: "rgba(156, 75, 255, 1)",
-                fontSize: normalize(25),
-                fontWeight: "700",
-              }}
-            >
-              description:
-            </Text>
-            <ScrollView
-              style={{
-                paddingVertical: 5,
-                paddingHorizontal: normalize(15),
-                backgroundColor: "rgba(156, 75, 255, 1)",
-                borderRadius: normalize(15),
-                // maxWidth: 300,
-                marginHorizontal: normalize(10),
-                maxHeight: normalize(150),
+                //   flexDirection: "row",
+                //   marginHorizontal: normalize(10),
+                justifyContent: "center",
+                gap: normalize(10),
               }}
             >
               <Text
                 style={{
-                  color: "white",
-                  fontSize: normalize(18),
-                  fontWeight: "500",
+                  color: "rgba(156, 75, 255, 1)",
+                  fontSize: normalize(25),
+                  fontWeight: "700",
                 }}
               >
-                {post.mediaItem.description}
+                overview:
               </Text>
-            </ScrollView>
+              <ScrollView
+                style={{
+                  paddingVertical: 5,
+                  paddingHorizontal: normalize(15),
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  borderRadius: normalize(15),
+                  // maxWidth: 300,
+                  marginHorizontal: normalize(10),
+                  maxHeight: normalize(150),
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: normalize(18),
+                    fontWeight: "500",
+                  }}
+                >
+                  {post.mediaItem.overview}
+                </Text>
+              </ScrollView>
+            </View>
           </View>
-        </View>
-      );
+        );
+      case 2:
+        return (
+          <View style={{ gap: normalize(15), marginVertical: normalize(20) }}>
+            <View
+              style={{
+                //   flexDirection: "row",
+                //   marginHorizontal: normalize(10),
+                justifyContent: "center",
+                gap: normalize(10),
+              }}
+            >
+              <Text
+                style={{
+                  color: "rgba(156, 75, 255, 1)",
+                  fontSize: normalize(25),
+                  fontWeight: "700",
+                }}
+              >
+                name:
+              </Text>
+              <ScrollView
+                style={{
+                  paddingVertical: normalize(2),
+                  paddingHorizontal: normalize(21),
+                  // justifyContent: "center",
+                  // alignItems: "flex-start",
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  borderRadius: normalize(15),
+                  maxHeight: normalize(28),
+                  // maxWidth: 300,
+                  marginHorizontal: normalize(10),
+                }}
+                horizontal
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: normalize(18),
+                    fontWeight: "500",
+                  }}
+                  // numberOfLines={4}
+                >
+                  {post.mediaItem.name}
+                </Text>
+              </ScrollView>
+            </View>
+
+            <View
+              style={{
+                //   flexDirection: "row",
+                //   marginHorizontal: normalize(10),
+                justifyContent: "center",
+                gap: normalize(10),
+              }}
+            >
+              <Text
+                style={{
+                  color: "rgba(156, 75, 255, 1)",
+                  fontSize: normalize(25),
+                  fontWeight: "700",
+                }}
+              >
+                description:
+              </Text>
+              <ScrollView
+                style={{
+                  paddingVertical: 5,
+                  paddingHorizontal: normalize(15),
+                  backgroundColor: "rgba(156, 75, 255, 1)",
+                  borderRadius: normalize(15),
+                  // maxWidth: 300,
+                  marginHorizontal: normalize(10),
+                  maxHeight: normalize(150),
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: normalize(18),
+                    fontWeight: "500",
+                  }}
+                >
+                  {post.mediaItem.description}
+                </Text>
+              </ScrollView>
+            </View>
+          </View>
+        );
     }
-    } catch (error) {
+  } catch (error) {
     console.error(error);
     return [];
   }
 };
 
-export default function MediaItemInfo({ visible, onClose, post }: MediaItemInfoProps) {
+export default function MediaItemInfo({
+  visible,
+  onClose,
+  post,
+}: MediaItemInfoProps) {
   const handleSpotifyButtonPress = () => {
     const url = post.mediaItem.external_urls.spotify;
-    Linking.canOpenURL(url).then(supported => {
+    Linking.canOpenURL(url).then((supported) => {
       if (supported) {
         Linking.openURL(url);
       } else {
@@ -399,8 +403,8 @@ export default function MediaItemInfo({ visible, onClose, post }: MediaItemInfoP
             borderRadius: normalize(20),
             paddingTop: normalize(15),
             paddingHorizontal: normalize(10),
-            borderColor: "rgba(156, 75, 255, 1)", 
-            borderWidth: normalize(4)
+            borderColor: "rgba(156, 75, 255, 1)",
+            borderWidth: normalize(4),
           }}
         >
           <View
@@ -577,9 +581,9 @@ export default function MediaItemInfo({ visible, onClose, post }: MediaItemInfoP
           </View> */}
           {post.mediaItem.media_type !== "Film" &&
             post.mediaItem.media_type !== "TV Show" && (
-              <TouchableOpacity 
-              style={{ bottom: 0, marginTop: normalize(20) }}
-              onPress={handleSpotifyButtonPress}
+              <TouchableOpacity
+                style={{ bottom: 0, marginTop: normalize(20) }}
+                onPress={handleSpotifyButtonPress}
               >
                 <Image
                   style={{ width: normalize(202), height: normalize(65) }}

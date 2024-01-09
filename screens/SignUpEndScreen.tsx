@@ -11,34 +11,39 @@ import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { normalize } from "../utils";
-import { AuthNavigationProp, MainNavigationProp, SignUpEndScreenRouteProp, User } from "../types";
+import {
+  AuthNavigationProp,
+  MainNavigationProp,
+  SignUpEndScreenRouteProp,
+  User,
+} from "../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as FileSystem from 'expo-file-system'; 
+import * as FileSystem from "expo-file-system";
 import { setDoc, doc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL  } from 'firebase/storage';
-import * as ImagePicker from 'expo-image-picker'; 
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import * as ImagePicker from "expo-image-picker";
 
 import { FIREBASE_STORAGE, FIRESTORE_DB } from "../firebaseConfig";
 import { addUserToDB, pickImage, uploadImage } from "../utilsFirebase";
 import { sharedStyles } from "../sharedStyles";
 
-const imgDir = FileSystem.documentDirectory + 'images/'; 
+const imgDir = FileSystem.documentDirectory + "images/";
 
 const ensureDirExists = async () => {
-  const dirInfo = await FileSystem.getInfoAsync(imgDir); 
+  const dirInfo = await FileSystem.getInfoAsync(imgDir);
   if (!dirInfo.exists) {
-    await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true }); 
+    await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
   }
-}
+};
 
 export default function SignUpEnd() {
   const navigation = useNavigation<AuthNavigationProp>();
   const mainNavigation = useNavigation<MainNavigationProp>();
   const route = useRoute<SignUpEndScreenRouteProp>();
   const { name, profileName, dateOfBirth, generalDescription } = route.params;
-  const [SignedUpUID, setSignedUpUID] = useState(""); 
+  const [SignedUpUID, setSignedUpUID] = useState("");
   const [profileImageUrl, setProfileImageUrl] = useState("");
-  const [selectedImageUri, setSelectedImageUri] = useState(""); 
+  const [selectedImageUri, setSelectedImageUri] = useState("");
   const [musicIsSelected, setMusicIsSelected] = useState(false);
   const [filmsTVShowsIsSelected, setFilmsTVShowsIsSelected] = useState(false);
   const [podcastsEpisodesIsSelected, setPodcastsEpisodesIsSelected] =
@@ -46,11 +51,11 @@ export default function SignUpEnd() {
   const [profileIsReady, setProfileIsReady] = useState(false);
   const [isSignUpOptionsModalVisible, setIsSignUpOptionsModalVisible] =
     useState(false);
-  const [hasSelectedImage, setHasSelectedImage] = useState(false); 
+  const [hasSelectedImage, setHasSelectedImage] = useState(false);
 
-// useEffect (() => {
-//   loadImage();
-// }, [])
+  // useEffect (() => {
+  //   loadImage();
+  // }, [])
 
   // const toggleSignUpOptionsModal = () => {
   //   setIsSignUpOptionsModalVisible(!isSignUpOptionsModalVisible);
@@ -64,7 +69,7 @@ export default function SignUpEnd() {
   //     aspect: [4, 3],
   //     quality: 0.75,
   //   };
-  
+
   //   if (useLibrary) {
   //     await ImagePicker.requestMediaLibraryPermissionsAsync();
   //     result = await ImagePicker.launchImageLibraryAsync(options);
@@ -72,22 +77,20 @@ export default function SignUpEnd() {
   //     await ImagePicker.requestCameraPermissionsAsync();
   //     result = await ImagePicker.launchCameraAsync(options);
   //   }
-  
+
   //   if (!result.canceled) {
-  //     // console.log(result.assets[0].uri); 
+  //     // console.log(result.assets[0].uri);
   //     saveImage(result.assets[0].uri)
   //   }
   // };
 
   // const saveImage = async (uri: string) => {
-  //   await ensureDirExists(); 
-  //   const filename = new Date().getTime() + '.jpg'; 
-  //   const dest = imgDir + filename; 
-  //   await FileSystem.copyAsync({ from: uri, to: dest}); 
+  //   await ensureDirExists();
+  //   const filename = new Date().getTime() + '.jpg';
+  //   const dest = imgDir + filename;
+  //   await FileSystem.copyAsync({ from: uri, to: dest});
   // }
-  
-  
-  
+
   // const loadImage = async () => {
   //   await ensureDirExists();
   //   const files = await FileSystem.readDirectoryAsync(imgDir);
@@ -102,14 +105,14 @@ export default function SignUpEnd() {
   //   try {
   //     const response = await fetch(uri);
   //     const blob = await response.blob();
-  
+
   //     const imageRef = ref(FIREBASE_STORAGE, `images/${new Date().getTime()}`); // Unique name for the image
-  
+
   //     await uploadBytes(imageRef, blob);
-  
+
   //     // Get download URL
   //     const downloadURL = await getDownloadURL(imageRef);
-  
+
   //     console.log('Image uploaded successfully!');
   //     console.log('Download URL:', downloadURL);
   //     return downloadURL;
@@ -117,7 +120,6 @@ export default function SignUpEnd() {
   //     console.error('Error uploading image: ', error);
   //   }
   // };
-  
 
   // const pickImage = async (setSelectedImageUri: (uri: string) => void) => {
   //   // Request permission
@@ -128,7 +130,7 @@ export default function SignUpEnd() {
   //     alert('Permission to access camera roll is required!');
   //     return;
   //   }
-  
+
   //   // Launch the image picker
   //   let result = await ImagePicker.launchImageLibraryAsync({
   //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -136,7 +138,7 @@ export default function SignUpEnd() {
   //     aspect: [4, 3],
   //     quality: 1,
   //   });
-  
+
   //   if (!result.canceled) {
   //     setSelectedImageUri(result.assets[0].uri); // This is the local URI of the image
   //   }
@@ -158,17 +160,15 @@ export default function SignUpEnd() {
   // }
 
   // const handleImageUpload = async () => {
-  //   const uri = selectedImageUri; 
+  //   const uri = selectedImageUri;
   //   if (uri) {
   //     await uploadImage(uri);
   //   }
   // };
-  
-
 
   const handlePress = async () => {
-    const uploadedImageUrl = await uploadImage(selectedImageUri); 
-    const signedUpUID = await AsyncStorage.getItem("uid"); 
+    const uploadedImageUrl = await uploadImage(selectedImageUri);
+    const signedUpUID = await AsyncStorage.getItem("uid");
 
     if (signedUpUID === null) {
       // Handle the case where signedUpUID is null
@@ -177,38 +177,38 @@ export default function SignUpEnd() {
     }
 
     const userObject: User = {
-      name: name, 
+      name: name,
       profileName: profileName,
       profilePicture: uploadedImageUrl,
       dateOfBirth: new Date(dateOfBirth),
       profileDescription: generalDescription,
-      followersCount: 0, 
-      followingCount: 0, 
+      followersCount: 0,
+      followingCount: 0,
       domainsOfTaste: {
-          Music: {
-            isActive: musicIsSelected,
-            domainId: 0,
-            score: 0
-          },
-          FilmsTVShows: {
-            isActive: filmsTVShowsIsSelected,
-            domainId: 1,
-            score: 0
-          }, 
-          PodcastsEpisodes: {
-            isActive: podcastsEpisodesIsSelected,
-            domainId: 2,
-            score: 0
-          }
+        Music: {
+          isActive: musicIsSelected,
+          domainId: 0,
+          score: 0,
+        },
+        FilmsTVShows: {
+          isActive: filmsTVShowsIsSelected,
+          domainId: 1,
+          score: 0,
+        },
+        PodcastsEpisodes: {
+          isActive: podcastsEpisodesIsSelected,
+          domainId: 2,
+          score: 0,
+        },
       },
-      followersUsersList: [], 
-      followingUsersList: [], 
-    }
+      followersUsersList: [],
+      followingUsersList: [],
+    };
     console.log("WE'RE GETTING HERE");
     await addUserToDB(userObject, signedUpUID);
     console.log("[USER]: ", userObject);
     mainNavigation.navigate("Tabs");
-  }
+  };
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
@@ -275,29 +275,32 @@ export default function SignUpEnd() {
             marginTop: normalize(24),
           }}
         >
-          {selectedImageUri ? 
-          (
-            <Image source={{uri: selectedImageUri}} style={{
-              width: normalize(328) ,
-              height: normalize(320),
-              borderRadius: normalize(15),
-              borderWidth: normalize(8),
-              borderColor: "rgba(156, 75, 255, 1)",
-            }} />) :
-            (<TouchableOpacity
-              onPress={()=> {
-                pickImage(setSelectedImageUri)
-              }
-            }
-            >
+          {selectedImageUri ? (
             <Image
-              source={require("../assets/icons/AddImageIconPurple.png")}
+              source={{ uri: selectedImageUri }}
               style={{
-                width: normalize(76),
-                height: normalize(76),
+                width: normalize(328),
+                height: normalize(320),
+                borderRadius: normalize(15),
+                borderWidth: normalize(8),
+                borderColor: "rgba(156, 75, 255, 1)",
               }}
             />
-          </TouchableOpacity>)}
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                pickImage(setSelectedImageUri);
+              }}
+            >
+              <Image
+                source={require("../assets/icons/AddImageIconPurple.png")}
+                style={{
+                  width: normalize(76),
+                  height: normalize(76),
+                }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <TouchableOpacity
@@ -457,8 +460,7 @@ export default function SignUpEnd() {
           </TouchableOpacity>
         </View>
 
-        { 
-        selectedImageUri &&
+        {selectedImageUri &&
         (musicIsSelected ||
           filmsTVShowsIsSelected ||
           podcastsEpisodesIsSelected) ? (
@@ -471,29 +473,21 @@ export default function SignUpEnd() {
               ...sharedStyles.touchableChooseButtonContainer,
               backgroundColor: "rgba(82, 42, 154, 1)",
               borderColor: "rgba(156, 75, 255, 1)",
-              borderWidth: normalize(4), 
+              borderWidth: normalize(4),
               shadowColor: "rgba(156, 75, 255, 1)",
               bottom: normalize(40),
             }}
           >
-            <Text
-              style={sharedStyles.chooseButtonText}
-            >
-              ready to go!
-            </Text>
+            <Text style={sharedStyles.chooseButtonText}>ready to go!</Text>
           </TouchableOpacity>
         ) : (
           <View
             style={{
-              ...sharedStyles.chooseButtonContainer, 
+              ...sharedStyles.chooseButtonContainer,
               bottom: normalize(40),
             }}
           >
-            <Text
-              style={sharedStyles.chooseButtonText}
-            >
-              ready to go!
-            </Text>
+            <Text style={sharedStyles.chooseButtonText}>ready to go!</Text>
           </View>
         )}
       </SafeAreaView>
@@ -505,6 +499,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-
   },
 });

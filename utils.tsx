@@ -19,8 +19,8 @@ export const normalize = (value: number) => width * (value / 390);
 // get Search Result Item subtitle, depending on the media type:
 export const getItemSubTitle = (mediaItem: any, domainId: number) => {
   // try {
-    switch (domainId){
-    case 0 : {
+  switch (domainId) {
+    case 0: {
       return (
         <View style={{ flexDirection: "row", maxWidth: normalize(80) }}>
           {mediaItem.artists?.map((artist: any, index: number) => (
@@ -33,7 +33,6 @@ export const getItemSubTitle = (mediaItem: any, domainId: number) => {
                   style={styles.itemSubtitle}
                 >
                   {artist.name}-
-
                 </Text>
               ) : (
                 <Text
@@ -49,14 +48,14 @@ export const getItemSubTitle = (mediaItem: any, domainId: number) => {
         </View>
       );
     }
-    case 2 : {
+    case 2: {
       return (
         <Text numberOfLines={1} style={styles.itemSubtitle}>
           {mediaItem.description}
         </Text>
       );
     }
-    case 1 : {
+    case 1: {
       return (
         <Text numberOfLines={1} style={styles.itemSubtitle}>
           {mediaItem.media_type}
@@ -68,7 +67,7 @@ export const getItemSubTitle = (mediaItem: any, domainId: number) => {
         <Text numberOfLines={1} style={styles.itemSubtitle}>
           Error: Invalid post type!
         </Text>
-      )
+      );
     }
   }
   // } catch (error) {
@@ -321,16 +320,17 @@ export const getItemImage = (item: any, domainId: number) => {
       case 2:
         return { uri: item.images[0].url };
       case 1:
-        return { uri: `https://image.tmdb.org/t/p/original/${item.poster_path}` };
+        return {
+          uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
+        };
       default:
         throw new Error(`Invalid domainId: ${domainId}`);
     }
   } catch (error) {
     console.error(error);
-    return { uri: 'DefaultImageURL' }; // Replace 'DefaultImageURL' with a default image url if needed
+    return { uri: "DefaultImageURL" }; // Replace 'DefaultImageURL' with a default image url if needed
   }
 };
-
 
 // export const getItemTitle = (item: any, postType: string) => {
 //   switch (postType) {
@@ -346,29 +346,29 @@ export const getItemImage = (item: any, domainId: number) => {
 // };
 export const getItemTitle = (item: any, domainId: number) => {
   switch (domainId) {
-      case 0:
-          return item.name;
-      case 2:
-          return item.name;
-      case 1:
-          return item.media_type === "movie" ? item.title : item.name;
-      default:
-          console.error('Invalid "postType" was passed!');
-          return "Unknown Title";
+    case 0:
+      return item.name;
+    case 2:
+      return item.name;
+    case 1:
+      return item.media_type === "movie" ? item.title : item.name;
+    default:
+      console.error('Invalid "postType" was passed!');
+      return "Unknown Title";
   }
 };
 
 export const getButtonsAccentColor = (postType?: string) => {
   switch (postType) {
-      case "Song":
-          return "rgba(0, 255, 163, 1)";
-      case "PodcastEpisode":
-          return "rgba(110, 212, 73, 1)";
-      case "Film/TVShow":
-          return "rgba(250, 0, 255, 1)";
-      default:
-          console.log('Invalid "postType" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case "Song":
+      return "rgba(0, 255, 163, 1)";
+    case "PodcastEpisode":
+      return "rgba(110, 212, 73, 1)";
+    case "Film/TVShow":
+      return "rgba(250, 0, 255, 1)";
+    default:
+      console.log('Invalid "postType" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
@@ -388,82 +388,82 @@ export const getButtonsAccentColor = (postType?: string) => {
 
 export const getGradientsFirstColor = (postType: string) => {
   switch (postType) {
-      case "Song":
-          return "rgba(0, 98, 62, 1)";
-      case "PodcastEpisode":
-          return "rgba(75, 117, 59, 1)";
-      case "Film/TVShow":
-          return "rgba(99, 0, 101, 1)";
-      default:
-          console.error('Invalid "postType" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case "Song":
+      return "rgba(0, 98, 62, 1)";
+    case "PodcastEpisode":
+      return "rgba(75, 117, 59, 1)";
+    case "Film/TVShow":
+      return "rgba(99, 0, 101, 1)";
+    default:
+      console.error('Invalid "postType" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getSearchBarColor = (postType: string) => {
   switch (postType) {
-      case "Song":
-          return "rgba(20, 169, 115, 0.75)";
-      case "PodcastEpisode":
-          return "rgba(105, 146, 91, 0.75)";
-      case "Film/TVShow":
-          return "rgba(134, 0, 137, 0.75)";
-      default:
-          console.log('Invalid "postType" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case "Song":
+      return "rgba(20, 169, 115, 0.75)";
+    case "PodcastEpisode":
+      return "rgba(105, 146, 91, 0.75)";
+    case "Film/TVShow":
+      return "rgba(134, 0, 137, 0.75)";
+    default:
+      console.log('Invalid "postType" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getMoodTextColor = (postType?: string) => {
   switch (postType) {
-      case "Song":
-          return "rgba(153, 255, 218, 1)";
-      case "PodcastEpisode":
-          return "rgba(197, 238, 182, 1)";
-      case "Film/TVShow":
-          return "rgba(253, 153, 255, 1)";
-      default:
-          console.log('Invalid "postType" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case "Song":
+      return "rgba(153, 255, 218, 1)";
+    case "PodcastEpisode":
+      return "rgba(197, 238, 182, 1)";
+    case "Film/TVShow":
+      return "rgba(253, 153, 255, 1)";
+    default:
+      console.log('Invalid "postType" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getMoodContainerColor = (postType?: string) => {
   switch (postType) {
-      case "Song":
-          return "rgba(0, 255, 163, 0.4)";
-      case "PodcastEpisode":
-          return "rgba(110, 212, 73, 0.4)";
-      case "Film/TVShow":
-          return "rgba(250, 0, 255, 0.4)";
-      default:
-          console.log('Invalid "postType" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case "Song":
+      return "rgba(0, 255, 163, 0.4)";
+    case "PodcastEpisode":
+      return "rgba(110, 212, 73, 0.4)";
+    case "Film/TVShow":
+      return "rgba(250, 0, 255, 0.4)";
+    default:
+      console.log('Invalid "postType" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getPlaylistCardBackgroundColor = (postType: string) => {
   switch (postType) {
-      case "Song":
-          return "rgba(0, 255, 163, 0.75)";
-      case "PodcastEpisode":
-          return "rgba(110, 212, 73, 0.75)";
-      case "Film/TVShow":
-          return "rgba(250, 0, 255, 0.75)";
-      default:
-          console.log('Invalid "postType" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case "Song":
+      return "rgba(0, 255, 163, 0.75)";
+    case "PodcastEpisode":
+      return "rgba(110, 212, 73, 0.75)";
+    case "Film/TVShow":
+      return "rgba(250, 0, 255, 0.75)";
+    default:
+      console.log('Invalid "postType" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getImageWidth = (postType: string) => {
   // try {
-      switch (postType) {
-          case "Film/TVShow":
-              return normalize(275);
-          default:
-              return normalize(300);
-      }
+  switch (postType) {
+    case "Film/TVShow":
+      return normalize(275);
+    default:
+      return normalize(300);
+  }
   // } catch (error) {
   //     console.error(error);
   //     return "Error"; // Updated to return a string indicating an error instead of an array
@@ -472,43 +472,43 @@ export const getImageWidth = (postType: string) => {
 
 export const getScreenGradientFirstColor = (domain: Domain) => {
   switch (domain.domainId) {
-      case 0:
-          return "rgba(0, 98, 62, 1)";
-      case 1:
-          return "rgba(99, 0, 101, 1)";
-      case 2:
-          return "rgba(75, 117, 59, 1)";
-      default:
-          console.log('Invalid "domain" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case 0:
+      return "rgba(0, 98, 62, 1)";
+    case 1:
+      return "rgba(99, 0, 101, 1)";
+    case 2:
+      return "rgba(75, 117, 59, 1)";
+    default:
+      console.log('Invalid "domain" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getDomainsOfTasteGradientsFirstColor = (domain: Domain) => {
   switch (domain.domainId) {
-      case 0:
-          return "rgba(0, 209, 134, 0.75)";
-      case 1:
-          return "rgba(207, 0, 211, 0.75)";
-      case 2:
-          return "rgba(110, 212, 73, 0.75)";
-      default:
-          console.log('Invalid "domain" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case 0:
+      return "rgba(0, 209, 134, 0.75)";
+    case 1:
+      return "rgba(207, 0, 211, 0.75)";
+    case 2:
+      return "rgba(110, 212, 73, 0.75)";
+    default:
+      console.log('Invalid "domain" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
 export const getPlaylistBigCardBackgroundColor = (domain: Domain) => {
   switch (domain.domainId) {
-      case 0:
-          return "rgba(0, 255, 163, 0.3)";
-      case 1:
-          return "rgba(250, 0, 255, 0.3)";
-      case 2:
-          return "rgba(120, 190, 94, 0.3)";
-      default:
-          console.log('Invalid "domain" was passed!');
-          return "rgba(105, 51, 172, 1)";
+    case 0:
+      return "rgba(0, 255, 163, 0.3)";
+    case 1:
+      return "rgba(250, 0, 255, 0.3)";
+    case 2:
+      return "rgba(120, 190, 94, 0.3)";
+    default:
+      console.log('Invalid "domain" was passed!');
+      return "rgba(105, 51, 172, 1)";
   }
 };
 
@@ -529,7 +529,6 @@ export const getDomainOfTasteScoreIcon = (domain: Domain) => {
     return require("./assets/icon.png"); // Replace with your default icon
   }
 };
-
 
 export const getPlaylistScoreIcon = (domain: Domain) => {
   try {
@@ -565,8 +564,7 @@ export const getDomainsName = (domain: Domain) => {
     console.error(error);
     return "Default Domain"; // Replace with your default icon
   }
-}
-
+};
 
 export const getImageHeight = (postType: string) => {
   try {
@@ -582,15 +580,13 @@ export const getImageHeight = (postType: string) => {
   }
 };
 
-
-
 export const getPlaylistsMediaItemComponent = ({
   domainOfTaste,
   item: post,
   profileContentNavigation,
   user,
 }: PlaylistsMediaItemComponentProps) => {
-  switch (domainOfTaste.domainId){
+  switch (domainOfTaste.domainId) {
     case 0: {
       return (
         // <Text>{post.toString()}</Text>
@@ -611,23 +607,25 @@ export const getPlaylistsMediaItemComponent = ({
               backgroundColor: "rgba(58, 17, 90, 0.5)",
               marginRight: normalize(15),
               alignItems: "center",
-              borderColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
-              borderWidth: normalize(4), 
+              borderColor: getMoodContainerColor(
+                DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+              ),
+              borderWidth: normalize(4),
             }}
           >
-          <Image
-            source={
-              // { "uri": post.mediaItem.image}  //with implemented MediaItem Interface
-              getItemImage(post.mediaItem, domainOfTaste.domainId)
-            }
-            style={{
-              width: normalize(100),
-              height: normalize(100),
-              borderBottomLeftRadius: normalize(10),
-              borderBottomRightRadius: normalize(10),
-              //   borderRadius: normalize(10),
-            }}
-          />
+            <Image
+              source={
+                // { "uri": post.mediaItem.image}  //with implemented MediaItem Interface
+                getItemImage(post.mediaItem, domainOfTaste.domainId)
+              }
+              style={{
+                width: normalize(100),
+                height: normalize(100),
+                borderBottomLeftRadius: normalize(10),
+                borderBottomRightRadius: normalize(10),
+                //   borderRadius: normalize(10),
+              }}
+            />
             <View
               style={{
                 alignItems: "center",
@@ -645,7 +643,7 @@ export const getPlaylistsMediaItemComponent = ({
                 numberOfLines={1}
               >
                 {/* {post.mediaItem.name} //with implemented MediaItem Interface*/}
-                {getItemTitle(post.mediaItem, domainOfTaste.domainId)  }
+                {getItemTitle(post.mediaItem, domainOfTaste.domainId)}
               </Text>
               <Text
                 style={{
@@ -655,13 +653,11 @@ export const getPlaylistsMediaItemComponent = ({
                 }}
                 numberOfLines={1}
               >
-                {post.mediaItem.album.name} 
+                {post.mediaItem.album.name}
               </Text>
               <View style={{ width: normalize(165) }}>
                 <FlatList
-                  data={
-                    post.mediaItem.artists
-                  }
+                  data={post.mediaItem.artists}
                   scrollEnabled={false}
                   horizontal
                   style={{
@@ -673,7 +669,7 @@ export const getPlaylistsMediaItemComponent = ({
                         : "center",
                     maxWidth: normalize(165),
                     overflow: "hidden",
-                    marginHorizontal: normalize(5)
+                    marginHorizontal: normalize(5),
                     //   numberOfLines: 1,
                   }}
                   // keyExtractor={(item) => item.domainId.toString()} // Change this to your key extractor function
@@ -704,8 +700,8 @@ export const getPlaylistsMediaItemComponent = ({
                 />
               </View>
             </View>
-      </View>
-      </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       );
     }
     case 1: {
@@ -765,12 +761,14 @@ export const getPlaylistsMediaItemComponent = ({
               backgroundColor: "rgba(58, 17, 90, 0.8)",
               marginRight: normalize(15),
               alignItems: "center",
-              borderColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+              borderColor: getMoodContainerColor(
+                DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+              ),
               borderWidth: normalize(5),
               // justifyContent: "center",
               // // padding: 0,
             }}
-            >
+          >
             <View
               style={{
                 flexDirection: "row",
@@ -790,7 +788,7 @@ export const getPlaylistsMediaItemComponent = ({
                   width: normalize(120),
                   height: normalize(120),
                   borderRadius: normalize(10),
-                  left: normalize(5) // because of the borderwidth
+                  left: normalize(5), // because of the borderwidth
                   // opacity: 0.8,
                 }}
               />
@@ -813,7 +811,7 @@ export const getPlaylistsMediaItemComponent = ({
                   numberOfLines={5}
                 >
                   {/* {post.mediaItem.name} //with implemented MediaItem Interface*/}
-                {getItemTitle(post.mediaItem, domainOfTaste.domainId)  }
+                  {getItemTitle(post.mediaItem, domainOfTaste.domainId)}
                 </Text>
               </View>
             </View>
@@ -834,16 +832,18 @@ export const getPlaylistsMediaItemComponent = ({
       );
     }
     default: {
-      return <View
-            style={{
-              width: normalize(165),
-              height: normalize(189),
-              borderRadius: normalize(10),
-              backgroundColor: "rgba(105, 51, 172, 1)",
-              marginRight: normalize(15),
-              alignItems: "center",
-            }}
-          />
+      return (
+        <View
+          style={{
+            width: normalize(165),
+            height: normalize(189),
+            borderRadius: normalize(10),
+            backgroundColor: "rgba(105, 51, 172, 1)",
+            marginRight: normalize(15),
+            alignItems: "center",
+          }}
+        />
+      );
     }
   }
 };
@@ -873,11 +873,10 @@ export const getPlaylistsMediaItemComponent = ({
 //   }
 // };
 export const transformMoodsToStringArray = (moods: Mood[]): string[] => {
-  return moods.map(mood => mood.name);
+  return moods.map((mood) => mood.name);
 };
 
 export const getCarouselNumColumns = (listLength: number) => listLength / 5;
-
 
 // export const generateRandomString = (length: number) => {
 //   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -899,7 +898,7 @@ export const getCarouselNumColumns = (listLength: number) => listLength / 5;
 //   return returnValue;
 
 // } catch (error) {
-//   console.error("Error at Crypto.digestStringAsync(): ", error); 
+//   console.error("Error at Crypto.digestStringAsync(): ", error);
 //   return "Error at generateCodeChallenge()"
 // }
 // };

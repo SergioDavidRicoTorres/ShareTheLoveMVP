@@ -9,7 +9,7 @@ import {
   Text,
 } from "react-native";
 import { useState } from "react";
-import * as AuthSession from 'expo-auth-session';
+import * as AuthSession from "expo-auth-session";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import AuthOptions from "../components/AuthOptions";

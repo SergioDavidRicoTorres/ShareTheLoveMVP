@@ -13,7 +13,6 @@ import { useCurrentUser } from "../CurrentUserContext";
 
 const Tab = createBottomTabNavigator();
 
-
 function Tabs() {
   // const currentUserId = (FIREBASE_AUTH.currentUser?.uid || "defaultUserId")
   // const [currentUser, setCurrentUser]  = useState<User | null>(null);
@@ -44,7 +43,7 @@ function Tabs() {
   //       console.error('Error:', error);
   //     }
   //   };
-  
+
   //   if (currentUserId) {
   //     getUserData();
   //   }
@@ -125,7 +124,7 @@ function Tabs() {
                   borderWidth: normalize(3),
                 }}
                 source={{
-                  uri: currentUser?.profilePicture
+                  uri: currentUser?.profilePicture,
                   // uri: getCurrentUserData().profilePicture,
                 }}
               />

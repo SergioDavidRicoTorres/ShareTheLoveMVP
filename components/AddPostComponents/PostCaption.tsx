@@ -26,7 +26,7 @@ import {
   getMoodTextColor,
   getImageHeight,
   getImageWidth,
-  normalize
+  normalize,
 } from "../../utils";
 import { PostCaptionProps } from "../../types";
 import { sharedStyles } from "../../sharedStyles";
@@ -40,7 +40,7 @@ function PostCaption({
   postSelectedMedia,
   postType,
   postSelectedMoodsTags,
-  domainId
+  domainId,
 }: PostCaptionProps) {
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (SearchPlaylist) -----------------------------
@@ -94,9 +94,9 @@ function PostCaption({
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
             style={{
-              ...styles.backgroundGradient, 
+              ...styles.backgroundGradient,
               borderColor: getButtonsAccentColor(postType),
-              borderWidth: normalize(3), 
+              borderWidth: normalize(3),
             }}
           >
             {/* Modal Content */}
@@ -111,7 +111,7 @@ function PostCaption({
                   // backButtonContainer
                   onPress={onClose}
                   style={{
-                    left: normalize(8)
+                    left: normalize(8),
                   }}
                 >
                   {/* Back Button Image */}
@@ -130,20 +130,23 @@ function PostCaption({
                 >
                   <View
                     // achievedProgressState(1.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
                     // achivedProgressState(2.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
                     // followingProgressState(3.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
@@ -187,7 +190,7 @@ function PostCaption({
                   height: getImageHeight(postType),
                   backgroundColor: getGradientsFirstColor(postType),
                 }}
-                >
+              >
                 <Image
                   // mediaItemImage
                   source={getItemImage(postSelectedMedia, domainId)}
@@ -196,9 +199,9 @@ function PostCaption({
                     width: getImageWidth(postType),
                     height: getImageHeight(postType),
                     borderColor: getMoodContainerColor(postType),
-                    borderWidth: normalize(4), 
+                    borderWidth: normalize(4),
                   }}
-                  />
+                />
               </View>
 
               {/* Moods */}
@@ -262,7 +265,7 @@ function PostCaption({
                       width: normalize(70),
                       borderRadius: normalize(100),
                       borderColor: getButtonsAccentColor(postType),
-                      borderWidth: normalize(4), 
+                      borderWidth: normalize(4),
                     }}
                     source={{
                       uri: getCurrentUserData().profilePicture,
@@ -318,13 +321,13 @@ function PostCaption({
             </View>
           ) : (
             <TouchableOpacity
-            style={{
-              ...sharedStyles.touchableChooseButtonContainer,
-              backgroundColor: getGradientsFirstColor(postType),
-              borderColor: getButtonsAccentColor(postType),
-              borderWidth: normalize(4), 
-              shadowColor: getButtonsAccentColor(postType),
-            }}
+              style={{
+                ...sharedStyles.touchableChooseButtonContainer,
+                backgroundColor: getGradientsFirstColor(postType),
+                borderColor: getButtonsAccentColor(postType),
+                borderWidth: normalize(4),
+                shadowColor: getButtonsAccentColor(postType),
+              }}
               onPress={toggleSearchPlaylistModal}
             >
               <Text style={sharedStyles.chooseButtonText}>Save Post</Text>
@@ -491,7 +494,6 @@ const styles = StyleSheet.create({
 
     bottom: -normalize(20),
     zIndex: 1,
-
   },
   // userImage: {
   //   height: normalize(70),

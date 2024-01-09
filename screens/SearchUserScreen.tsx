@@ -19,21 +19,18 @@ import { HomeNavigationProp, ProfileNavigationProp, User } from "../types";
 import { getUsers } from "../utilsData";
 import { fetchAllUsers } from "../utilsFirebase";
 
-
-
 export default function SearchUser() {
   // const USERS = getUsers();
   const { width } = Dimensions.get("window"); // screen width constant
   const homeNavigation = useNavigation<HomeNavigationProp>();
   // const profileNavigation = useNavigation<ProfileNavigationProp>();
-  
+
   const [users, setUsers] = useState<User[]>([]);
   const [searchInput, setSearchInput] = useState<string>("");
-  const [searchResults, setSearchResults] = useState <User[]> ([]);
+  const [searchResults, setSearchResults] = useState<User[]>([]);
 
   const handleSearch = (text: string) => {
     setSearchInput(text);
-
 
     const filteredData: User[] = users.filter((item) =>
       item.name.toLowerCase().includes(text.toLowerCase())
@@ -53,47 +50,44 @@ export default function SearchUser() {
 
   const handlePress = (user: User | undefined) => {
     if (user === undefined) {
-      throw new Error('Error When Selecting User');
+      throw new Error("Error When Selecting User");
     }
     // if (mainNavigation !== undefined){
-      homeNavigation.navigate("ExternalProfileScreen", {user})
+    homeNavigation.navigate("ExternalProfileScreen", { user });
     // }
-  }
+  };
 
   return (
     <LinearGradient
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
       style={styles.container}
     >
-      <SafeAreaView 
-      style={styles.container}
-      >
-      <View
+      <SafeAreaView style={styles.container}>
+        <View
           style={{
             // backgroundColor: "white",
             width,
             marginBottom: normalize(5),
-            alignItems: "flex-end"
+            alignItems: "flex-end",
           }}
         >
-
           {/* Back Button */}
           <TouchableOpacity
-                  // backButtonContainer
-                  onPress={() => homeNavigation.goBack()}
-                  style={{
-                    right: normalize(8)
-                  }}
-                >
-                  {/* Back Button Image */}
-                  <Image
-                    source={require("../assets/icons/CancelButtonLightPurple.png")}
-                    style={{
-                      width: normalize(28),
-                      height: normalize(28),
-                    }}
-                  />
-                </TouchableOpacity>
+            // backButtonContainer
+            onPress={() => homeNavigation.goBack()}
+            style={{
+              right: normalize(8),
+            }}
+          >
+            {/* Back Button Image */}
+            <Image
+              source={require("../assets/icons/CancelButtonLightPurple.png")}
+              style={{
+                width: normalize(28),
+                height: normalize(28),
+              }}
+            />
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -112,9 +106,9 @@ export default function SearchUser() {
             shadowOpacity: 0.6,
             shadowRadius: normalize(10),
             bottom: normalize(50),
-            alignItems: "center", 
+            alignItems: "center",
             justifyContent: "center",
-            marginTop: normalize(50)
+            marginTop: normalize(50),
           }}
         >
           <LinearGradient
@@ -124,7 +118,7 @@ export default function SearchUser() {
               height: normalize(650),
               borderRadius: normalize(15),
               borderColor: "rgba(156, 75, 255, 1)",
-              borderWidth: normalize(5)
+              borderWidth: normalize(5),
               //   shadowColor: "rgba(241, 159, 0, 1)",
               //   shadowOffset: {
               //     width: 0,
@@ -185,7 +179,7 @@ export default function SearchUser() {
                       // backgroundColor: "white",
                     }}
                     onPress={() => handlePress(item)}
-                    >
+                  >
                     <Image
                       style={{
                         width: normalize(60),
@@ -201,9 +195,9 @@ export default function SearchUser() {
                         justifyContent: "center",
                         marginLeft: normalize(10),
                         backgroundColor: "rgba(84, 42, 147, 1)",
-                        paddingHorizontal: normalize (12),
+                        paddingHorizontal: normalize(12),
                         width: normalize(220),
-                        borderRadius: normalize(10), 
+                        borderRadius: normalize(10),
                         borderColor: "rgba(201, 157, 255, 1)",
                         borderWidth: normalize(3),
                       }}
@@ -294,7 +288,7 @@ export default function SearchUser() {
                         )}
                         keyExtractor={(domain, index) => index.toString()}  //fetch and use element id from firestore
                               /> */}
-            </View> 
+            </View>
           </LinearGradient>
         </View>
       </SafeAreaView>
@@ -322,7 +316,7 @@ const styles = StyleSheet.create({
     marginTop: normalize(20),
     backgroundColor: "rgba(105, 51, 172, 1)",
     alignItems: "center",
-    borderColor: "rgba(162, 148, 255, 0.7)", 
+    borderColor: "rgba(162, 148, 255, 0.7)",
     borderWidth: normalize(3),
   },
   searchIcon: {

@@ -16,7 +16,10 @@ function HomeNavigator() {
       screenOptions={{ headerShown: false }}
       initialRouteName="HomeScreen"
     >
-      <Stack.Screen name="ExternalProfileScreen" component={ExternalProfileScreen} />
+      <Stack.Screen
+        name="ExternalProfileScreen"
+        component={ExternalProfileScreen}
+      />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="SearchUserScreen" component={SearchUser} />
       {/* <Stack.Screen name="DomainOfTasteScreen" component={DomainOfTasteScreen} />
@@ -24,7 +27,10 @@ function HomeNavigator() {
         name="PostsViewScreen"
         component={PostsViewScreen}
       /> */}
-      <Stack.Screen name="ProfileContentNavigator" component={ProfileContentNavigator} />
+      <Stack.Screen
+        name="ProfileContentNavigator"
+        component={ProfileContentNavigator}
+      />
     </Stack.Navigator>
   );
 }

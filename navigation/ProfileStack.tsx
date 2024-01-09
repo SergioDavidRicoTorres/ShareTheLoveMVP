@@ -7,7 +7,6 @@ import DomainOfTasteScreen from "../screens/DomainOfTasteScreen";
 import PostsViewScreen from "../screens/PostsViewScreen";
 import { ProfileContentNavigator } from "./ProfileContentNavigator";
 
-
 const Stack = createStackNavigator<ProfileNavigatorParamsList>();
 
 function ProfileNavigator() {
@@ -17,7 +16,10 @@ function ProfileNavigator() {
       initialRouteName="ProfileScreen"
     >
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Stack.Screen name="ProfileContentNavigator" component={ProfileContentNavigator} />  
+      <Stack.Screen
+        name="ProfileContentNavigator"
+        component={ProfileContentNavigator}
+      />
       {/* <Stack.Screen name="DomainOfTasteScreen" component={DomainOfTasteScreen} />
       <Stack.Screen
         name="PostsViewScreen"

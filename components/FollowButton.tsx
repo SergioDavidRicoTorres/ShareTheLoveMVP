@@ -8,8 +8,8 @@ import { followUser, unfollowUser } from "../utilsFirebase";
 // Import or define normalize, followUser, unfollowUser
 
 type FollowButtonProps = {
-    profileUserId: string;      // The ID of the user whose profile is being viewed
-  };
+  profileUserId: string; // The ID of the user whose profile is being viewed
+};
 
 const FollowButton = ({ profileUserId }: FollowButtonProps) => {
   const [isFollowing, setIsFollowing] = useState(false);
@@ -25,7 +25,9 @@ const FollowButton = ({ profileUserId }: FollowButtonProps) => {
   useEffect(() => {
     const checkIfFollowing = async () => {
       try {
-        const followingList = currentUser ? currentUser.followingUsersList as string[] : [];
+        const followingList = currentUser
+          ? (currentUser.followingUsersList as string[])
+          : [];
         setIsFollowing(followingList?.includes(profileUserId));
       } catch (error) {
         console.error("Failed to fetch user data:", error);
@@ -67,7 +69,7 @@ const FollowButton = ({ profileUserId }: FollowButtonProps) => {
       {isFollowing ? (
         // Following state UI
         <View
-            style={{
+          style={{
             paddingVertical: normalize(2),
             paddingHorizontal: normalize(30),
             borderRadius: normalize(15),
@@ -76,23 +78,23 @@ const FollowButton = ({ profileUserId }: FollowButtonProps) => {
             backgroundColor: "rgba(1, 4, 43, 1)",
             borderColor: "rgba(91, 46, 167, 1)",
             borderWidth: normalize(5),
-            }}
+          }}
         >
-            <Text
+          <Text
             style={{
-                color: "rgba(186, 129, 255, 1)",
-                fontSize: normalize(25),
-                fontWeight: "700",
+              color: "rgba(186, 129, 255, 1)",
+              fontSize: normalize(25),
+              fontWeight: "700",
             }}
-            >
+          >
             Following
-            </Text>
+          </Text>
         </View>
       ) : (
         // Follow state UI
         <LinearGradient
-        colors={[ "rgba(156, 75, 255, 1)", "rgba(95, 110, 231, 1)"]} // Specify the colors for the gradient
-        style={{
+          colors={["rgba(156, 75, 255, 1)", "rgba(95, 110, 231, 1)"]} // Specify the colors for the gradient
+          style={{
             paddingVertical: normalize(2),
             paddingHorizontal: normalize(30),
             borderRadius: normalize(15),
@@ -101,17 +103,17 @@ const FollowButton = ({ profileUserId }: FollowButtonProps) => {
             // backgroundColor: "rgba(156, 75, 255, 1)",
             borderColor: "rgba(91, 46, 167, 1)",
             borderWidth: normalize(5),
-        }}
+          }}
         >
-        <Text
-        style={{
-            color: "white",
-            fontSize: normalize(25),
-            fontWeight: "700",
-        }}
-        >
-        Follow
-        </Text>
+          <Text
+            style={{
+              color: "white",
+              fontSize: normalize(25),
+              fontWeight: "700",
+            }}
+          >
+            Follow
+          </Text>
         </LinearGradient>
       )}
     </TouchableOpacity>

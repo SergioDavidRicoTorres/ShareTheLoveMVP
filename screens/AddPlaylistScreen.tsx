@@ -1,17 +1,23 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
-    View,
-    Dimensions,
-    StyleSheet,
-    FlatList,
-    TextInput,
-    Text,
-    Image,
-    TouchableOpacity,
-    ImageBackground,
-  } from "react-native";import { SafeAreaView } from "react-native-safe-area-context";
-import { AddPlaylistScreenRouteProp, Mood, Playlist, ProfileNavigationProp } from "../types";
+  View,
+  Dimensions,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  Text,
+  Image,
+  TouchableOpacity,
+  ImageBackground,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  AddPlaylistScreenRouteProp,
+  Mood,
+  Playlist,
+  ProfileNavigationProp,
+} from "../types";
 import { useEffect, useState } from "react";
 import { getAllMoodsAndTagsArray } from "../utilsData";
 import { addPlaylistToDB, pickImage, uploadImage } from "../utilsFirebase";
@@ -23,149 +29,160 @@ import AddPlaylist from "../components/AddPostComponents/AddPlaylist";
 const { width } = Dimensions.get("window"); // screen width constant
 
 export default function AddPlaylistScreen() {
+  const route = useRoute<AddPlaylistScreenRouteProp>();
+  const navigation = useNavigation<ProfileNavigationProp>();
+  const { domainId } = route.params;
+  // console.log("-----------", domainId)
 
-        const route = useRoute<AddPlaylistScreenRouteProp> ();
-        const navigation = useNavigation<ProfileNavigationProp>();
-        const { domainId } = route.params;
-        // console.log("-----------", domainId)
-
-      // const postType = DOMAINPOSTTYPE.get(domainId);
+  // const postType = DOMAINPOSTTYPE.get(domainId);
   const [playlistTitle, setPlaylistTitle] = useState("");
   const handleTitleChange = (value: string) => {
     setPlaylistTitle(value);
   };
   const [hasCover, setHasCover] = useState(false);
-  const [selectedImageUri, setSelectedImageUri] = useState(""); 
-  
+  const [selectedImageUri, setSelectedImageUri] = useState("");
+
   // search states (input, results)
   const allMoods = getAllMoodsAndTagsArray();
   const [allMoodsObject, setAllMoodsObject] = useState({
-    "AllMoods": [{
-      "categoryId": 0, 
-      "name": "AllMoods",
-      "moodsTagsList": allMoods
-    }]
+    AllMoods: [
+      {
+        categoryId: 0,
+        name: "AllMoods",
+        moodsTagsList: allMoods,
+      },
+    ],
   });
-  
+
   const resetMoodsSelection = () => {
-    setAllMoodsObject(prevState => {
-      const updatedMoods = prevState.AllMoods[0].moodsTagsList.map(mood => ({
+    setAllMoodsObject((prevState) => {
+      const updatedMoods = prevState.AllMoods[0].moodsTagsList.map((mood) => ({
         ...mood,
-        isSelected: false
+        isSelected: false,
       }));
-      
+
       return {
         ...prevState,
-        AllMoods: [
-          { ...prevState.AllMoods[0], moodsTagsList: updatedMoods }
-        ]
+        AllMoods: [{ ...prevState.AllMoods[0], moodsTagsList: updatedMoods }],
       };
     });
   };
   // Optional Modal Visible State
   const [isAddPlaylistModalVisible, setIsAddPlaylistModalVisible] =
-  useState(false);
+    useState(false);
   // Optional Modal Show Function
   const toggleAddPlaylistModal = () => {
     setIsAddPlaylistModalVisible(!isAddPlaylistModalVisible);
   };
-  
+
   // Call resetMoodsSelection to set all moods isSelected to false
   useEffect(() => {
     resetMoodsSelection();
   }, []);
-  
-  
-//   const getInitiallySelectedMoods = () => {
-//     const initiallySelectedMoods = [];
-//     for (const mood of allMoodsObject.AllMoods[0].moodsTagsList) {
-//       if (mood.isSelected) {
-//         initiallySelectedMoods.push(mood);
-//       }
-//     }
-//     return initiallySelectedMoods;
-//   };
+
+  //   const getInitiallySelectedMoods = () => {
+  //     const initiallySelectedMoods = [];
+  //     for (const mood of allMoodsObject.AllMoods[0].moodsTagsList) {
+  //       if (mood.isSelected) {
+  //         initiallySelectedMoods.push(mood);
+  //       }
+  //     }
+  //     return initiallySelectedMoods;
+  //   };
   const [selectedMoodsTags, setSelectedMoodsTags] = useState<Mood[]>(
     []
     // getInitiallySelectedMoods()
-    );
-    
-    const [isAddMoodModalVisible, setIsAddMoodModalVisible] = useState(false);
-    // Optional Modal show Function
-    const toggleAddMoodModal = () => {
-      setIsAddMoodModalVisible(!isAddMoodModalVisible);
-    };
-    const handleElementSelection = (itemId: number) => {
-      // Copy and modify the moodsTagsList
-      const modifiedData = allMoodsObject.AllMoods[0].moodsTagsList.map((mood, index) => {
+  );
+
+  const [isAddMoodModalVisible, setIsAddMoodModalVisible] = useState(false);
+  // Optional Modal show Function
+  const toggleAddMoodModal = () => {
+    setIsAddMoodModalVisible(!isAddMoodModalVisible);
+  };
+  const handleElementSelection = (itemId: number) => {
+    // Copy and modify the moodsTagsList
+    const modifiedData = allMoodsObject.AllMoods[0].moodsTagsList.map(
+      (mood, index) => {
         if (index === itemId) {
           return { ...mood, isSelected: !mood.isSelected };
         }
         return mood;
-      });
-      
-      // Update the allMoodsObject state
-      setAllMoodsObject(prevState => ({
-        ...prevState,
-        AllMoods: [
-          { ...prevState.AllMoods[0], moodsTagsList: modifiedData }
-        ]
-      }));
-      
-      // Update the selectedMoodsTags array based on the isSelected attribute
-      const updatedselectedMoodsTags = modifiedData.filter(mood => mood.isSelected);
-      
-      // Update the selectedMoodsTags state
-      setSelectedMoodsTags(updatedselectedMoodsTags);
-    };
-    // console.log("PostType: ", postType)
-    // console.log("[selectedMoodsTags]: ", selectedMoodsTags)
-    // console.log("[selectedMoodsTags.length]: ", selectedMoodsTags.length)
-    const handleSavePlaylist = async () => {
-      try{
-        const uploadedImageUrl = await uploadImage(selectedImageUri); 
-          console.log("handleSavePlaylist() has been called!")
-        const currentUserId = FIREBASE_AUTH.currentUser?.uid
-        console.log("domainId: ", domainId); 
-        console.log("uploadedImageUrl", uploadedImageUrl); 
-        console.log("currentUserId", currentUserId)
-        if(domainId !== null && domainId !== undefined && uploadedImageUrl && currentUserId) {
-          
-          const newPlaylist: Playlist = {
-            userId: currentUserId,
-            domainId: domainId,
-            name: playlistTitle,
-            image: uploadedImageUrl,
-            moods: selectedMoodsTags, 
-            score: 0,
-          }
+      }
+    );
 
-          await addPlaylistToDB(newPlaylist);
-          console.log("[STEP 4 WORKED]")
+    // Update the allMoodsObject state
+    setAllMoodsObject((prevState) => ({
+      ...prevState,
+      AllMoods: [{ ...prevState.AllMoods[0], moodsTagsList: modifiedData }],
+    }));
+
+    // Update the selectedMoodsTags array based on the isSelected attribute
+    const updatedselectedMoodsTags = modifiedData.filter(
+      (mood) => mood.isSelected
+    );
+
+    // Update the selectedMoodsTags state
+    setSelectedMoodsTags(updatedselectedMoodsTags);
+  };
+  // console.log("PostType: ", postType)
+  // console.log("[selectedMoodsTags]: ", selectedMoodsTags)
+  // console.log("[selectedMoodsTags.length]: ", selectedMoodsTags.length)
+  const handleSavePlaylist = async () => {
+    try {
+      const uploadedImageUrl = await uploadImage(selectedImageUri);
+      console.log("handleSavePlaylist() has been called!");
+      const currentUserId = FIREBASE_AUTH.currentUser?.uid;
+      console.log("domainId: ", domainId);
+      console.log("uploadedImageUrl", uploadedImageUrl);
+      console.log("currentUserId", currentUserId);
+      if (
+        domainId !== null &&
+        domainId !== undefined &&
+        uploadedImageUrl &&
+        currentUserId
+      ) {
+        const newPlaylist: Playlist = {
+          userId: currentUserId,
+          domainId: domainId,
+          name: playlistTitle,
+          image: uploadedImageUrl,
+          moods: selectedMoodsTags,
+          score: 0,
+          reviewsList: [],
+          reviewsCount: 0,
+        };
+
+        await addPlaylistToDB(newPlaylist);
+        console.log("[STEP 4 WORKED]");
       }
     } catch (error) {
-      console.error('Error adding the playlist to the database: ', error);
+      console.error("Error adding the playlist to the database: ", error);
     }
-    }
+  };
 
-    const handleCreatePlaylistButton = async () => {
-      try {
-        const playlistId = await handleSavePlaylist();
-        console.log("[STEP 1 WORKED]")
+  const handleCreatePlaylistButton = async () => {
+    try {
+      const playlistId = await handleSavePlaylist();
+      console.log("[STEP 1 WORKED]");
     } catch (error) {
-      console.error('Error Creating Playlist: ', error);
+      console.error("Error Creating Playlist: ", error);
     }
+  };
+  return (
+    <LinearGradient
+      colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.container}>
+        <AddPlaylist
+          visible={true}
+          onClose={navigation.goBack}
+          onCloseAll={navigation.goBack}
+          hasNewPost={false}
+          domainId={domainId}
+        />
 
-    }
-        return (
-          <LinearGradient
-            colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
-            style={styles.container}
-          >
-            <SafeAreaView style={styles.container}>
-<AddPlaylist visible={true} onClose={navigation.goBack} onCloseAll={navigation.goBack} hasNewPost={false} domainId={domainId}/>
-
-          {/* <View style={{padding: normalize(5), height: normalize(766),backgroundColor: "rgba(156, 75, 255, 1)", borderRadius: normalize(10)}}>
+        {/* <View style={{padding: normalize(5), height: normalize(766),backgroundColor: "rgba(156, 75, 255, 1)", borderRadius: normalize(10)}}>
 
           <LinearGradient
             colors={["rgba(156, 75, 255, 1)", "rgba(58, 17, 90, 1)"]}
@@ -456,57 +473,57 @@ export default function AddPlaylistScreen() {
             </View>
           )}
                */}
-            </SafeAreaView>
-          </LinearGradient>
-        )
+      </SafeAreaView>
+    </LinearGradient>
+  );
 }
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backgroundGradient: {
+    borderRadius: normalize(10),
+    marginBottom: -normalize(22),
+    width: normalize(360),
+    height: normalize(756),
+  },
+  modalContent: {
+    flex: 1,
+    alignItems: "center",
+  },
+  chooseButtonContainer: {
+    position: "absolute",
+    paddingHorizontal: normalize(20),
+    height: normalize(40),
+    borderRadius: normalize(15),
+    bottom: normalize(30),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(152, 152, 152, 1)",
+    marginBottom: normalize(60),
+  },
+  touchableChooseButtonContainer: {
+    position: "absolute",
+    paddingHorizontal: normalize(20),
+    height: normalize(40),
+    borderRadius: normalize(15),
+    bottom: normalize(30),
+    justifyContent: "center",
+    alignItems: "center",
+    shadowOffset: {
+      width: 0,
+      height: 0,
     },
-    backgroundGradient: {
-      borderRadius: normalize(10),
-      marginBottom: -normalize(22),
-      width: normalize(360),
-      height: normalize(756),
-    },
-    modalContent: {
-      flex: 1,
-      alignItems: "center",
-    },
-    chooseButtonContainer: {
-        position: "absolute",
-        paddingHorizontal: normalize(20),
-        height: normalize(40),
-        borderRadius: normalize(15),
-        bottom: normalize(30),
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(152, 152, 152, 1)",
-        marginBottom: normalize(60),
-      },
-      touchableChooseButtonContainer: {
-        position: "absolute",
-        paddingHorizontal: normalize(20),
-        height: normalize(40),
-        borderRadius: normalize(15),
-        bottom: normalize(30),
-        justifyContent: "center",
-        alignItems: "center",
-        shadowOffset: {
-          width: 0,
-          height: 0,
-        },
-        shadowOpacity: 0.5,
-        shadowRadius: normalize(10),
-        marginBottom: normalize(60),
-      },
-      chooseButtonText: {
-        fontWeight: "700",
-        fontSize: normalize(18),
-        lineHeight: normalize(21),
-        color: "white",
-      },
-})
+    shadowOpacity: 0.5,
+    shadowRadius: normalize(10),
+    marginBottom: normalize(60),
+  },
+  chooseButtonText: {
+    fontWeight: "700",
+    fontSize: normalize(18),
+    lineHeight: normalize(21),
+    color: "white",
+  },
+});

@@ -26,7 +26,13 @@ import {
 } from "../utils";
 import { DOMAINPOSTTYPE } from "../constants";
 import { normalize } from "../utils";
-import { Domain, ProfileContentNavigationProp, ProfileNavigationProp, ProfileScreenRouteProp, User } from "../types";
+import {
+  Domain,
+  ProfileContentNavigationProp,
+  ProfileNavigationProp,
+  ProfileScreenRouteProp,
+  User,
+} from "../types";
 import { getUsersDomains, DEFAULT_USER } from "../utilsData";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import AddPlaylist from "../components/AddPostComponents/AddPlaylist";
@@ -34,10 +40,8 @@ import DomainOfTasteCard from "../components/DomainOfTasteCard";
 import { fetchUserById } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
 
-
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
-
 
 export default function ProfileScreen() {
   const route = useRoute<ProfileScreenRouteProp>();
@@ -58,18 +62,17 @@ export default function ProfileScreen() {
     // This could be a loading indicator, a message, or a redirect
     return <div>Loading userId...</div>;
   }
-  const [domainsArray, setDomainsArray] = useState<Domain[]> ([]);
+  const [domainsArray, setDomainsArray] = useState<Domain[]>([]);
   // const user: User = getUserDataById(userId);
-//   useEffect(() => {
-//     console.log(getUsersDomains(user));
-//     if (user) {
-//         setDomainsArray(getUsersDomains(user));
-//     }
-// }, [user]); 
+  //   useEffect(() => {
+  //     console.log(getUsersDomains(user));
+  //     if (user) {
+  //         setDomainsArray(getUsersDomains(user));
+  //     }
+  // }, [user]);
   const navigation = useNavigation();
   // const profileNavigation = useNavigation<ProfileNavigationProp>();
   // const profileContentNavigation = useNavigation<ProfileContentNavigationProp>();
-  
 
   // Optional Modal Boolean State
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
@@ -80,7 +83,7 @@ export default function ProfileScreen() {
 
   // Optional Modal Visible State
   const [isAddPlaylistModalVisible, setIsAddPlaylistModalVisible] =
-  useState(false);
+    useState(false);
   // Optional Modal Show Function
   const toggleAddPlaylistModal = () => {
     setIsAddPlaylistModalVisible(!isAddPlaylistModalVisible);
@@ -105,7 +108,7 @@ export default function ProfileScreen() {
   //   };
 
   //   getUserDataById();
-    
+
   // }, [userId]); // The useEffect hook will run when the userId changes
 
   useEffect(() => {
@@ -117,20 +120,20 @@ export default function ProfileScreen() {
         // const user: User | null = await fetchUserById(userId);
         if (currentUser !== null) {
           // setUser(user); // Set the user
-          
+
           // Now get domains
           // console.log(":::::::::::::::::::: USER'S DOMAINS:::::::::::::::::")
           // console.log(getUsersDomains(user));
           setDomainsArray(getUsersDomains(currentUser));
         } else {
           setCurrentUser(DEFAULT_USER);
-          throw new Error('User not found');
+          throw new Error("User not found");
         }
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
       }
     };
-  
+
     if (userId) {
       getUserDataAndDomains();
     }
@@ -329,7 +332,7 @@ export default function ProfileScreen() {
                 marginBottom: normalize(150),
                 alignItems: "center",
               }}
-              >
+            >
               <Carousel
                 data={domainsArray}
                 sliderWidth={width}
@@ -338,10 +341,15 @@ export default function ProfileScreen() {
                 itemWidth={normalize(270)} // Taking into account the horizontal margin
                 activeSlideAlignment={"center"}
                 renderItem={({ item: category }) => (
-                  <DomainOfTasteCard 
-                  isCurrentUser={true}
-                  navigation = {navigation} 
-                  category = {category} user = {currentUser} toggleAddPlaylistModal = {toggleAddPlaylistModal} userId = {userId} isAddPlaylistModalVisible = {isAddPlaylistModalVisible}></DomainOfTasteCard>
+                  <DomainOfTasteCard
+                    isCurrentUser={true}
+                    navigation={navigation}
+                    category={category}
+                    user={currentUser}
+                    toggleAddPlaylistModal={toggleAddPlaylistModal}
+                    userId={userId}
+                    isAddPlaylistModalVisible={isAddPlaylistModalVisible}
+                  ></DomainOfTasteCard>
                 )}
               />
             </View>

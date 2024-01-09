@@ -1,4 +1,10 @@
-import React, { createContext, useContext, Dispatch, SetStateAction, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  Dispatch,
+  SetStateAction,
+  ReactNode,
+} from "react";
 
 type UserAuthContextType = {
   setIsUserProfileComplete: Dispatch<SetStateAction<boolean>>;
@@ -7,7 +13,7 @@ type UserAuthContextType = {
 
 const UserAuthContext = createContext<UserAuthContextType>({
   setIsUserProfileComplete: () => {},
-  setIsSpotifyAuthenticated: () => {}
+  setIsSpotifyAuthenticated: () => {},
 });
 
 export const useUserAuth = () => useContext(UserAuthContext);
@@ -18,9 +24,15 @@ type UserAuthProviderProps = {
   children: ReactNode;
 };
 
-export const UserAuthProvider = ({ setIsUserProfileComplete, setIsSpotifyAuthenticated,  children }: UserAuthProviderProps) => {
+export const UserAuthProvider = ({
+  setIsUserProfileComplete,
+  setIsSpotifyAuthenticated,
+  children,
+}: UserAuthProviderProps) => {
   return (
-    <UserAuthContext.Provider value={{ setIsUserProfileComplete, setIsSpotifyAuthenticated }}>
+    <UserAuthContext.Provider
+      value={{ setIsUserProfileComplete, setIsSpotifyAuthenticated }}
+    >
       {children}
     </UserAuthContext.Provider>
   );

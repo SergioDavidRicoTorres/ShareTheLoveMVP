@@ -43,40 +43,45 @@ export default function SignUpPersonalInfo() {
     setIsSignUpOptionsModalVisible(!isSignUpOptionsModalVisible);
   };
 
-    // minimum date 18 years ago from today
-    const minDate = new Date();
-    minDate.setFullYear(minDate.getFullYear() - 18);
+  // minimum date 18 years ago from today
+  const minDate = new Date();
+  minDate.setFullYear(minDate.getFullYear() - 18);
 
-    const validateAge = () => {
-      const inputDate = new Date(`${yearOfBirth}-${monthOfBirth.padStart(2, '0')}-${dayOfBirth.padStart(2, '0')}`);
-  
-      if (inputDate <= minDate) {
-        // The entered date is valid and on or after the minimum date
-        // Proceed with further processing
-        setDateOfBirth(inputDate)
-        console.log("VALID DATE"); 
-        console.log("DATE OF BIRTH: ", inputDate)
-        Alert.alert('Valid Date', 'The entered date is valid.');
-        return true; 
-      } else {
-        // The entered date is before the minimum date
-        console.log("INVALID DATE"); 
-        console.log("DATE OF BIRTH: ", inputDate)
-        Alert.alert('Invalid Date', 'You must be at least 18 years old.');
-        return false; 
-      }
-    };
+  const validateAge = () => {
+    const inputDate = new Date(
+      `${yearOfBirth}-${monthOfBirth.padStart(2, "0")}-${dayOfBirth.padStart(
+        2,
+        "0"
+      )}`
+    );
 
-    const handlePress = () => { 
-      if (validateAge()) {
-        navigation.navigate("SignUpEndScreen", {
-          name: name, 
-          profileName: profileName, 
-          dateOfBirth: dateOfBirth.toISOString(), 
-          generalDescription: generalDescription
-        })
-      }
+    if (inputDate <= minDate) {
+      // The entered date is valid and on or after the minimum date
+      // Proceed with further processing
+      setDateOfBirth(inputDate);
+      console.log("VALID DATE");
+      console.log("DATE OF BIRTH: ", inputDate);
+      Alert.alert("Valid Date", "The entered date is valid.");
+      return true;
+    } else {
+      // The entered date is before the minimum date
+      console.log("INVALID DATE");
+      console.log("DATE OF BIRTH: ", inputDate);
+      Alert.alert("Invalid Date", "You must be at least 18 years old.");
+      return false;
     }
+  };
+
+  const handlePress = () => {
+    if (validateAge()) {
+      navigation.navigate("SignUpEndScreen", {
+        name: name,
+        profileName: profileName,
+        dateOfBirth: dateOfBirth.toISOString(),
+        generalDescription: generalDescription,
+      });
+    }
+  };
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
@@ -336,7 +341,6 @@ export default function SignUpPersonalInfo() {
                 onChangeText={setDayOfBirth}
                 keyboardType="number-pad"
                 maxLength={2}
-
                 returnKeyType="done"
                 style={{
                   color: "white",
@@ -408,26 +412,15 @@ export default function SignUpPersonalInfo() {
               ...sharedStyles.touchableChooseButtonContainer,
               backgroundColor: "rgba(82, 42, 154, 1)",
               borderColor: "rgba(156, 75, 255, 1)",
-              borderWidth: normalize(4), 
+              borderWidth: normalize(4),
               shadowColor: "rgba(156, 75, 255, 1)",
             }}
           >
-            <Text
-              style={sharedStyles.chooseButtonText}
-            >
-              Continue
-            </Text>
+            <Text style={sharedStyles.chooseButtonText}>Continue</Text>
           </TouchableOpacity>
         ) : (
-          <View
-            style={sharedStyles.chooseButtonContainer}
-          >
-
-            <Text
-              style={sharedStyles.chooseButtonText}
-            >
-              Continue
-            </Text>
+          <View style={sharedStyles.chooseButtonContainer}>
+            <Text style={sharedStyles.chooseButtonText}>Continue</Text>
           </View>
         )}
       </SafeAreaView>

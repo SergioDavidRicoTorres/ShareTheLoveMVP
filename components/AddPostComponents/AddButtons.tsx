@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, Image, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 import SearchMedia from "./SearchMedia";
 import { normalize } from "../../utils";
 
@@ -35,8 +41,7 @@ function AddButtons() {
       }}
     >
       {opened && (
-
-          <TouchableOpacity
+        <TouchableOpacity
           style={{
             position: "absolute",
             bottom: normalize(55),
@@ -47,25 +52,25 @@ function AddButtons() {
             height: normalize(80),
             borderRadius: normalize(50),
             backgroundColor: "rgba(75, 117, 59, 1)",
-            borderColor: "rgba(197, 238, 182, 1)", 
-            borderWidth: normalize(5)
+            borderColor: "rgba(197, 238, 182, 1)",
+            borderWidth: normalize(5),
           }}
           onPress={toggleEpisodePostModal}
-          >
-            <Image
-              resizeMode="contain"
-              style={{
-                height: normalize(80),
-                width: normalize(80),
-              }}
-              source={require("../../assets/icons/AddPodcastEpisodeIcon.png")}
-            />
-          </TouchableOpacity>
+        >
+          <Image
+            resizeMode="contain"
+            style={{
+              height: normalize(80),
+              width: normalize(80),
+            }}
+            source={require("../../assets/icons/AddPodcastEpisodeIcon.png")}
+          />
+        </TouchableOpacity>
       )}
       {opened && (
         // <View
         // >
-          <TouchableOpacity 
+        <TouchableOpacity
           style={{
             position: "absolute",
             bottom: normalize(120),
@@ -75,41 +80,39 @@ function AddButtons() {
             height: normalize(80),
             borderRadius: normalize(50),
             backgroundColor: "rgba(0, 98, 62, 1)",
-            borderColor: "rgba(153, 255, 218, 1))", 
-            borderWidth: normalize(5)
+            borderColor: "rgba(153, 255, 218, 1))",
+            borderWidth: normalize(5),
           }}
           onPress={toggleMusicPostModal}
-          >
-            <Image
-              resizeMode="contain"
-              style={{
-                height: normalize(80),
-                width: normalize(80),
-              }}
-              source={require("../../assets/icons/AddSongIcon.png")}
-            />
-          </TouchableOpacity>
+        >
+          <Image
+            resizeMode="contain"
+            style={{
+              height: normalize(80),
+              width: normalize(80),
+            }}
+            source={require("../../assets/icons/AddSongIcon.png")}
+          />
+        </TouchableOpacity>
         // </View>
       )}
       {opened && (
         <View
-        style={{
-          position: "absolute",
-          bottom: normalize(55),
-          left: normalize(100),
-          alignItems: "center",
-          justifyContent: "center",
-          width: normalize(80),
-          height: normalize(80),
-          borderRadius: normalize(50),
-          backgroundColor: "rgba(99, 0, 101, 1)",
-          borderColor: "rgba(253, 153, 255, 1)", 
-          borderWidth: normalize(5)
-        }}
+          style={{
+            position: "absolute",
+            bottom: normalize(55),
+            left: normalize(100),
+            alignItems: "center",
+            justifyContent: "center",
+            width: normalize(80),
+            height: normalize(80),
+            borderRadius: normalize(50),
+            backgroundColor: "rgba(99, 0, 101, 1)",
+            borderColor: "rgba(253, 153, 255, 1)",
+            borderWidth: normalize(5),
+          }}
         >
-          <TouchableOpacity 
-          onPress={toggleFilmTVShowPostModal}
-          >
+          <TouchableOpacity onPress={toggleFilmTVShowPostModal}>
             <Image
               resizeMode="contain"
               style={{
@@ -124,13 +127,13 @@ function AddButtons() {
       <TouchableOpacity
         onPress={() => setOpened(!opened)}
         // style={{
-          // shadowColor: "black",
-          // shadowOpacity: 0.3,
-          // shadowOffset: { width: 0, height: 2 },
+        // shadowColor: "black",
+        // shadowOpacity: 0.3,
+        // shadowOffset: { width: 0, height: 2 },
         // }}
       >
         <View
-          style={ opened ? styles.unselectedAddBotton : styles.selectedAddButton}
+          style={opened ? styles.unselectedAddBotton : styles.selectedAddButton}
         >
           <Image
             source={require("../../assets/icons/AddButton.png")}
@@ -166,29 +169,29 @@ function AddButtons() {
 
 const styles = StyleSheet.create({
   unselectedAddBotton: {
-      alignItems: "center",
-      justifyContent: "center",
-      top: 0,
-      width: normalize(70),
-      height: normalize(70),
-      backgroundColor: "rgba(156, 75, 255, 1)",
-      borderRadius: normalize(100),
-      shadowColor: "rgba(77, 159, 217, 1)",
-      shadowOffset: {
-        width: 0,
-        height: 0,
-      },
-      shadowOpacity: 1,
-      shadowRadius: normalize(20),
-    }, 
-    selectedAddButton: {
-      alignItems: "center",
-      justifyContent: "center",
-      top: 0,
-      width: normalize(70),
-      height: normalize(70),
-      backgroundColor: "rgba(156, 75, 255, 1)",
-      borderRadius: normalize(100),
-    }
-  });
+    alignItems: "center",
+    justifyContent: "center",
+    top: 0,
+    width: normalize(70),
+    height: normalize(70),
+    backgroundColor: "rgba(156, 75, 255, 1)",
+    borderRadius: normalize(100),
+    shadowColor: "rgba(77, 159, 217, 1)",
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 1,
+    shadowRadius: normalize(20),
+  },
+  selectedAddButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    top: 0,
+    width: normalize(70),
+    height: normalize(70),
+    backgroundColor: "rgba(156, 75, 255, 1)",
+    borderRadius: normalize(100),
+  },
+});
 export default AddButtons;

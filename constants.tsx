@@ -5,7 +5,7 @@ export const DOMAINPOSTTYPE = new Map<number, string>([
 ]);
 
 export const DOMAINID = new Map<string, number>([
-  ["Song", 0], 
-  ["Film/TVShow", 1], 
-  ["PodcastEpisode", 2]
+  ["Song", 0],
+  ["Film/TVShow", 1],
+  ["PodcastEpisode", 2],
 ]);

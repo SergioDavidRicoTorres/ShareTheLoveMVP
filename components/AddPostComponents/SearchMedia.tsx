@@ -28,7 +28,7 @@ import {
   getItemTitle,
   normalize,
   getMoodTextColor,
-  getMoodContainerColor
+  getMoodContainerColor,
 } from "../../utils";
 import { searchSong, searchPodcastEpisode } from "../../utilsData";
 import { SearchMediaProps } from "../../types";
@@ -38,7 +38,12 @@ import { sharedStyles } from "../../sharedStyles";
 // const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
-function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps) {
+function SearchMedia({
+  visible,
+  onClose,
+  postType,
+  domainId,
+}: SearchMediaProps) {
   // Media Search Input (string):
   useEffect(() => {
     if (visible) {
@@ -52,8 +57,6 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
   const [selectedItem, setSelectedItem] = useState(null);
   // First Search (boolean):
   // const [isFirstSearch, setIsFirstSearch] = useState(true);
-
-
 
   // // SEARCH PodcastEpisode FUNCTION::::::::::::::::::::::
   // const searchPodcastEpisode = async (searchTerm: string) => {
@@ -172,7 +175,8 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
 
       // Filter the results to include only movies and TV shows, excluding persons
       const filteredResults = data.results.filter(
-        (result: any) => result.media_type === "movie" || result.media_type === "tv"
+        (result: any) =>
+          result.media_type === "movie" || result.media_type === "tv"
       );
 
       // Process the filtered results as needed
@@ -235,9 +239,10 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
           {/* Modal Background Gradient */}
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
-            style={{...styles.backgroundGradient, 
-            borderColor: getButtonsAccentColor(postType),
-            borderWidth: normalize(3), 
+            style={{
+              ...styles.backgroundGradient,
+              borderColor: getButtonsAccentColor(postType),
+              borderWidth: normalize(3),
             }}
           >
             {/* Modal Content */}
@@ -252,7 +257,7 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
                   // backButtonContainer
                   onPress={onClose}
                   style={{
-                    left: normalize(8)
+                    left: normalize(8),
                   }}
                 >
                   {/* Back Button Image */}
@@ -271,8 +276,9 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
                 >
                   <View
                     // achievedProgressState(1.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
@@ -309,7 +315,7 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
                   ...styles.searchContainer,
                   backgroundColor: getSearchBarColor(postType),
                   borderColor: getMoodContainerColor(postType),
-                  borderWidth: normalize(3), 
+                  borderWidth: normalize(3),
                 }}
               >
                 <Image
@@ -362,11 +368,13 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
                         style={[
                           !isSelected
                             ? styles.searchResultItemContainer
-                            : {... sharedStyles.selectedMediaItemContainer,
-                              backgroundColor: getMoodContainerColor(postType),
-                              borderColor: getMoodContainerColor(postType),
-                              borderWidth: normalize(3), 
-                            }, // Change style if selected
+                            : {
+                                ...sharedStyles.selectedMediaItemContainer,
+                                backgroundColor:
+                                  getMoodContainerColor(postType),
+                                borderColor: getMoodContainerColor(postType),
+                                borderWidth: normalize(3),
+                              }, // Change style if selected
                         ]}
                       >
                         {getItemImage(item, domainId) && (
@@ -430,7 +438,7 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
                 ...sharedStyles.touchableChooseButtonContainer,
                 backgroundColor: getGradientsFirstColor(postType),
                 borderColor: getButtonsAccentColor(postType),
-                borderWidth: normalize(4), 
+                borderWidth: normalize(4),
                 shadowColor: getButtonsAccentColor(postType),
               }}
               onPress={() => {
@@ -439,7 +447,7 @@ function SearchMedia({ visible, onClose, postType, domainId }: SearchMediaProps)
               }}
             >
               <Text style={sharedStyles.chooseButtonText}>
-              Choose
+                Choose
                 {" " + postType}
               </Text>
             </TouchableOpacity>

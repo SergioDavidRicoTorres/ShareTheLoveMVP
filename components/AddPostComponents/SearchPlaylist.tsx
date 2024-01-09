@@ -21,7 +21,7 @@ import {
   getMoodTextColor,
   getSearchBarColor,
   getPlaylistCardBackgroundColor,
-  normalize
+  normalize,
 } from "../../utils";
 import { getCurrentUserData } from "../../UserData";
 import { DOMAINID } from "../../constants";
@@ -151,29 +151,29 @@ function SearchPlaylist({
   postType,
   postSelectedMoodsTags,
   postInsertedCaption,
-  domainId
+  domainId,
 }: SearchPlaylistProps) {
   const userId = FIREBASE_AUTH.currentUser?.uid;
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          if(userId === undefined) {
-            return [];
-          }
-          // console.log("[userId]: ", userId); 
-          // console.log("[domainId]: ", domainId); 
-          const data = await getDomainsPlaylistsData(userId, domainId);
-          // console.log("[playlists]: ", data);
-          setPlaylists(data);
-        } catch (error) {
-          console.error('Error fetching playlists data:', error);
-          // Handle the error appropriately
+    const fetchData = async () => {
+      try {
+        if (userId === undefined) {
+          return [];
         }
-      };
-    
-      fetchData();
-    }, [userId, domainId]); // Dependencies
+        // console.log("[userId]: ", userId);
+        // console.log("[domainId]: ", domainId);
+        const data = await getDomainsPlaylistsData(userId, domainId);
+        // console.log("[playlists]: ", data);
+        setPlaylists(data);
+      } catch (error) {
+        console.error("Error fetching playlists data:", error);
+        // Handle the error appropriately
+      }
+    };
+
+    fetchData();
+  }, [userId, domainId]); // Dependencies
   // const domainPlaylists = getDomainsPlaylistsData(userId, DOMAINID.get(postType));
 
   // Optional Modal Visible State
@@ -184,68 +184,76 @@ function SearchPlaylist({
     setIsAddPlaylistModalVisible(!isAddPlaylistModalVisible);
   };
   // selected Playlist (Object):
-  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(
+    null
+  );
   // search states (input)
   const [searchInput, setSearchInput] = useState("");
   // search results
   const [searchResults, setSearchResults] = useState(playlists);
   // const handleSearch = (text: string) => {
   //   setSearchInput(text);
-  
+
   //   const playlistTypeIndex = {
   //     Song: 0,
   //     "Film/TVShow": 1,
   //     PodcastEpisode: 2,
   //   };
-  
+
   //   const filteredData = userPlaylists[
   //     playlistTypeIndex[postType]
   //   ].playlists.filter((item) =>
   //     item.name.toLowerCase().includes(text.toLowerCase())
   //   );
-  
+
   //   setSearchResults(filteredData);
   // };
   const handleSearch = (text: string) => {
     setSearchInput(text);
-  
+
     const playlistTypeIndex = {
       Song: 0,
       "Film/TVShow": 1,
       PodcastEpisode: 2,
     };
-  
+
     const filteredData = playlists.filter((item) =>
       item.name.toLowerCase().includes(text.toLowerCase())
     );
-  
+
     setSearchResults(filteredData);
   };
 
   const handlePress = async () => {
-    const currentUserId = FIREBASE_AUTH.currentUser?.uid; 
-    if (currentUserId === undefined || domainId == undefined || selectedPlaylist?.playlistId == undefined) {
+    const currentUserId = FIREBASE_AUTH.currentUser?.uid;
+    if (
+      currentUserId === undefined ||
+      domainId == undefined ||
+      selectedPlaylist?.playlistId == undefined
+    ) {
       // Handle the case where signedUpUID is null
-      console.error('No "currentUserId" or "domaindId" or "selectedPlaylist?.playlistId" found');
+      console.error(
+        'No "currentUserId" or "domaindId" or "selectedPlaylist?.playlistId" found'
+      );
       return; // Exit the function or handle this case appropriately
     }
 
     const postObject: Post = {
-        userId: currentUserId,
-        domainId: domainId,
-        playlistId: selectedPlaylist?.playlistId, 
-        moods: postSelectedMoodsTags,
-        caption: postInsertedCaption,
-        likesCount: 0,
-        creationTime: Date.now(),
-        mediaItem: postSelectedMedia, 
-        likesUserIdsList: [],
-    }
+      userId: currentUserId,
+      domainId: domainId,
+      playlistId: selectedPlaylist?.playlistId,
+      moods: postSelectedMoodsTags,
+      caption: postInsertedCaption,
+      likesCount: 0,
+      creationTime: Date.now(),
+      mediaItem: postSelectedMedia,
+      likesUserIdsList: [],
+    };
 
     await addPostToDB(postObject);
     console.log("[USER]: ", postObject);
     onCloseAll();
-  }
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -256,10 +264,11 @@ function SearchPlaylist({
           {/* Modal Gradient */}
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
-            style={{...styles.backgroundGradient, 
+            style={{
+              ...styles.backgroundGradient,
               borderColor: getButtonsAccentColor(postType),
-              borderWidth: normalize(3), 
-              }}
+              borderWidth: normalize(3),
+            }}
           >
             {/* Modal Content */}
             <View style={styles.modalContent}>
@@ -273,7 +282,7 @@ function SearchPlaylist({
                   // backButtonContainer
                   onPress={onClose}
                   style={{
-                    left: normalize(8)
+                    left: normalize(8),
                   }}
                 >
                   {/* Back Button Image */}
@@ -292,26 +301,30 @@ function SearchPlaylist({
                 >
                   <View
                     // achievedProgressState(1.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
                     // achivedProgressState(2.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
                     // followingProgressState(3.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
                     // followingProgressState(4.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                 </View>
@@ -335,7 +348,7 @@ function SearchPlaylist({
                   ...styles.searchContainer,
                   backgroundColor: getSearchBarColor(postType),
                   borderColor: getMoodContainerColor(postType),
-                  borderWidth: normalize(3), 
+                  borderWidth: normalize(3),
                 }}
               >
                 <Image
@@ -354,7 +367,8 @@ function SearchPlaylist({
                   value={searchInput}
                   onChangeText={(text) => {
                     if (searchInput !== "" && text == "") {
-                      setSearchResults(playlists)}
+                      setSearchResults(playlists);
+                    }
                     setSearchInput(text);
                   }}
                   onSubmitEditing={() => handleSearch(searchInput)}
@@ -403,7 +417,7 @@ function SearchPlaylist({
                           style={styles.playlistBackgroundImage}
                           resizeMode="cover"
                           // imageStyle={styles.playlistBackgroundImageStyle}
-                          imageStyle = {{
+                          imageStyle={{
                             opacity: 0.5,
                             borderRadius: normalize(10),
                           }}
@@ -480,22 +494,24 @@ function SearchPlaylist({
                 ...sharedStyles.touchableChooseButtonContainer,
                 backgroundColor: "rgba(66, 31, 177, 1)",
                 borderColor: "rgba(72, 43, 255, 1)",
-                borderWidth: normalize(4), 
+                borderWidth: normalize(4),
                 shadowColor: "rgba(72, 43, 255, 1)",
               }}
               onPress={toggleAddPlaylistModal}
             >
-              <Text style={sharedStyles.chooseButtonText}>Add New Playlist</Text>
+              <Text style={sharedStyles.chooseButtonText}>
+                Add New Playlist
+              </Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-            style={{
-              ...sharedStyles.touchableChooseButtonContainer,
-              backgroundColor: getGradientsFirstColor(postType),
-              borderColor: getButtonsAccentColor(postType),
-              borderWidth: normalize(4), 
-              shadowColor: getButtonsAccentColor(postType),
-            }}
+              style={{
+                ...sharedStyles.touchableChooseButtonContainer,
+                backgroundColor: getGradientsFirstColor(postType),
+                borderColor: getButtonsAccentColor(postType),
+                borderWidth: normalize(4),
+                shadowColor: getButtonsAccentColor(postType),
+              }}
               onPress={() => {
                 handlePress();
               }}

@@ -25,7 +25,7 @@ import {
   getButtonsAccentColor,
   getGradientsFirstColor,
   normalize,
-  transformMoodsToStringArray
+  transformMoodsToStringArray,
 } from "../../utils";
 import { Mood, MoodsAndTagsCategory, MoodsTagsProps } from "../../types";
 import { getMoodsAndTagsCategories } from "../../utilsData";
@@ -40,16 +40,15 @@ function MoodsTags({
   onCloseAll,
   postSelectedMedia,
   postType,
-  domainId
+  domainId,
 }: MoodsTagsProps) {
-
   const MOODSANDTAGS = getMoodsAndTagsCategories(postType);
 
   // const MOODSANDTAGS = getMoodsAndTagsCategories(postType).map(category => ({
   //   ...category,
   //   moodsTagsList: category.moodsTagsList.map(mood => ({
-  //     ...mood, 
-  //     isSelected: false 
+  //     ...mood,
+  //     isSelected: false
   //   }))
   // }));
   // const MOODSANDTAGS: any =
@@ -122,10 +121,15 @@ function MoodsTags({
       !modifiedData[categoryId].moodsTagsList[itemId].isSelected;
 
     // Update the selectedMoodsTags array based on the isSelected attribute
-    const updatedPostSelectedMoodsTags = modifiedData.reduce((acc: Mood[], category: MoodsAndTagsCategory) => {
-      const selectedItems = category.moodsTagsList.filter((item) => item.isSelected);
-      return [...acc, ...selectedItems];
-    }, []);
+    const updatedPostSelectedMoodsTags = modifiedData.reduce(
+      (acc: Mood[], category: MoodsAndTagsCategory) => {
+        const selectedItems = category.moodsTagsList.filter(
+          (item) => item.isSelected
+        );
+        return [...acc, ...selectedItems];
+      },
+      []
+    );
 
     setPostSelectedMoodsTags(updatedPostSelectedMoodsTags);
   };
@@ -144,9 +148,9 @@ function MoodsTags({
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
             style={{
-              ...styles.backgroundGradient, 
+              ...styles.backgroundGradient,
               borderColor: getButtonsAccentColor(postType),
-              borderWidth: normalize(3), 
+              borderWidth: normalize(3),
             }}
           >
             {/* Modal Content */}
@@ -161,7 +165,7 @@ function MoodsTags({
                   // backButtonContainer
                   onPress={onClose}
                   style={{
-                    left: normalize(8)
+                    left: normalize(8),
                   }}
                 >
                   {/* Back Button Image */}
@@ -180,14 +184,16 @@ function MoodsTags({
                 >
                   <View
                     // achievedProgressState(1.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
                     // achivedProgressState(2.)
-                    style={{...styles.achievedProgressState, 
-                      backgroundColor: getMoodContainerColor(postType)
+                    style={{
+                      ...styles.achievedProgressState,
+                      backgroundColor: getMoodContainerColor(postType),
                     }}
                   />
                   <View
@@ -231,10 +237,11 @@ function MoodsTags({
               {/* Media Item */}
               <View
                 // mediaItemContainer
-                style={{... sharedStyles.selectedMediaItemContainer,
+                style={{
+                  ...sharedStyles.selectedMediaItemContainer,
                   backgroundColor: getMoodContainerColor(postType),
                   borderColor: getMoodContainerColor(postType),
-                  borderWidth: normalize(3), 
+                  borderWidth: normalize(3),
                   marginTop: normalize(10),
                 }}
               >
@@ -382,7 +389,7 @@ function MoodsTags({
                 ...sharedStyles.touchableChooseButtonContainer,
                 backgroundColor: getGradientsFirstColor(postType),
                 borderColor: getButtonsAccentColor(postType),
-                borderWidth: normalize(4), 
+                borderWidth: normalize(4),
                 shadowColor: getButtonsAccentColor(postType),
               }}
               onPress={() => {
@@ -390,11 +397,15 @@ function MoodsTags({
                 onClose;
               }}
             >
-              <Text style={sharedStyles.chooseButtonText}>Choose Moods/Tags</Text>
+              <Text style={sharedStyles.chooseButtonText}>
+                Choose Moods/Tags
+              </Text>
             </TouchableOpacity>
           ) : (
             <View style={sharedStyles.chooseButtonContainer}>
-              <Text style={sharedStyles.chooseButtonText}>Choose Moods/Tags</Text>
+              <Text style={sharedStyles.chooseButtonText}>
+                Choose Moods/Tags
+              </Text>
             </View>
           )}
         </View>
@@ -511,8 +522,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: normalize(5),
-    borderColor: "rgba(105, 51, 172, 1)", 
-    borderWidth: normalize(3)
+    borderColor: "rgba(105, 51, 172, 1)",
+    borderWidth: normalize(3),
   },
   addMoodButtonText: {
     fontWeight: "700",

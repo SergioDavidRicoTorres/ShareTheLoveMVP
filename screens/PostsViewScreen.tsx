@@ -18,8 +18,17 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getCurrentUserData } from "../UserData";
 import MediaItemInfo from "../components/MediaItemInfo";
-import { Domain, PostsViewScreenRouteProp, ProfileNavigationProp } from "../types";
-import { getScreenGradientFirstColor, getMoodTextColor, getMoodContainerColor, getItemImage } from "../utils";
+import {
+  Domain,
+  PostsViewScreenRouteProp,
+  ProfileNavigationProp,
+} from "../types";
+import {
+  getScreenGradientFirstColor,
+  getMoodTextColor,
+  getMoodContainerColor,
+  getItemImage,
+} from "../utils";
 import { DOMAINPOSTTYPE } from "../constants";
 import { normalize } from "../utils";
 
@@ -82,17 +91,17 @@ const user = getCurrentUserData();
 // };
 
 const getPlaylistAccentColor = (category: Domain) => {
-    if (category.domainId === 0) {
-      return "rgba(0, 255, 163, 1)";
-    }
-    if (category.domainId === 1) {
-      return "rgba(250, 0, 255, 1)";
-    }
-    if (category.domainId === 2) {
-      return "rgba(154, 255, 118, 1)";
-    }
-    console.log('Invalid "domain" was passed!');
-    return "rgba(105, 51, 172, 1)"
+  if (category.domainId === 0) {
+    return "rgba(0, 255, 163, 1)";
+  }
+  if (category.domainId === 1) {
+    return "rgba(250, 0, 255, 1)";
+  }
+  if (category.domainId === 2) {
+    return "rgba(154, 255, 118, 1)";
+  }
+  console.log('Invalid "domain" was passed!');
+  return "rgba(105, 51, 172, 1)";
 };
 
 // const getMoodContainerColor = (category) => {
@@ -116,7 +125,7 @@ export default function PostsViewScreen() {
   const handleButtonPress = () => {
     // Handle button press event
   };
-  const route = useRoute<PostsViewScreenRouteProp> ();
+  const route = useRoute<PostsViewScreenRouteProp>();
   const navigation = useNavigation<ProfileNavigationProp>();
 
   const { domainOfTaste, post, user } = route.params;
@@ -150,21 +159,21 @@ export default function PostsViewScreen() {
         >
           {/* Back Button */}
           <TouchableOpacity
-                  // backButtonContainer
-                  onPress={() => navigation.goBack()}
-                  style={{
-                    left: normalize(10)
-                  }}
-                >
-                  {/* Back Button Image */}
-                  <Image
-                    source={require("../assets/icons/ArrowBack.png")}
-                    style={{
-                      width: normalize(17),
-                      height: normalize(28),
-                    }}
-                  />
-                </TouchableOpacity>
+            // backButtonContainer
+            onPress={() => navigation.goBack()}
+            style={{
+              left: normalize(10),
+            }}
+          >
+            {/* Back Button Image */}
+            <Image
+              source={require("../assets/icons/ArrowBack.png")}
+              style={{
+                width: normalize(17),
+                height: normalize(28),
+              }}
+            />
+          </TouchableOpacity>
         </View>
         {/* <ScrollView
           style={{
@@ -180,7 +189,7 @@ export default function PostsViewScreen() {
             fontSize: normalize(24),
             fontWeight: "700",
             textAlign: "center",
-            maxWidth: normalize(325)
+            maxWidth: normalize(325),
           }}
           numberOfLines={1}
         >
@@ -214,7 +223,6 @@ export default function PostsViewScreen() {
               getItemImage(post.mediaItem, domainOfTaste.domainId)
             }
             resizeMode="cover"
-
             imageStyle={{
               opacity: 0.9,
               borderRadius: normalize(15),
@@ -240,8 +248,10 @@ export default function PostsViewScreen() {
                   backfaceVisibility: "hidden",
                   marginBottom: normalize(10),
                   alignItems: "center",
-                  borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
-                  borderWidth: normalize(2), 
+                  borderColor: getMoodTextColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
+                  borderWidth: normalize(2),
                 }}
               >
                 <View
@@ -258,7 +268,6 @@ export default function PostsViewScreen() {
                     shadowOpacity: 1,
                     shadowRadius: normalize(8),
                     bottom: normalize(50),
-                    
                   }}
                 >
                   {/* <Text>{user.name}</Text> */}
@@ -267,8 +276,10 @@ export default function PostsViewScreen() {
                       width: normalize(70),
                       height: normalize(70),
                       borderRadius: normalize(70),
-                      borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
-                      borderWidth: normalize(3), 
+                      borderColor: getMoodTextColor(
+                        DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                      ),
+                      borderWidth: normalize(3),
                     }}
                     source={{ uri: user.profilePicture }}
                   />
@@ -285,14 +296,18 @@ export default function PostsViewScreen() {
                         // moodContainer
                         style={{
                           ...styles.moodContainer,
-                          backgroundColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                          backgroundColor: getMoodContainerColor(
+                            DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                          ),
                         }}
                       >
                         <Text
                           // moodText
                           style={{
                             ...styles.moodText,
-                            color: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                            color: getMoodTextColor(
+                              DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                            ),
                           }}
                         >
                           {mood.name}
@@ -310,7 +325,7 @@ export default function PostsViewScreen() {
                       color: "white",
                       fontSize: normalize(18),
                       fontWeight: "600",
-                      marginHorizontal: normalize(2)
+                      marginHorizontal: normalize(2),
                     }}
                   >
                     @{user.profileName}
@@ -321,7 +336,7 @@ export default function PostsViewScreen() {
                         color: "white",
                         fontSize: normalize(18),
                         fontWeight: "300",
-                        marginHorizontal: normalize(10)
+                        marginHorizontal: normalize(10),
                       }}
                       numberOfLines={4}
                     >
@@ -335,20 +350,26 @@ export default function PostsViewScreen() {
                   toggleMediaItemInfoModal();
                 }}
                 style={{
-                  backgroundColor:getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                  backgroundColor: getMoodContainerColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
                   paddingHorizontal: normalize(20),
                   paddingVertical: 5,
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: normalize(10),
                   marginBottom: normalize(30),
-                  borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
-                  borderWidth: normalize(2), 
+                  borderColor: getMoodTextColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
+                  borderWidth: normalize(2),
                 }}
               >
                 <Text
                   style={{
-                    color: getMoodTextColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
+                    color: getMoodTextColor(
+                      DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                    ),
                     fontSize: normalize(20),
                     fontWeight: "700",
                     // marginHorizontal: normalize(20),
