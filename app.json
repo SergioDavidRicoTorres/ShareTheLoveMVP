@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.sergiodavidricotorres.ShareTheLoveMVP"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,12 +32,12 @@
       "eas": {
         "projectId": "e49a9ea5-4a8c-4c93-9c67-66408c04e811"
       }
-    }, 
+    },
     "plugins": [
       [
-        "expo-image-picker", 
+        "expo-image-picker",
         {
-          "photosPermission": "Select and upload images", 
+          "photosPermission": "Select and upload images",
           "cameraPermission": "Allow Share The Love to access your camera."
         }
       ]
