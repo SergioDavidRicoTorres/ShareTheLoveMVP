@@ -14,13 +14,17 @@ import {
 import { normalize } from "./utils";
 import { useSpotifyAuth } from "./SpotifyAuthContext";
 
-WebBrowser.maybeCompleteAuthSession();
+// Place it inside a useEffect to ensure it's called only once
 //   const redirectUri = AuthSession.makeRedirectUri({ scheme: 'ShareTheLoveMVP://', path: 'redirect'});
 //   console.log("this is the other redirectUri: ", redirectUri)
 
 export const SpotifyAuthComponent = ({
   authType,
 }: SpotifyAuthComponentProp) => {
+  useEffect(() => {
+    WebBrowser.maybeCompleteAuthSession();
+    // console.log("CHECKPOINT useEffect!");
+  }, []);
   const navigation = useNavigation<AuthNavigationProp>();
   // const mainNavigation = useNavigation<MainNavigationProp>();
   const { setIsSpotifyAuthenticated } = useSpotifyAuth();
@@ -48,6 +52,7 @@ export const SpotifyAuthComponent = ({
       const result = await authRequest.promptAsync(spotifyDiscovery);
       console.log("CHECKPOINT 3!");
       if (result.type === "success") {
+        console.log("CHECKPOINT 4!");
         const tokenResult = await AuthSession.exchangeCodeAsync(
           {
             code: result.params.code,
