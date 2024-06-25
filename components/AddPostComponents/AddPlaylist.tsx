@@ -10,6 +10,8 @@ import {
   Image,
   TouchableOpacity,
   ImageBackground,
+  Platform,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import allMoods from "../../DummyData/AllMoods.json";
@@ -39,6 +41,7 @@ import {
   uploadImage,
 } from "../../utilsFirebase";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { MEDIATYPENAME } from "../../constants";
 
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
@@ -169,65 +172,92 @@ function AddPlaylist({
   };
 
   const handleSavePost = async (newPlaylistId: string) => {
-    const currentUserId = FIREBASE_AUTH.currentUser?.uid;
-    if (
-      currentUserId === undefined ||
-      domainId === undefined ||
-      newPlaylistId === undefined ||
-      postSelectedMoodsTags === undefined ||
-      postInsertedCaption === undefined
-    ) {
-      // Handle the case where signedUpUID is null
-      console.error(
-        'No "currentUserId" or "domaindId" or "newPlaylist?.playlistId" found'
+    try {
+      const currentUserId = FIREBASE_AUTH.currentUser?.uid;
+      if (
+        currentUserId === undefined ||
+        domainId === undefined ||
+        newPlaylistId === undefined ||
+        postSelectedMoodsTags === undefined ||
+        postInsertedCaption === undefined
+      ) {
+        throw new Error(
+          "ShareTheLove Error: No user or domain of taste or playlist was found"
+        );
+      }
+
+      const postObject: Post = {
+        userId: currentUserId,
+        domainId: domainId,
+        playlistId: newPlaylistId,
+        moods: postSelectedMoodsTags,
+        caption: postInsertedCaption,
+        likesCount: 0,
+        creationTime: Date.now(),
+        mediaItem: postSelectedMedia,
+        likesUserIdsList: [],
+      };
+
+      await addPostToDB(postObject);
+      Alert.alert(
+        "Hurray! You've added your new " +
+          MEDIATYPENAME.get(domainId) +
+          " successfully.",
+        "It may take a short while to show up on your profile"
       );
-      return; // Exit the function or handle this case appropriately
+      onCloseAll();
+    } catch (error: any) {
+      Alert.alert(
+        "Something went wrong when creating your post: ",
+        String(error.message) + "\n\n...But no worries, just try again."
+      );
     }
-
-    const postObject: Post = {
-      userId: currentUserId,
-      domainId: domainId,
-      playlistId: newPlaylistId,
-      moods: postSelectedMoodsTags,
-      caption: postInsertedCaption,
-      likesCount: 0,
-      creationTime: Date.now(),
-      mediaItem: postSelectedMedia,
-      likesUserIdsList: [],
-    };
-
-    await addPostToDB(postObject);
-    console.log("[USER]: ", postObject);
-    onCloseAll();
   };
 
   const handleSavePlaylist = async () => {
     try {
-      const uploadedImageUrl = await uploadImage(selectedImageUri);
+      const uploadedImageUrl =
+        selectedImageUri != "" ? await uploadImage(selectedImageUri) : "";
       const currentUserId = FIREBASE_AUTH.currentUser?.uid;
+      let newPlaylist: Playlist;
       console.log("domainId: ", domainId);
       console.log("uploadedImageUrl", uploadedImageUrl);
       console.log("currentUserId", currentUserId);
-      if (
-        domainId !== null &&
-        domainId !== undefined &&
-        uploadedImageUrl &&
-        currentUserId
-      ) {
-        const newPlaylist: Playlist = {
-          userId: currentUserId,
-          domainId: domainId,
-          name: playlistTitle,
-          image: uploadedImageUrl,
-          moods: selectedMoodsTags,
-          score: 0,
-          reviewsCount: 0,
-          reviewsList: [],
-        };
+      if (domainId !== null && domainId !== undefined && currentUserId) {
+        uploadedImageUrl != ""
+          ? (newPlaylist = {
+              userId: currentUserId,
+              domainId: domainId,
+              name: playlistTitle,
+              image: uploadedImageUrl,
+              moods: selectedMoodsTags,
+              score: 0,
+              reviewsCount: 0,
+              reviewsList: [],
+            })
+          : (newPlaylist = {
+              userId: currentUserId,
+              domainId: domainId,
+              name: playlistTitle,
+              moods: selectedMoodsTags,
+              score: 0,
+              reviewsCount: 0,
+              reviewsList: [],
+            });
         const newPlaylistId = await addPlaylistToDB(newPlaylist);
+        Alert.alert(
+          "Hurray! You've added your new playlist successfully.",
+          "It may take a short while to show up on your profile, but you can start adding some " +
+            MEDIATYPENAME.get(domainId) +
+            "s to it right away."
+        );
         return newPlaylistId;
       }
-    } catch (error) {
+    } catch (error: any) {
+      Alert.alert(
+        "Something went wrong when creating your playlist: ",
+        String(error.message) + "\n\n...But no worries, just try again."
+      );
       console.error("Error adding the playlist to the database: ", error);
       return "[ERROR]: Playlist wasn't handled properly";
     }
@@ -272,10 +302,11 @@ function AddPlaylist({
               {/* Modal Content */}
               <View style={styles.modalContent}>
                 {/* <TouchableOpacity> */}
-                {!hasCover && (
+                {!hasCover ? (
                   <View
                     style={{
-                      width,
+                      width: normalize(360),
+                      marginHorizontal: 0,
                       height: normalize(272),
                       flexDirection: "row",
                       backgroundColor: "rgba(156, 75, 255, 1)",
@@ -290,15 +321,15 @@ function AddPlaylist({
                       style={{
                         position: "absolute",
                         top: normalize(10),
-                        left: normalize(24),
+                        left: normalize(10),
                       }}
                     >
                       {/* Back Button Image */}
                       <Image
-                        source={require("../../assets/icons/ArrowBack.png")}
+                        source={require("../../assets/icons/ArrowBackLightAndDarkPurpleIcon.png")}
                         style={{
-                          width: normalize(20),
-                          height: normalize(33),
+                          width: normalize(30),
+                          height: normalize(50),
                         }}
                       />
                     </TouchableOpacity>
@@ -319,14 +350,13 @@ function AddPlaylist({
                       />
                     </TouchableOpacity>
                   </View>
-                )}
-                {hasCover && (
+                ) : (
                   <ImageBackground
                     source={{
                       uri: selectedImageUri,
                     }}
                     style={{
-                      width,
+                      width: normalize(360),
                       height: normalize(272),
                       flexDirection: "row",
                     }}
@@ -337,30 +367,36 @@ function AddPlaylist({
                     <TouchableOpacity
                       style={{
                         marginTop: normalize(10),
-                        marginLeft: normalize(24),
+                        marginLeft: normalize(10),
                       }}
                       onPress={onClose}
                     >
                       <Image
-                        source={require("../../assets/icons/ArrowBack.png")}
+                        source={require("../../assets/icons/ArrowBackLightAndDarkPurpleIcon.png")}
                         style={{
-                          width: normalize(14),
-                          height: normalize(23),
+                          width: normalize(30),
+                          height: normalize(50),
                         }}
                       />
                     </TouchableOpacity>
+
                     <TouchableOpacity
                       style={{
                         marginTop: normalize(8),
-                        marginLeft: normalize(315),
+                        left: normalize(260),
+                        // marginLeft: normalize(200),
                       }}
-                      onPress={onClose}
+                      onPress={() => {
+                        pickImage(setSelectedImageUri).then(() => {
+                          setHasCover(true);
+                        });
+                      }}
                     >
                       <Image
-                        source={require("../../assets/icons/MusicPlaylistCoverOptionsButton.png")}
+                        source={require("../../assets/icons/EditPlaylistImageIcon.png")}
                         style={{
-                          width: normalize(7),
-                          height: normalize(28),
+                          width: normalize(55),
+                          height: normalize(55),
                         }}
                       />
                     </TouchableOpacity>
@@ -407,8 +443,14 @@ function AddPlaylist({
                 </View>
                 <View
                   style={{
-                    width: normalize(363),
-                    height: normalize(290),
+                    width:
+                      Platform.OS == "android"
+                        ? normalize(360)
+                        : normalize(363),
+                    height:
+                      Platform.OS == "android"
+                        ? normalize(312)
+                        : normalize(290),
                     backgroundColor: "rgba(203, 203, 203, 0.5)",
                     borderRadius: normalize(10),
                     justifyContent: "center",
@@ -447,8 +489,6 @@ function AddPlaylist({
                           data={category.moodsTagsList}
                           style={{ paddingTop: normalize(10) }}
                           renderItem={({ item, index: itemIndex }) => {
-                            //
-
                             return (
                               <TouchableOpacity
                                 style={
@@ -463,6 +503,9 @@ function AddPlaylist({
                                         alignItems: "center",
                                         borderRadius: normalize(10),
                                         marginVertical: normalize(8),
+                                        // Platform.OS == "android"
+                                        //   ? normalize(4)
+                                        //   : normalize(8),
                                         marginHorizontal: normalize(10),
                                       }
                                     : {
@@ -474,6 +517,9 @@ function AddPlaylist({
                                         alignItems: "center",
                                         borderRadius: normalize(10),
                                         marginVertical: normalize(8),
+                                        // Platform.OS == "android"
+                                        //   ? normalize(4)
+                                        //   : normalize(8),
                                         marginHorizontal: normalize(10),
                                       }
                                 }
@@ -507,12 +553,14 @@ function AddPlaylist({
                     }}
                     style={{
                       top: normalize(16),
+                      paddingVertical: normalize(5),
+                      paddingHorizontal: normalize(10),
                       justifyContent: "center",
                       alignItems: "center",
-                      paddingHorizontal: normalize(20),
-                      paddingVertical: normalize(5),
-                      backgroundColor: "rgba(255, 184, 0, 1)",
                       borderRadius: normalize(10),
+                      borderWidth: normalize(4),
+                      borderColor: "rgba(156, 75, 255, 1)",
+                      backgroundColor: "rgba(58, 17, 90, 0.75)",
                       shadowColor: "#6933AC",
                       shadowOffset: {
                         width: 0,
@@ -525,13 +573,38 @@ function AddPlaylist({
                     <Text
                       style={{
                         fontWeight: "700",
-                        fontSize: normalize(18),
+                        fontSize: normalize(20),
                         color: "white",
                       }}
                     >
                       Add your own mood
                     </Text>
                   </TouchableOpacity>
+                  {/* <TouchableOpacity
+                // addMoodButtonContainer
+                style={{
+                  // marginTop: normalize(5),
+                  paddingVertical: normalize(5),
+                  paddingHorizontal: normalize(10),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: normalize(10),
+                  borderWidth: normalize(4),
+                  borderColor: "rgba(156, 75, 255, 1)",
+                  backgroundColor: "rgba(58, 17, 90, 0.75)",
+                }}
+                onPress={() => {
+                  toggleAddMoodModal();
+                  onClose;
+                }}
+              >
+                <Text
+                  // addMoodButtonText
+                  style={styles.addMoodButtonText}
+                >
+                  Add your own mood
+                </Text>
+              </TouchableOpacity> */}
                 </View>
               </View>
 

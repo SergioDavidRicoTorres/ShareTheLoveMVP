@@ -5,6 +5,9 @@ export default function App() {
   return (
     <SpotifyAuthProvider>
       <MainNavigator />
+      {/* <View>
+        <Text>Welcome to ShareTheLoveMVP</Text>
+      </View> */}
     </SpotifyAuthProvider>
   );
 }

@@ -7,6 +7,7 @@ import ExternalProfileScreen from "../screens/ExternalProfileScreen";
 import { ProfileContentNavigator } from "./ProfileContentNavigator";
 import PostsViewScreen from "../screens/PostsViewScreen";
 import DomainOfTasteScreen from "../screens/DomainOfTasteScreen";
+import DebuggingScreen from "../screens/DebuggingScreen";
 
 const Stack = createStackNavigator<HomeNavigatorParamsList>();
 
@@ -16,17 +17,14 @@ function HomeNavigator() {
       screenOptions={{ headerShown: false }}
       initialRouteName="HomeScreen"
     >
+      {/* <Stack.Screen name="DebuggingScreen" component={DebuggingScreen} /> */}
       <Stack.Screen
         name="ExternalProfileScreen"
         component={ExternalProfileScreen}
       />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="SearchUserScreen" component={SearchUser} />
-      {/* <Stack.Screen name="DomainOfTasteScreen" component={DomainOfTasteScreen} />
-      <Stack.Screen
-        name="PostsViewScreen"
-        component={PostsViewScreen}
-      /> */}
+
       <Stack.Screen
         name="ProfileContentNavigator"
         component={ProfileContentNavigator}

@@ -116,6 +116,7 @@ export type MainNavigatorParamsList = {
   Tabs: undefined;
 };
 export type AuthNavigatorParamsList = {
+  // DebuggingScreen: undefined;
   AuthScreen: undefined;
   AuthEmailPasswordScreen: {
     authType: string;
@@ -138,6 +139,7 @@ export type TabsNavigatorParamsList = {
 };
 
 export type HomeNavigatorParamsList = {
+  DebuggingScreen: undefined;
   HomeScreen: undefined;
   SearchUserScreen: undefined;
   ExternalProfileScreen: {
@@ -233,6 +235,7 @@ export type PlaylistsMediaItemComponentProps = {
   item: Post;
   profileContentNavigation: ProfileContentNavigationProp;
   user: User;
+  isCurrentUser: boolean;
 };
 
 export type MediaItemInfoProps = {

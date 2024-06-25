@@ -8,6 +8,8 @@ import {
   Dimensions,
   ScrollView,
   FlatList,
+  Platform,
+  StatusBar,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -15,7 +17,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 // import { getCurrentUserData } from "../UserData";
 import Settings from "../components/Settings";
 import { useEffect, useState } from "react";
-import Carousel from "react-native-snap-carousel";
+// import Carousel from "react-native-snap-carousel";
 import {
   getDomainOfTasteScoreIcon,
   getMoodContainerColor,
@@ -39,8 +41,9 @@ import AddPlaylist from "../components/AddPostComponents/AddPlaylist";
 import DomainOfTasteCard from "../components/DomainOfTasteCard";
 import { fetchUserById } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
+import Carousel from "react-native-reanimated-carousel";
 
-const { width } = Dimensions.get("window"); // screen width constant
+const { width, height } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
 export default function ProfileScreen() {
@@ -139,12 +142,28 @@ export default function ProfileScreen() {
     }
   }, [route]); // Depends on userId
 
+  const domainWidth = width * 0.7; // Adjust item width to decrease spacing
+  const domainSpacing = (width - domainWidth) / 2; // Calculate spacing to center items
+
   return (
     <LinearGradient
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
+      }}
+      // style={styles.container}
     >
-      <SafeAreaView style={styles.container}>
+      <StatusBar
+        backgroundColor="rgba(105, 51, 172, 1)"
+        barStyle="light-content"
+      />
+      <SafeAreaView
+        style={{
+          ...styles.container,
+          // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }} // External Container
+      >
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ alignItems: "center" }}>
             <Text
@@ -328,12 +347,12 @@ export default function ProfileScreen() {
             </View>
             <View
               style={{
-                marginTop: normalize(25),
-                marginBottom: normalize(150),
-                alignItems: "center",
+                marginTop: normalize(0),
+                marginBottom: normalize(0),
+                justifyContent: "center",
               }}
             >
-              <Carousel
+              {/* <Carousel
                 data={domainsArray}
                 sliderWidth={width}
                 firstItem={0}
@@ -351,6 +370,32 @@ export default function ProfileScreen() {
                     isAddPlaylistModalVisible={isAddPlaylistModalVisible}
                   ></DomainOfTasteCard>
                 )}
+              /> */}
+              <Carousel
+                width={width}
+                height={height}
+                data={domainsArray}
+                renderItem={({ item: category }) => (
+                  <View
+                    style={{
+                      marginLeft: (width - width * 0.9) / 2,
+                    }}
+                  >
+                    <DomainOfTasteCard
+                      isCurrentUser={true}
+                      navigation={navigation}
+                      category={category}
+                      user={currentUser}
+                      toggleAddPlaylistModal={toggleAddPlaylistModal}
+                      userId={userId}
+                      isAddPlaylistModalVisible={isAddPlaylistModalVisible}
+                    />
+                  </View>
+                )}
+                mode="parallax"
+                style={{
+                  paddingHorizontal: domainSpacing,
+                }} // Center the items
               />
             </View>
           </View>

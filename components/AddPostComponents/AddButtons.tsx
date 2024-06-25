@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  Platform,
 } from "react-native";
 import SearchMedia from "./SearchMedia";
 import { normalize } from "../../utils";
@@ -44,7 +45,7 @@ function AddButtons() {
         <TouchableOpacity
           style={{
             position: "absolute",
-            bottom: normalize(55),
+            bottom: Platform.OS == "android" ? normalize(85) : normalize(55),
             right: normalize(100),
             alignItems: "center",
             justifyContent: "center",
@@ -73,7 +74,7 @@ function AddButtons() {
         <TouchableOpacity
           style={{
             position: "absolute",
-            bottom: normalize(120),
+            bottom: Platform.OS == "android" ? normalize(150) : normalize(120),
             alignItems: "center",
             justifyContent: "center",
             width: normalize(80),
@@ -100,7 +101,7 @@ function AddButtons() {
         <View
           style={{
             position: "absolute",
-            bottom: normalize(55),
+            bottom: Platform.OS == "android" ? normalize(85) : normalize(55),
             left: normalize(100),
             alignItems: "center",
             justifyContent: "center",

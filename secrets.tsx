@@ -1,7 +1,16 @@
+import * as Linking from "expo-linking";
+const redirectUri = Linking.createURL("redirect");
+console.log("redirectUri: ", redirectUri);
+
 export const spotifyCredentials = {
   clientId: "7e18ac3973ba4d51a66bfe7265a75fb1",
   clientSecret: "dd73ec8705e94cf98551ff5ebe48d639",
-  redirectUri: "com.domain.ShareTheLove1234://redirect",
+  // redirectUri: "com.domain.ShareTheLove1234://redirect",
+  // redirectUri: "exp://77.80.120.203:8081",
+  // redirectUri: "exp://0pj9hcy.sergiodavidricotorres.8081.exp.direct",
+  // redirectUri: "ShareTheLoveMVP://redirect",
+  // redirectUri: "sharethelovemvp://redirect",
+  redirectUri: redirectUri,
 };
 
 export const TMDBCredentials = {

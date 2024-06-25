@@ -10,6 +10,7 @@ import { FIREBASE_AUTH } from "../firebaseConfig";
 import { User } from "../types";
 import { useEffect, useState } from "react";
 import { useCurrentUser } from "../CurrentUserContext";
+import DebuggingScreen from "../screens/DebuggingScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -61,6 +62,13 @@ function Tabs() {
         },
       }}
     >
+      {/* <Tab.Screen
+        name="Debugging"
+        component={DebuggingScreen}
+        options={{
+          headerShown: false,
+        }}
+      /> */}
       <Tab.Screen
         name="Home"
         component={HomeNavigator}
@@ -89,17 +97,17 @@ function Tabs() {
           ),
         }}
       />
-      {
-        <Tab.Screen
-          name="Add"
-          component={AddButtons}
-          options={() => ({
-            headerShown: false,
 
-            tabBarButton: () => <AddButtons />,
-          })}
-        />
-      }
+      <Tab.Screen
+        name="Add"
+        component={AddButtons}
+        options={() => ({
+          headerShown: false,
+
+          tabBarButton: () => <AddButtons />,
+        })}
+      />
+
       <Tab.Screen
         name="Profile"
         component={ProfileNavigator}

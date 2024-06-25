@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "ShareTheLoveMVP",
+    "scheme": "sharethelovemvp",
     "name": "ShareTheLoveMVP",
     "slug": "ShareTheLoveMVP",
     "version": "1.0.0",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#01042B"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -23,7 +23,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sergiodavidricotorres.ShareTheLoveMVP"
+      "package": "com.sergiodavidricotorres.ShareTheLoveMVP",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -41,6 +44,12 @@
           "cameraPermission": "Allow Share The Love to access your camera."
         }
       ]
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e49a9ea5-4a8c-4c93-9c67-66408c04e811"
+    }
   }
 }

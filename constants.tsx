@@ -9,3 +9,9 @@ export const DOMAINID = new Map<string, number>([
   ["Film/TVShow", 1],
   ["PodcastEpisode", 2],
 ]);
+
+export const MEDIATYPENAME = new Map<number, string>([
+  [0, "Song"],
+  [1, "Film/TVShow"],
+  [2, "Podcast Episode"],
+]);

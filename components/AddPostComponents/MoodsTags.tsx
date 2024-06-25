@@ -221,7 +221,17 @@ function MoodsTags({
               {/* Add Mood Button */}
               <TouchableOpacity
                 // addMoodButtonContainer
-                style={styles.addMoodButtonContainer}
+                style={{
+                  // marginTop: normalize(5),
+                  paddingVertical: normalize(5),
+                  paddingHorizontal: normalize(10),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: normalize(10),
+                  borderWidth: normalize(4),
+                  borderColor: "rgba(156, 75, 255, 1)",
+                  backgroundColor: "rgba(58, 17, 90, 0.75)",
+                }}
                 onPress={() => {
                   toggleAddMoodModal();
                   onClose;
@@ -234,6 +244,35 @@ function MoodsTags({
                   Add your own mood
                 </Text>
               </TouchableOpacity>
+              {/* <TouchableOpacity
+            style={{
+              marginTop: normalize(5),
+              paddingVertical: normalize(4),
+              paddingHorizontal: normalize(5),
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: normalize(10),
+              borderWidth: normalize(4),
+              borderColor: "rgba(156, 75, 255, 1)",
+              backgroundColor: "rgba(58, 17, 90, 0.75)",
+            }}
+            onPress={() =>
+              navigation.navigate("AddPlaylistScreen", {
+                domainId: category.domainId,
+              })
+            }
+            // onPress={toggleAddPlaylistModal}
+          >
+            <Text
+              style={{
+                color: "rgba(156, 75, 255, 1)",
+                fontSize: normalize(18),
+                fontWeight: "700",
+              }}
+            >
+              Add Playlist
+            </Text>
+          </TouchableOpacity> */}
               {/* Media Item */}
               <View
                 // mediaItemContainer

@@ -10,6 +10,8 @@ import {
   ScrollView,
   FlatList,
   ImageBackground,
+  Platform,
+  StatusBar,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -31,10 +33,12 @@ import {
 } from "../types";
 import { clusterPostsByPlaylistId, getDomainName } from "../utilsData";
 import { FIREBASE_AUTH } from "../firebaseConfig";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DOMAINPOSTTYPE } from "../constants";
 import { getDomainsPlaylistsData, getDomainsPostsData } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
+import { RefreshControl } from "react-native-gesture-handler";
+// import { StatusBar } from "expo-status-bar";
 
 const { width } = Dimensions.get("window"); // screen width constant
 
@@ -82,29 +86,41 @@ export default function DomainOfTasteScreen() {
   const [clusteredPlaylistsPosts, setClusteredPlaylistsPosts] =
     useState<Map<string, Post[]>>();
 
+  const [refresh, setRefresh] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const playlistsData = await getDomainsPlaylistsData(
+        userId,
+        domainOfTaste.domainId
+      );
+      setPlaylists(playlistsData);
+      const postsData = await getDomainsPostsData(
+        userId,
+        domainOfTaste.domainId
+      );
+      // console.log("==================================================")
+      // console.log("================= UNCLUSTERED POSTS ===================")
+      // console.log(postsData);
+      // console.log("==================================================")
+      const clusteredPosts = clusterPostsByPlaylistId(postsData);
+      setClusteredPlaylistsPosts(clusteredPosts);
+    } catch (error) {
+      console.error("Error fetching playlists data:", error);
+      // Handle the error appropriately
+    }
+  };
+
+  // Refresh function
+  const pullRefresh = useCallback(async () => {
+    setRefresh(true);
+    await fetchData();
+    setTimeout(() => {
+      setRefresh(false);
+    }, 5000);
+  }, [userId, domainOfTaste.domainId]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const playlistsData = await getDomainsPlaylistsData(
-          userId,
-          domainOfTaste.domainId
-        );
-        setPlaylists(playlistsData);
-        const postsData = await getDomainsPostsData(
-          userId,
-          domainOfTaste.domainId
-        );
-        // console.log("==================================================")
-        // console.log("================= UNCLUSTERED POSTS ===================")
-        // console.log(postsData);
-        // console.log("==================================================")
-        const clusteredPosts = clusterPostsByPlaylistId(postsData);
-        setClusteredPlaylistsPosts(clusteredPosts);
-      } catch (error) {
-        console.error("Error fetching playlists data:", error);
-        // Handle the error appropriately
-      }
-    };
     fetchData();
   }, [userId, domainOfTaste.domainId]); // Dependencies
   // console.log("DOMAIN OF TASTE: ", domainOfTaste)
@@ -117,9 +133,21 @@ export default function DomainOfTasteScreen() {
   return (
     <LinearGradient
       colors={[getScreenGradientFirstColor(domainOfTaste), "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
+      }}
     >
-      <SafeAreaView style={styles.container}>
+      <StatusBar
+        backgroundColor={getScreenGradientFirstColor(domainOfTaste)}
+        barStyle="light-content"
+      />
+      <SafeAreaView
+        style={{
+          ...styles.container,
+          // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }} // External Container
+      >
         <View
           style={{
             // backgroundColor: getScreenGradientFirstColor(domainOfTaste),
@@ -145,7 +173,11 @@ export default function DomainOfTasteScreen() {
             />
           </TouchableOpacity>
         </View>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={() => pullRefresh()}
+          />
           <View style={{ alignItems: "center" }}>
             {/* <View style={{ marginTop: 25, marginBottom: 150 }}> */}
             {/* Back Button */}
@@ -205,6 +237,9 @@ export default function DomainOfTasteScreen() {
               ItemSeparatorComponent={() => (
                 <View style={{ height: normalize(20) }} />
               )}
+              // refreshControl={
+
+              // }
               renderItem={({ item: playlist, index }) => (
                 // <View>
                 //   <Text>{playlist.playlistId}</Text>

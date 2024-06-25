@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Alert,
 } from "react-native";
 import React from "react";
 // import * as Crypto from 'expo-crypto';
 import { Domain, Mood, PlaylistsMediaItemComponentProps } from "./types";
 import { DOMAINPOSTTYPE } from "./constants";
+import { deletePlaylistAndRelatedData, deletePost } from "./utilsFirebase";
 // import { Song, FilmOrTVShow, PodcastEpisode } from "./types";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
@@ -22,30 +24,13 @@ export const getItemSubTitle = (mediaItem: any, domainId: number) => {
   switch (domainId) {
     case 0: {
       return (
-        <View style={{ flexDirection: "row", maxWidth: normalize(80) }}>
-          {mediaItem.artists?.map((artist: any, index: number) => (
-            <React.Fragment key={index}>
-              {/* itemArtistName */}
-              {index !== mediaItem.artists.length - 1 ? (
-                <Text
-                  // itemArtistName with "-"
-                  numberOfLines={1}
-                  style={styles.itemSubtitle}
-                >
-                  {artist.name}-
-                </Text>
-              ) : (
-                <Text
-                  // itemArtistName without "-"
-                  numberOfLines={1}
-                  style={styles.itemSubtitle}
-                >
-                  {artist.name}
-                </Text>
-              )}
-            </React.Fragment>
-          ))}
-        </View>
+        <Text numberOfLines={1} style={styles.itemSubtitle}>
+          {mediaItem.artists
+            ?.map(
+              (artist: any, index: number) => (index ? " - " : "") + artist.name
+            )
+            .join("")}
+        </Text>
       );
     }
     case 2: {
@@ -548,6 +533,24 @@ export const getPlaylistScoreIcon = (domain: Domain) => {
   }
 };
 
+export const getDomainOfTasteXIcon = (domain: Domain) => {
+  try {
+    switch (domain.domainId) {
+      case 0:
+        return require("./assets/icons/MusicXIcon.png");
+      case 1:
+        return require("./assets/icons/FilmsTVShowsXIcon.png");
+      case 2:
+        return require("./assets/icons/PodcastsEpisodesXIcon.png");
+      default:
+        throw new Error(`Invalid domain id: ${domain.domainId}`);
+    }
+  } catch (error) {
+    console.error(error);
+    return require("./assets/icon.png"); // Replace with your default icon
+  }
+};
+
 export const getDomainsName = (domain: Domain) => {
   try {
     switch (domain.domainId) {
@@ -580,11 +583,57 @@ export const getImageHeight = (postType: string) => {
   }
 };
 
+function confirmDeletePost(postId: string | undefined) {
+  if (postId !== undefined) {
+    Alert.alert(
+      "Confirm Delete", // Alert Title
+      "Are you sure you want to delete this post?", // Alert Message
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Delete canceled"),
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => deletePost(postId),
+          style: "destructive",
+        },
+      ],
+      { cancelable: false } // This prevents tapping outside the alert from dismissing it
+    );
+  }
+}
+
+export function confirmDeletePlaylist(playlistId: string | undefined) {
+  console.log("[utils::confirmDeletePlaylist()]");
+  if (playlistId !== undefined) {
+    Alert.alert(
+      "Confirm Delete", // Alert Title
+      "Are you sure you want to delete this Playlist?", // Alert Message
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Delete canceled"),
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => deletePlaylistAndRelatedData(playlistId),
+          style: "destructive",
+        },
+      ],
+      { cancelable: false } // This prevents tapping outside the alert from dismissing it
+    );
+  }
+}
+
 export const getPlaylistsMediaItemComponent = ({
   domainOfTaste,
   item: post,
   profileContentNavigation,
   user,
+  isCurrentUser,
 }: PlaylistsMediaItemComponentProps) => {
   switch (domainOfTaste.domainId) {
     case 0: {
@@ -597,6 +646,9 @@ export const getPlaylistsMediaItemComponent = ({
               post,
               user,
             });
+          }}
+          style={{
+            paddingTop: normalize(10),
           }}
         >
           <View
@@ -613,6 +665,35 @@ export const getPlaylistsMediaItemComponent = ({
               borderWidth: normalize(4),
             }}
           >
+            {isCurrentUser && (
+              <TouchableOpacity
+                style={{
+                  position: "absolute",
+                  right: normalize(-10),
+                  top: normalize(-10),
+                  padding: normalize(6),
+                  borderRadius: normalize(10),
+                  borderWidth: normalize(3),
+                  backgroundColor: getMoodContainerColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
+                  borderColor: getButtonsAccentColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
+                }}
+                onPress={() => {
+                  confirmDeletePost(post.postId);
+                }}
+              >
+                <Image
+                  source={getDomainOfTasteXIcon(domainOfTaste)}
+                  style={{
+                    width: normalize(15),
+                    height: normalize(15),
+                  }}
+                />
+              </TouchableOpacity>
+            )}
             <Image
               source={
                 // { "uri": post.mediaItem.image}  //with implemented MediaItem Interface
@@ -714,6 +795,9 @@ export const getPlaylistsMediaItemComponent = ({
               user,
             });
           }}
+          style={{
+            paddingTop: normalize(10),
+          }}
         >
           <View
             style={{
@@ -738,6 +822,35 @@ export const getPlaylistsMediaItemComponent = ({
                 borderRadius: normalize(10),
               }}
             />
+            {isCurrentUser && (
+              <TouchableOpacity
+                style={{
+                  position: "absolute",
+                  right: normalize(-10),
+                  top: normalize(-10),
+                  padding: normalize(6),
+                  borderRadius: normalize(10),
+                  borderWidth: normalize(3),
+                  backgroundColor: getMoodContainerColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
+                  borderColor: getButtonsAccentColor(
+                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                  ),
+                }}
+                onPress={() => {
+                  confirmDeletePost(post.postId);
+                }}
+              >
+                <Image
+                  source={getDomainOfTasteXIcon(domainOfTaste)}
+                  style={{
+                    width: normalize(15),
+                    height: normalize(15),
+                  }}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </TouchableOpacity>
       );
@@ -751,6 +864,9 @@ export const getPlaylistsMediaItemComponent = ({
               post,
               user,
             });
+          }}
+          style={{
+            paddingTop: normalize(10),
           }}
         >
           <View
@@ -779,6 +895,35 @@ export const getPlaylistsMediaItemComponent = ({
                 //   overflow: "hidden",
               }}
             >
+              {isCurrentUser && (
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    right: normalize(-10),
+                    top: normalize(-10),
+                    padding: normalize(6),
+                    borderRadius: normalize(10),
+                    borderWidth: normalize(3),
+                    backgroundColor: getMoodContainerColor(
+                      DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                    ),
+                    borderColor: getButtonsAccentColor(
+                      DOMAINPOSTTYPE.get(domainOfTaste.domainId)
+                    ),
+                  }}
+                  onPress={() => {
+                    confirmDeletePost(post.postId);
+                  }}
+                >
+                  <Image
+                    source={getDomainOfTasteXIcon(domainOfTaste)}
+                    style={{
+                      width: normalize(15),
+                      height: normalize(15),
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
               <Image
                 source={
                   // { uri: post.mediaItem.image }
@@ -902,6 +1047,16 @@ export const getCarouselNumColumns = (listLength: number) => listLength / 5;
 //   return "Error at generateCodeChallenge()"
 // }
 // };
+
+export const pullRefresh = (
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  setRefresh(true);
+
+  setTimeout(() => {
+    setRefresh(false);
+  }, 5000);
+};
 
 const styles = StyleSheet.create({
   itemSubtitle: {

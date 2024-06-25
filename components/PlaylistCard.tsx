@@ -19,6 +19,9 @@ import {
   getPlaylistScoreIcon,
   getPlaylistsMediaItemComponent,
   normalize,
+  getScreenGradientFirstColor,
+  getDomainOfTasteXIcon,
+  confirmDeletePlaylist,
 } from "../utils";
 import {
   Playlist,
@@ -31,7 +34,11 @@ import { DOMAINPOSTTYPE } from "../constants";
 import { getPlaylistId, getPlaylistsPostsData, getPosts } from "../utilsData";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import { DEFAULT_PLAYLIST, updatePlaylistReview } from "../utilsFirebase";
+import {
+  DEFAULT_PLAYLIST,
+  deletePlaylistAndRelatedData,
+  updatePlaylistReview,
+} from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
 import { doc, onSnapshot } from "firebase/firestore";
 import { FIRESTORE_DB } from "../firebaseConfig";
@@ -46,6 +53,7 @@ export default function PlaylistCard({
   posts,
 }: PlaylistCardProps) {
   const { currentUser } = useCurrentUser();
+  const isCurrentUser = currentUser?.userId == user.userId;
   const [playlist, setPlaylist] = useState<Playlist>(DEFAULT_PLAYLIST);
   const [currentReviewScore, setCurrentReviewScore] = useState<number>(0); // Original score from database
   const [sliderScore, setSliderScore] = useState<number>(0); // Score being manipulated by slider
@@ -147,8 +155,41 @@ export default function PlaylistCard({
           backgroundColor: getPlaylistBigCardBackgroundColor(domainOfTaste),
         }}
       >
+        {isCurrentUser && (
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              right: normalize(-4),
+              top: normalize(-4),
+              paddingHorizontal: normalize(20),
+              paddingVertical: normalize(14),
+              borderTopRightRadius: normalize(10),
+              borderTopLeftRadius: normalize(0),
+              borderBottomRightRadius: normalize(0),
+              borderBottomLeftRadius: normalize(10),
+              // borderWidth: normalize(4),
+              backgroundColor: getScreenGradientFirstColor(domainOfTaste),
+              borderColor: getScreenGradientFirstColor(domainOfTaste),
+            }}
+            onPress={() => confirmDeletePlaylist(playlistId)}
+          >
+            <Image
+              source={getDomainOfTasteXIcon(domainOfTaste)}
+              style={{
+                width: normalize(22),
+                height: normalize(22),
+              }}
+            />
+          </TouchableOpacity>
+        )}
         <View>
-          <ScrollView horizontal>
+          <ScrollView
+            horizontal
+            style={{
+              maxWidth: normalize(320),
+              // backgroundColor: "white",
+            }}
+          >
             <Text
               style={{
                 marginLeft: normalize(10),
@@ -156,6 +197,7 @@ export default function PlaylistCard({
                 color: "white",
                 fontSize: normalize(35),
                 fontWeight: "500",
+                maxWidth: normalize(310),
               }}
               // numberOfLines={1}
             >
@@ -205,6 +247,7 @@ export default function PlaylistCard({
                 item,
                 profileContentNavigation: profileContentNavigation,
                 user,
+                isCurrentUser,
               })
             }
             keyExtractor={(post, index) => index.toString()}

@@ -1,4 +1,9 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import {
   FIREBASE_AUTH,
   FIREBASE_STORAGE,
@@ -10,6 +15,7 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -25,12 +31,12 @@ import {
 import { signOut } from "firebase/auth";
 
 export const DEFAULT_USER: User = {
-  name: "Default User Name",
+  name: "",
   profileName: "Default_User_Profile_Name",
   dateOfBirth: new Date("1990-04-14T00:00:00.000Z"),
   profilePicture:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png",
-  profileDescription: "Default Profile Descriptino",
+  profileDescription: "",
   followersCount: 0,
   followingCount: 0,
   followersUsersList: [],
@@ -58,7 +64,7 @@ export const DEFAULT_PLAYLIST: Playlist = {
   playlistId: "DEFAULT_PLAYLIST_ID",
   userId: "DEFAULT_USER_ID",
   domainId: 0,
-  name: "DEFAULE_PLAYLIST_NAME",
+  name: "",
   moods: [],
   score: 0,
   reviewsList: [],
@@ -72,7 +78,8 @@ export const addUserToDB = async (user: User, uid: string) => {
     const userDocRef = doc(FIRESTORE_DB, "users", uid);
     await setDoc(userDocRef, user);
   } catch (error) {
-    console.error("Error adding the user to the database: ", error);
+    // console.error("Error adding the user to the database: ", error);
+    throw error;
   }
 };
 
@@ -83,8 +90,9 @@ export const addPostToDB = async (post: Post) => {
     await setDoc(postDocRef, post);
     // console.log("[STEP 3 ALMOST WORKED]")
     // return postDocRef.id; // This is the ID of the newly added document
-  } catch (error) {
-    console.error("Error adding the post to the database: ", error);
+  } catch (error: any) {
+    console.error("Error at utilsFirebase::addPostToDB(): ", error);
+    throw error;
   }
 };
 
@@ -93,10 +101,11 @@ export const addPlaylistToDB = async (playlist: Playlist) => {
     // Add additional user data to Firestore
     const playlistDocRef = doc(collection(FIRESTORE_DB, "playlists"));
     await setDoc(playlistDocRef, playlist);
-    console.log("[STEP 3 ALMOST WORKED]");
+    // console.log("[STEP 3 ALMOST WORKED]");
     return playlistDocRef.id; // This is the ID of the newly added document
-  } catch (error) {
-    console.error("Error adding the playlist to the database: ", error);
+  } catch (error: any) {
+    console.error("Error at utilsFirebase::addPlaylistToDB(): ", error);
+    throw error;
   }
 };
 
@@ -114,10 +123,11 @@ export const uploadImage = async (uri: string) => {
 
     //   console.log('Image uploaded successfully!');
     //   console.log('Download URL:', downloadURL);
-    console.log("[STEP 2 WORKED]");
+    //   console.log("[STEP 2 WORKED]");
     return downloadURL;
   } catch (error) {
-    console.error("Error uploading image: ", error);
+    console.error("Error at utilsFirebase::uploadImage(): ", error);
+    throw error;
   }
 };
 
@@ -143,7 +153,8 @@ export const pickImage = async (setSelectedImageUri: (uri: string) => void) => {
       setSelectedImageUri(result.assets[0].uri); // This is the local URI of the image
     }
   } catch (error) {
-    console.error("Error picking the image: ", error);
+    console.error("Error at utilsFirebase::pickImage(): ", error);
+    throw error;
   }
 };
 
@@ -163,6 +174,119 @@ export const fetchUserById = async (userId: string): Promise<User | null> => {
     return null;
   }
 };
+export const deletePlaylistAndRelatedData = async (playlistId: string) => {
+  try {
+    // Step 1: Delete Playlist Document
+    const playlistDocRef = doc(FIRESTORE_DB, "playlists", playlistId);
+    const playlistDoc = await getDoc(playlistDocRef);
+
+    if (!playlistDoc.exists()) {
+      console.log("Playlist not found");
+      return;
+    }
+
+    const playlistData = playlistDoc.data();
+    await deleteDoc(playlistDocRef);
+    //console.log("Playlist deleted successfully");
+    console.log("[Checkpoint 1]");
+
+    // Step 2: Delete Associated Image
+    if (playlistData.image) {
+      const imageRef = ref(FIREBASE_STORAGE, playlistData.image);
+      await deleteObject(imageRef);
+      //console.log("Image deleted successfully");
+      console.log("[Checkpoint 1.b]");
+    }
+
+    // Step 3: Delete Related Post Documents
+    const postsCollectionRef = collection(FIRESTORE_DB, "posts");
+    const queryByPlaylist = query(
+      postsCollectionRef,
+      where("playlistId", "==", playlistId)
+    );
+    const querySnapshot = await getDocs(queryByPlaylist);
+
+    console.log("Query Snapshot: " + querySnapshot);
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+    //console.log("Related posts deleted successfully");
+    console.log("[Checkpoint 2]");
+  } catch (error) {
+    console.error(
+      "Error at utilsFirebase::deletePlaylistAndRelatedData(): ",
+      error
+    );
+    throw error;
+  }
+};
+
+// export const deletePlaylistAndRelatedData = async (playlistId: string) => {
+//   try {
+//     // Step 1: Delete Playlist Document
+//     const playlistDocRef = doc(FIRESTORE_DB, "playlists", playlistId);
+//     const playlistDoc = await getDoc(playlistDocRef);
+
+//     if (!playlistDoc.exists()) {
+//       console.log("Playlist not found");
+//       throw new Error("Playlist with ID: " + playlistId + " wasn't found");
+//     }
+
+//     const playlistData = playlistDoc.data();
+//     await deleteDoc(playlistDocRef);
+//     console.log("[Checkpoint 1]");
+
+//     // Step 2: Delete Associated Image
+//     if (playlistData.image) {
+//       const imageRef = ref(FIREBASE_STORAGE, playlistData.image);
+//       await deleteObject(imageRef);
+//       console.log("[Checkpoint 1.b]");
+//     }
+
+//     // Step 3: Delete Related Post Documents
+//     const postsCollectionRef = collection(FIRESTORE_DB, "posts");
+//     const queryByPlaylist = query(
+//       postsCollectionRef,
+//       where("playlistID", "==", playlistId)
+//     );
+//     const querySnapshot = await getDocs(queryByPlaylist);
+
+//     // Collect all delete promises
+//     const deletePromises: Promise<void>[] = [];
+//     querySnapshot.forEach((doc) => {
+//       const deletePromise = deleteDoc(doc.ref);
+//       deletePromises.push(deletePromise);
+//     });
+
+//     // Wait for all deletions to complete
+//     await Promise.all(deletePromises);
+//     console.log("[Checkpoint 2]");
+//   } catch (error) {
+//     console.error(
+//       "Error at utilsFirebase::deletePlaylistAndRelatedData(): ",
+//       error
+//     );
+//     throw error;
+//   }
+// };
+
+export async function deletePost(postId: string | undefined) {
+  if (postId === undefined) {
+    throw new Error(`No postId was given!`);
+  }
+  const postDocRef = doc(FIRESTORE_DB, "posts", postId);
+  try {
+    const docSnap = await getDoc(postDocRef);
+    if (!docSnap.exists()) {
+      throw new Error(`No post found with ID: ${postId}`);
+    }
+    await deleteDoc(postDocRef);
+    console.log(`Post with ID: ${postId} has been successfully deleted.`);
+  } catch (error) {
+    console.error("Error at utilsFirebase::deletePost(): ", error);
+    //throw error; // Re-throw the error to be handled by the caller
+  }
+}
 
 //HELPER chunkArray function:
 // Helper function to split an array into chunks with TypeScript type annotations
@@ -186,7 +310,7 @@ export const fetchLastPosts = async (
 ): Promise<Post[]> => {
   try {
     const postsRef = collection(FIRESTORE_DB, "posts");
-    const MAX_WHEREIN_VALUES = 10;
+    const MAX_WHEREIN_VALUES = 50;
     const MAX_POSTS = numberOfPosts;
     let allPosts: Post[] = [];
 
@@ -258,7 +382,7 @@ export const fetchAllUsers = async () => {
       const userData = doc.data() as User;
       userData.userId = doc.id;
       users.push(userData);
-      console.log("USER: ", userData);
+      // console.log("USER: ", userData);
     });
     // console.log("[USERS]: ", users)
     return users;
@@ -446,61 +570,236 @@ export async function toggleLikePost(
   }
 }
 
+// export const updateDomainScore = async (userId: string, domainId: number): Promise<void> => {
+//   const playlistsRef = collection(FIRESTORE_DB, "playlists");
+
+//   // Query playlists that match the userId and domainId
+//   const q = query(playlistsRef, where("userId", "==", userId), where("domainId", "==", domainId));
+
+//   try {
+//     const querySnapshot = await getDocs(q);
+//     let totalScore = 0;
+//     let count = 0;
+
+//     // Calculate the total score and count the number of playlists
+//     querySnapshot.forEach((doc) => {
+//       const data = doc.data();
+//       if (data.score !== undefined) {
+//         totalScore += data.score;
+//         count++;
+//       }
+//     });
+
+//     if (count === 0) {
+//       console.error("No playlists found for this domain, cannot calculate average score.");
+//       return;
+//     }
+
+//     // Calculate the new average score
+//     const newAverageScore = totalScore / count;
+
+//     // Update the user's domain score
+//     const userRef = doc(db, "users", userId);
+//     const domainKeys = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
+//     const domainToUpdate = domainKeys[domainId];
+
+//     // Using a transaction or a straightforward update, depending on your consistency requirements
+//     await updateDoc(userRef, {
+//       [`domainsOfTaste.${domainToUpdate}.score`]: newAverageScore
+//     });
+
+//     console.log(`Updated domain score for ${domainToUpdate} to ${newAverageScore}`);
+//   } catch (error) {
+//     console.error("Failed to update domain score:", error);
+//     throw error;
+//   }
+// };
+
+// export const updatePlaylistReview = async (
+//   playlistId: string,
+//   currentUserReview: PlaylistReview
+// ): Promise<void> => {
+//   const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
+
+//   try {
+//     await runTransaction(FIRESTORE_DB, async (transaction) => {
+//       const playlistDoc = await transaction.get(playlistRef);
+//       if (!playlistDoc.exists()) {
+//         throw "Playlist does not exist!";
+//       }
+
+//       const playlistData = playlistDoc.data() as Playlist;
+//       let reviewsList = playlistData.reviewsList || [];
+//       const existingReviewIndex = reviewsList.findIndex(
+//         (review) => review.userId === currentUserReview.userId
+//       );
+
+//       let isNewReview = false;
+
+//       if (existingReviewIndex !== -1) {
+//         // Update existing review
+//         reviewsList[existingReviewIndex].score = currentUserReview.score;
+//       } else {
+//         // Add new review
+//         reviewsList.push(currentUserReview);
+//         playlistData.reviewsCount += 1;
+//         isNewReview = true;
+//       }
+
+//       // Calculate and update global score
+//       let newPlaylistScore = playlistData.score;
+//       if (isNewReview) {
+//         newPlaylistScore =
+//           (playlistData.score * (playlistData.reviewsCount - 1) +
+//             currentUserReview.score) /
+//           playlistData.reviewsCount;
+//       } else {
+//         // Recalculate score considering the updated review
+//         const totalScore = reviewsList.reduce(
+//           (sum, review) => sum + review.score,
+//           0
+//         );
+//         newPlaylistScore = totalScore / reviewsList.length;
+//       }
+
+//       // Update Firestore document
+//       transaction.update(playlistRef, {
+//         reviewsList: reviewsList,
+//         score: newPlaylistScore,
+//         reviewsCount: playlistData.reviewsCount,
+//       });
+//       console.log("[updatePlaylistReview]: Ended succesfull!");
+//     });
+//     // After the transaction completes, update the domain score
+//     await updateDomainScore(playlistData.userId.toString(), playlistData.domainId);
+//     console.log("[updatePlaylistReview]: Domain score updated successfully!");
+//   } catch (error) {
+//     console.error("Failed to update playlist review:", error);
+//     throw error;
+//   }
+// };
+
 export const updatePlaylistReview = async (
   playlistId: string,
   currentUserReview: PlaylistReview
 ): Promise<void> => {
   const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
+  const userRef = doc(FIRESTORE_DB, "users", currentUserReview.userId); // Reference to user's document
+
+  // Pre-fetch the specific playlist document
+  let playlistData;
+  try {
+    const playlistDoc = await getDoc(playlistRef);
+    if (!playlistDoc.exists()) {
+      console.error("Playlist does not exist!");
+      return;
+    }
+    playlistData = playlistDoc.data() as Playlist;
+  } catch (error) {
+    console.error("Failed to fetch the playlist:", error);
+    return;
+  }
+
+  // Fetch the user document to get the domain score
+  const userDoc = await getDoc(userRef);
+  if (!userDoc.exists()) {
+    console.error("User does not exist!");
+    return;
+  }
+  const userData = userDoc.data() as User;
+  const domainKeys = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
+  const domainToUpdate = domainKeys[playlistData.domainId];
+  //const currentDomainScore = userData.domainsOfTaste[domainToUpdate].score;
+  console.log("[userData: " + userData + "]");
+  // Prepare to fetch related playlists to compute the current domain score
+  const playlistsRef = collection(FIRESTORE_DB, "playlists");
+  const playlistQuery = query(
+    playlistsRef,
+    where("userId", "==", playlistData.userId.toString()),
+    where("domainId", "==", playlistData.domainId)
+  );
+
+  let totalScore = 0;
+  let countPlaylistsScores = 0;
 
   try {
-    await runTransaction(FIRESTORE_DB, async (transaction) => {
-      const playlistDoc = await transaction.get(playlistRef);
-      if (!playlistDoc.exists()) {
-        throw "Playlist does not exist!";
-      }
+    const querySnapshot = await getDocs(playlistQuery);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      totalScore += data.score;
+      countPlaylistsScores++;
+    });
+  } catch (error) {
+    console.error(
+      "Failed to fetch playlists for domain score calculation:",
+      error
+    );
+    return;
+  }
 
-      const playlistData = playlistDoc.data() as Playlist;
+  const currentDomainScore = totalScore / countPlaylistsScores;
+
+  // Begin the transaction for updates only
+  try {
+    await runTransaction(FIRESTORE_DB, async (transaction) => {
       let reviewsList = playlistData.reviewsList || [];
       const existingReviewIndex = reviewsList.findIndex(
         (review) => review.userId === currentUserReview.userId
       );
 
       let isNewReview = false;
-
       if (existingReviewIndex !== -1) {
-        // Update existing review
         reviewsList[existingReviewIndex].score = currentUserReview.score;
       } else {
-        // Add new review
         reviewsList.push(currentUserReview);
         playlistData.reviewsCount += 1;
         isNewReview = true;
       }
 
-      // Calculate and update global score
-      let newPlaylistScore = playlistData.score;
-      if (isNewReview) {
-        newPlaylistScore =
-          (playlistData.score * (playlistData.reviewsCount - 1) +
-            currentUserReview.score) /
-          playlistData.reviewsCount;
-      } else {
-        // Recalculate score considering the updated review
-        const totalScore = reviewsList.reduce(
-          (sum, review) => sum + review.score,
-          0
-        );
-        newPlaylistScore = totalScore / reviewsList.length;
-      }
+      const newTotalScore = reviewsList.reduce(
+        (sum, review) => sum + review.score,
+        0
+      );
+      const newPlaylistScore = newTotalScore / reviewsList.length;
 
-      // Update Firestore document
+      // Update the playlist document within the transaction
       transaction.update(playlistRef, {
         reviewsList: reviewsList,
         score: newPlaylistScore,
         reviewsCount: playlistData.reviewsCount,
       });
-      console.log("[updatePlaylistReview]: Ended succesfull!");
+
+      console.log("[currentDomainScore = " + currentDomainScore + "]");
+      console.log("[countPlaylistsScores = " + countPlaylistsScores + "]");
+      console.log("[newPlaylistScore = " + countPlaylistsScores + "]");
+      // Compute new domain score
+      const newDomainScore =
+        (currentDomainScore * countPlaylistsScores + newPlaylistScore) /
+        (countPlaylistsScores + 1);
+      console.log(
+        "[newDomainScore = " +
+          newDomainScore +
+          "] VS [currentDomainScore = " +
+          currentDomainScore +
+          "]"
+      );
+
+      const userRef = doc(
+        FIRESTORE_DB,
+        "users",
+        playlistData.userId.toString()
+      );
+      const domainKeys = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
+      const domainToUpdate = domainKeys[playlistData.domainId];
+
+      // Update the user's domain score
+      transaction.update(userRef, {
+        [`domainsOfTaste.${domainToUpdate}.score`]: newDomainScore,
+      });
     });
+    console.log(
+      "[updatePlaylistReview]: Playlist and domain score updated successfully!"
+    );
   } catch (error) {
     console.error("Failed to update playlist review:", error);
     throw error;

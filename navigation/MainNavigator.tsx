@@ -9,6 +9,7 @@ import { Unsubscribe, doc, onSnapshot } from "firebase/firestore";
 import { useSpotifyAuth } from "../SpotifyAuthContext";
 import { CurrentUserProvider } from "../CurrentUserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Text, View } from "react-native";
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function MainNavigator() {
@@ -16,6 +17,7 @@ function MainNavigator() {
   const { isSpotifyAuthenticated, setIsSpotifyAuthenticated } =
     useSpotifyAuth();
 
+  //------ USE EFFECT TO KEEP ------------------
   useEffect(() => {
     let firestoreUnsubscribe: Unsubscribe | null = null;
 
@@ -59,6 +61,7 @@ function MainNavigator() {
     };
   }, [isSpotifyAuthenticated]); // Include isSpotifyAuthenticated in the dependencies array
 
+  //--------------------- FOR DELETION ----------------------
   // useEffect(() => {
   //   let firestoreUnsubscribe: Unsubscribe | null = null;
   //   const spotifyAccessToken = await AsyncStorage.getItem("accessToken");
@@ -95,6 +98,9 @@ function MainNavigator() {
   //     }
   //   };
   // }, [isSpotifyAuthenticated]); // Include isSpotifyAuthenticated in the dependencies array
+
+  //--------------------- FOR DELETION ----------------------
+
   console.log("[ISAUTHENTICATED]: ", isAuthenticated);
   return (
     <NavigationContainer>
@@ -106,6 +112,33 @@ function MainNavigator() {
         <AuthNavigator />
       )}
     </NavigationContainer>
+
+    // <View
+    //   style={{
+    //     flex: 1,
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //   }}
+    // >
+    //   {isAuthenticated ? (
+    //     <Text>Yes Authenticated</Text>
+    //   ) : (
+    //     <Text>Not Authenticated</Text>
+    //   )}
+    // </View>
+    // <NavigationContainer>
+    //   <AuthNavigator />
+    // </NavigationContainer>
+
+    // <NavigationContainer>
+    //   <CurrentUserProvider>
+    //     <Tabs />
+    //   </CurrentUserProvider>
+    // </NavigationContainer>
+
+    //     <CurrentUserProvider>
+    //       <Tabs />
+    //     </CurrentUserProvider>
   );
 }
 

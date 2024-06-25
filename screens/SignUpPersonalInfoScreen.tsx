@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   Text,
   Alert,
+  Platform,
+  StatusBar,
 } from "react-native";
 import { useState } from "react";
 
@@ -18,6 +20,7 @@ import { normalize } from "../utils";
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigationProp } from "../types";
 import { sharedStyles } from "../sharedStyles";
+// import { StatusBar } from "expo-status-bar";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 
@@ -55,7 +58,11 @@ export default function SignUpPersonalInfo() {
       )}`
     );
 
-    if (inputDate <= minDate) {
+    if (
+      inputDate <= minDate &&
+      parseInt(monthOfBirth) <= 12 &&
+      parseInt(dayOfBirth) <= 31
+    ) {
       // The entered date is valid and on or after the minimum date
       // Proceed with further processing
       setDateOfBirth(inputDate);
@@ -87,8 +94,12 @@ export default function SignUpPersonalInfo() {
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
       style={styles.container}
     >
+      <StatusBar backgroundColor="transparent" barStyle="light-content" />
       <SafeAreaView
-        style={styles.container} // External Container
+        style={{
+          ...styles.container,
+          marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }}
       >
         <View
           style={{
@@ -432,7 +443,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
+    justifyContent: "flex-start",
     // backgroundColor: "blue",
   },
 });

@@ -12,6 +12,7 @@ import {
   FlatList,
   ImageBackground,
   Platform,
+  StatusBar,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -31,6 +32,7 @@ import {
 } from "../utils";
 import { DOMAINPOSTTYPE } from "../constants";
 import { normalize } from "../utils";
+// import { StatusBar } from "expo-status-bar";
 
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value: number) => width * (value / 390);
@@ -146,9 +148,21 @@ export default function PostsViewScreen() {
   return (
     <LinearGradient
       colors={[getScreenGradientFirstColor(domainOfTaste), "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
+      }}
     >
-      <SafeAreaView style={styles.container}>
+      <StatusBar
+        backgroundColor={getScreenGradientFirstColor(domainOfTaste)}
+        barStyle="light-content"
+      />
+      <SafeAreaView
+        style={{
+          ...styles.container,
+          // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }} // External Container
+      >
         {/* <ScrollView> */}
         <View
           style={{

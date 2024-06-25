@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ImageBackground,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import AddPlaylist from "./AddPlaylist";
@@ -24,7 +25,7 @@ import {
   normalize,
 } from "../../utils";
 import { getCurrentUserData } from "../../UserData";
-import { DOMAINID } from "../../constants";
+import { DOMAINID, MEDIATYPENAME } from "../../constants";
 import { Playlist, Post, SearchPlaylistProps } from "../../types";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { addPostToDB, getDomainsPlaylistsData } from "../../utilsFirebase";
@@ -225,34 +226,45 @@ function SearchPlaylist({
   };
 
   const handlePress = async () => {
-    const currentUserId = FIREBASE_AUTH.currentUser?.uid;
-    if (
-      currentUserId === undefined ||
-      domainId == undefined ||
-      selectedPlaylist?.playlistId == undefined
-    ) {
-      // Handle the case where signedUpUID is null
-      console.error(
-        'No "currentUserId" or "domaindId" or "selectedPlaylist?.playlistId" found'
+    try {
+      const currentUserId = FIREBASE_AUTH.currentUser?.uid;
+      if (
+        currentUserId === undefined ||
+        domainId == undefined ||
+        selectedPlaylist?.playlistId == undefined
+      ) {
+        throw new Error(
+          "ShareTheLove Error: No user or domain of taste or playlist was found"
+        );
+      }
+
+      const postObject: Post = {
+        userId: currentUserId,
+        domainId: domainId,
+        playlistId: selectedPlaylist?.playlistId,
+        moods: postSelectedMoodsTags,
+        caption: postInsertedCaption,
+        likesCount: 0,
+        creationTime: Date.now(),
+        mediaItem: postSelectedMedia,
+        likesUserIdsList: [],
+      };
+
+      await addPostToDB(postObject);
+      console.log("[USER]: ", postObject);
+      Alert.alert(
+        "Hurray! You've added your new " +
+          MEDIATYPENAME.get(domainId) +
+          " successfully.",
+        "It may take a short while to show up on your profile"
       );
-      return; // Exit the function or handle this case appropriately
+      onCloseAll();
+    } catch (error: any) {
+      Alert.alert(
+        "Something went wrong when creating your post: ",
+        String(error.message) + "\n\n...But no worries, just try again."
+      );
     }
-
-    const postObject: Post = {
-      userId: currentUserId,
-      domainId: domainId,
-      playlistId: selectedPlaylist?.playlistId,
-      moods: postSelectedMoodsTags,
-      caption: postInsertedCaption,
-      likesCount: 0,
-      creationTime: Date.now(),
-      mediaItem: postSelectedMedia,
-      likesUserIdsList: [],
-    };
-
-    await addPostToDB(postObject);
-    console.log("[USER]: ", postObject);
-    onCloseAll();
   };
 
   return (

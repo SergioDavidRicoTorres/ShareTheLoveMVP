@@ -431,8 +431,8 @@ export default function MediaItemInfo({
                 style={{
                   //   top: normalize(9),
                   //   position: "absolute",
-                  width: normalize(20),
-                  height: normalize(20),
+                  width: normalize(25),
+                  height: normalize(25),
                   //   right: normalize(9),
                 }}
               />
@@ -579,18 +579,17 @@ export default function MediaItemInfo({
               </View>
             </View>
           </View> */}
-          {post.mediaItem.media_type !== "Film" &&
-            post.mediaItem.media_type !== "TV Show" && (
-              <TouchableOpacity
-                style={{ bottom: 0, marginTop: normalize(20) }}
-                onPress={handleSpotifyButtonPress}
-              >
-                <Image
-                  style={{ width: normalize(202), height: normalize(65) }}
-                  source={require("../assets/icons/SpotifyButton.png")}
-                />
-              </TouchableOpacity>
-            )}
+          {post.domainId !== 1 && (
+            <TouchableOpacity
+              style={{ bottom: 0, marginTop: normalize(20) }}
+              onPress={handleSpotifyButtonPress}
+            >
+              <Image
+                style={{ width: normalize(202), height: normalize(65) }}
+                source={require("../assets/icons/SpotifyButton.png")}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </Modal>
     </View>

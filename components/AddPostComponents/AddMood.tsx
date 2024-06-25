@@ -18,6 +18,7 @@ import { normalize } from "../../utils";
 import { getCurrentUserData } from "../../UserData";
 import SearchPlaylist from "./SearchPlaylist";
 import { AddMoodProps } from "../../types";
+import { useCurrentUser } from "../../CurrentUserContext";
 
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
@@ -30,6 +31,18 @@ function AddMood({ visible, onClose }: AddMoodProps) {
   const [isSearchPlaylistModalVisible, setIsSearchPlaylistModalVisible] =
     useState(false);
   // Next Modal show Function
+  const { currentUser } = useCurrentUser();
+  if (!currentUser) {
+    // Handle the case where currentUser is null
+    // This could be a loading indicator, a message, or a redirect
+    return <div>Loading user data...</div>;
+  }
+  const userId = currentUser?.userId;
+  if (!userId) {
+    // Handle the case where currentUser is null
+    // This could be a loading indicator, a message, or a redirect
+    return <div>Loading userId...</div>;
+  }
   // const toggleSearchPlaylistModal = () => {
   //   setIsSearchPlaylistModalVisible(!isSearchPlaylistModalVisible);
   // };
@@ -97,7 +110,7 @@ function AddMood({ visible, onClose }: AddMoodProps) {
                 >
                   {/* Back Button Image */}
                   <Image
-                    source={require("../../assets/icons/CancelButtonPurple.png")}
+                    source={require("../../assets/icons/CancelButtonLightPurple.png")}
                     style={{
                       top: 9,
                       position: "absolute",
@@ -148,7 +161,7 @@ function AddMood({ visible, onClose }: AddMoodProps) {
                       borderRadius: normalize(100),
                     }}
                     source={{
-                      uri: getCurrentUserData().profilePicture,
+                      uri: currentUser.profilePicture,
                     }}
                   />
                 </View>
@@ -215,9 +228,9 @@ function AddMood({ visible, onClose }: AddMoodProps) {
                       height: normalize(25),
                       borderRadius: normalize(5),
                       borderWidth: normalize(4),
-                      borderColor: "rgba(58, 17, 90, 0.75)",
+                      borderColor: "rgba(156, 75, 255, 1)",
                       backgroundColor: isChecked
-                        ? "rgba(58, 17, 90, 1)"
+                        ? "rgba(156, 75, 255, 1)"
                         : "rgba(58, 17, 90, 0)",
                       justifyContent: "center",
                     }}
@@ -238,7 +251,8 @@ function AddMood({ visible, onClose }: AddMoodProps) {
                 <View style={{ width: normalize(273), height: normalize(43) }}>
                   <Text
                     style={{
-                      color: "rgba(58, 17, 90, 0.75)",
+                      // color: "rgba(58, 17, 90, 0.75)",
+                      color: "rgba(156, 75, 255, 1)",
                       fontSize: normalize(12),
                       fontStyle: "normal",
                       fontWeight: "500",
@@ -307,7 +321,9 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
     width: normalize(363),
     height: normalize(201),
-    backgroundColor: "rgba(255, 184, 0, 1)",
+    backgroundColor: "rgba(22, 0, 39, 1)",
+    borderWidth: normalize(4),
+    borderColor: "rgba(156, 75, 255, 1)",
   },
   modalContent: {
     alignItems: "center",
@@ -323,7 +339,7 @@ const styles = StyleSheet.create({
     borderRadius: normalize(15),
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "background: rgba(152, 152, 152, 1)",
+    backgroundColor: "rgba(152, 152, 152, 1)",
     bottom: normalize(12),
   },
   touchableChooseButtonContainer: {

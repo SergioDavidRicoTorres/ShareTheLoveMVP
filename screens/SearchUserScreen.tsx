@@ -8,6 +8,8 @@ import {
   Dimensions,
   FlatList,
   TextInput,
+  Platform,
+  StatusBar,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,6 +20,7 @@ import { normalize } from "../utils";
 import { HomeNavigationProp, ProfileNavigationProp, User } from "../types";
 import { getUsers } from "../utilsData";
 import { fetchAllUsers } from "../utilsFirebase";
+// import { StatusBar } from "expo-status-bar";
 
 export default function SearchUser() {
   // const USERS = getUsers();
@@ -60,15 +63,27 @@ export default function SearchUser() {
   return (
     <LinearGradient
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingTop: Platform.OS === "android" ? normalize(50) : 0,
+      }}
+      // style={styles.container}
     >
-      <SafeAreaView style={styles.container}>
+      <StatusBar
+        backgroundColor="rgba(105, 51, 172, 1)"
+        barStyle="light-content"
+      />
+      <SafeAreaView
+        style={{
+          ...styles.container,
+          // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }} // External Container
+      >
         <View
           style={{
             // backgroundColor: "white",
             width,
             marginBottom: normalize(5),
-            alignItems: "flex-end",
           }}
         >
           {/* Back Button */}
@@ -76,15 +91,15 @@ export default function SearchUser() {
             // backButtonContainer
             onPress={() => homeNavigation.goBack()}
             style={{
-              right: normalize(8),
+              left: normalize(10),
             }}
           >
             {/* Back Button Image */}
             <Image
-              source={require("../assets/icons/CancelButtonLightPurple.png")}
+              source={require("../assets/icons/ArrowBackLightPurple.png")}
               style={{
-                width: normalize(28),
-                height: normalize(28),
+                width: normalize(20),
+                height: normalize(38),
               }}
             />
           </TouchableOpacity>
@@ -309,10 +324,10 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     marginHorizontal: normalize(16),
-    height: normalize(31),
+    // height: normalize(31),
     borderRadius: normalize(20),
     paddingHorizontal: normalize(10),
-    paddingVertical: normalize(5),
+    paddingVertical: normalize(2),
     marginTop: normalize(20),
     backgroundColor: "rgba(105, 51, 172, 1)",
     alignItems: "center",

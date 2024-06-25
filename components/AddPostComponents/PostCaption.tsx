@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
   },
   outerMoodsContainer: {
     flexDirection: "row",
-    height: normalize(40),
+    // height: normalize(40),
     marginTop: normalize(15),
     alignItems: "center",
   },

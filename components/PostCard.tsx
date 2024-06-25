@@ -32,7 +32,7 @@ export default function PostCard({ post }: PostCardProps) {
   const [currentPost, setCurrentPost] = useState<Post>(post);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState(DEFAULT_USER);
-  console.log("FUK YESSSSS");
+  // console.log("FUK YESSSSS");
 
   useEffect(() => {
     // Ensure currentUser and currentUser.userId are defined
@@ -80,7 +80,7 @@ export default function PostCard({ post }: PostCardProps) {
     }
   };
 
-  console.log("[USER]: ", user);
+  // console.log("[USER]: ", user);
   // const user = getUserData(0);    //const user = getUserData(currentPost.userId);
 
   const getLikeComponent = (postType?: string) => {
@@ -389,7 +389,7 @@ export default function PostCard({ post }: PostCardProps) {
                 ? normalize(450)
                 : normalize(300),
             borderRadius: normalize(15),
-            borderColor: getMoodTextColor(
+            borderColor: getMoodContainerColor(
               DOMAINPOSTTYPE.get(currentPost.domainId)
             ),
             borderWidth: normalize(2),

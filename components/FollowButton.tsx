@@ -16,12 +16,6 @@ const FollowButton = ({ profileUserId }: FollowButtonProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const { currentUser } = useCurrentUser();
   const currentUserId = currentUser?.userId;
-  if (!currentUserId) {
-    // Handle the case where currentUser is null
-    // This could be a loading indicator, a message, or a redirect
-    return <div>Loading userId...</div>;
-  }
-
   useEffect(() => {
     const checkIfFollowing = async () => {
       try {
@@ -40,8 +34,11 @@ const FollowButton = ({ profileUserId }: FollowButtonProps) => {
     }
   }, [currentUser, profileUserId]);
 
-  // Define followUser and unfollowUser functions here or import them
-
+  if (!currentUserId) {
+    // Handle the case where currentUser is null
+    // This could be a loading indicator, a message, or a redirect
+    return <Text>Loading userId...</Text>;
+  }
   const handleFollow = async () => {
     try {
       await followUser(currentUserId, profileUserId);
@@ -59,6 +56,8 @@ const FollowButton = ({ profileUserId }: FollowButtonProps) => {
       console.error("Unfollow operation failed:", error);
     }
   };
+
+  // Define followUser and unfollowUser functions here or import them
 
   if (isLoading) {
     return <Text>Loading...</Text>; // or any other loading indicator

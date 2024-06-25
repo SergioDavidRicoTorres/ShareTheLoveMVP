@@ -5,6 +5,7 @@ import SignUpPersonalInfo from "../screens/SignUpPersonalInfoScreen";
 import SignUpEnd from "../screens/SignUpEndScreen";
 import AuthEmailPassword from "../screens/AuthEmailPasswordScreen";
 import { AuthNavigatorParamsList, AuthNavigatorProps } from "../types";
+import DebuggingScreen from "../screens/DebuggingScreen";
 
 const Stack = createStackNavigator<AuthNavigatorParamsList>();
 
@@ -15,6 +16,7 @@ const AuthNavigator = () => {
       // initialRouteName={initialRouteName}
       screenOptions={{ headerShown: false }}
     >
+      {/* <Stack.Screen name="DebuggingScreen" component={DebuggingScreen} /> */}
       <Stack.Screen name="AuthScreen" component={Auth} />
       <Stack.Screen
         name="AuthEmailPasswordScreen"

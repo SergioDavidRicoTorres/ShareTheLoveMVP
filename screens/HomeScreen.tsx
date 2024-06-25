@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -7,6 +7,9 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  Platform,
+  StatusBar,
+  RefreshControl,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,6 +20,7 @@ import { HomeNavigationProp, Post } from "../types";
 import { getChronologicallySortedPosts, getPosts } from "../utilsData";
 import { fetchLastPosts } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
+// import { StatusBar } from "expo-status-bar";
 
 const postCardsExamples = [
   {
@@ -96,22 +100,31 @@ const postCardsExamples = [
 // const feedItemSeparatorHeight = width * 0.089;
 export default function HomeScreen() {
   const { currentUser } = useCurrentUser();
-
+  const { width } = Dimensions.get("window"); // screen width constant
   const navigation = useNavigation<HomeNavigationProp>();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [refresh, setRefresh] = useState(false);
 
+  // Fetch data function
+  const fetchAndSetPosts = async () => {
+    const followingUsersList = currentUser?.followingUsersList ?? [];
+    const fetchedPosts = await fetchLastPosts(followingUsersList, 50);
+    setPosts(fetchedPosts);
+  };
+
+  // Initial data fetch
   useEffect(() => {
-    const fetchAndSetPosts = async () => {
-      // console.log("[HomeScreen]: posts have fetched!")
-      const followingUsersList = currentUser?.followingUsersList ?? [];
-      const fetchedPosts = await fetchLastPosts(followingUsersList, 50);
-      console.log(fetchedPosts);
-      setPosts(fetchedPosts);
-    };
-
     fetchAndSetPosts();
   }, [currentUser]);
 
+  // Refresh function
+  const pullRefresh = useCallback(async () => {
+    setRefresh(true);
+    await fetchAndSetPosts();
+    setTimeout(() => {
+      setRefresh(false);
+    }, 5000);
+  }, [currentUser]); // Ensure this depends on currentUser if your fetching logic needs it
   // console.log(AuthSession.getRedirectUrl());  //outputs the redirect uri link for the spotify API
   // firestore()
   // .collection('posts')
@@ -123,13 +136,24 @@ export default function HomeScreen() {
   //   }));
   //   // Now 'posts' is an array of objects, each with an 'id' property
   // });
+  console.log("width: ", width);
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
+      }}
     >
+      <StatusBar
+        backgroundColor="rgba(105, 51, 172, 1)"
+        barStyle="light-content"
+      />
       <SafeAreaView
-        style={styles.container} // External Container
+        style={{
+          ...styles.container,
+          marginTop: Platform.OS === "android" ? normalize(10) : 0,
+        }} // External Container
       >
         <View
           style={{
@@ -171,6 +195,12 @@ export default function HomeScreen() {
             )}
             keyExtractor={(item, index) => index.toString()} // keyExtractor={(item) => item.id}
             data={posts}
+            refreshControl={
+              <RefreshControl
+                refreshing={refresh}
+                onRefresh={() => pullRefresh()}
+              />
+            }
             renderItem={({ item: post }) => (
               // Post card
               <PostCard post={post} />
@@ -187,7 +217,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "blue",
   },
 
   appTitle: {

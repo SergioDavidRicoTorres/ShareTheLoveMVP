@@ -10,7 +10,10 @@ import {
   Text,
   TextInput,
   Alert,
+  Platform,
+  StatusBar,
 } from "react-native";
+// import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -62,6 +65,7 @@ import { sharedStyles } from "../sharedStyles";
 
 const signInEmailAndPassword = async (email: string, password: string) => {
   try {
+    // console.log("GETTING HERE");
     const userCredential = await signInWithEmailAndPassword(
       FIREBASE_AUTH,
       email,
@@ -71,21 +75,22 @@ const signInEmailAndPassword = async (email: string, password: string) => {
 
     // User is successfully signed in
     // ...
-    console.log("User has succesfully signed is!!: ");
-    console.log(
-      "[user.displayName]: ",
-      user.displayName,
-      ", [user.uid]: ",
-      user.uid
-    );
+    // console.log("User has succesfully signed is!!: ");
+    // console.log(
+    //   "[user.displayName]: ",
+    //   user.displayName,
+    //   ", [user.uid]: ",
+    //   user.uid
+    // );
 
     AsyncStorage.setItem("uid", user.uid);
     return true;
   } catch (error: any) {
     console.log("ERROR at signInEmailAndPassword!");
     console.error("Error.code: ", error.code);
-    console.error("Error.message: ", error.message);
-    return false;
+    console.error("Error.message : ", error.message);
+    throw error;
+    // return false;
   }
 };
 
@@ -100,20 +105,21 @@ const signUpEmailAndPassword = async (email: string, password: string) => {
 
     // User is successfully signed up
     // ...
-    console.log("User is succesfully signed up!!: ");
-    console.log(
-      "[user.displayName]: ",
-      user.displayName,
-      ", [user.uid]: ",
-      user.uid
-    );
+    // console.log("User is succesfully signed up!!: ");
+    // console.log(
+    //   "[user.displayName]: ",
+    //   user.displayName,
+    //   ", [user.uid]: ",
+    //   user.uid
+    // );
     AsyncStorage.setItem("uid", user.uid);
     return true;
   } catch (error: any) {
     console.log("ERROR at signUpEmailAndPassword!");
     console.error("Error.code: ", error.code);
     console.error("Error.message: ", error.message);
-    return false;
+    throw error;
+    // return false;
   }
 };
 
@@ -231,17 +237,29 @@ const AuthEmailPassword = () => {
           "The entered password is too short, it has to be at least 6 characters long."
         );
       }
-    } catch (error) {
+    } catch (error: any) {
+      // Alert.alert("Incorrect email address or password. Please try again.");
+      Alert.alert(
+        "Oops somthing went wrong: ",
+        String(error.message) + "\n\n...But no worries, just try again."
+      );
       console.error("Authentication error:", error);
     }
   };
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingTop: Platform.OS === "android" ? normalize(50) : 0,
+      }}
     >
+      <StatusBar backgroundColor="transparent" barStyle="light-content" />
       <SafeAreaView
-        style={styles.container} // External Container
+        style={{
+          ...styles.container,
+          marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }}
       >
         <View
           style={{
@@ -540,6 +558,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "flex-start",
   },
 });
 

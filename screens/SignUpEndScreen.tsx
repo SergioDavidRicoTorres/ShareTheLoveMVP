@@ -6,6 +6,9 @@ import {
   Image,
   TouchableOpacity,
   Text,
+  Platform,
+  StatusBar,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -26,6 +29,7 @@ import * as ImagePicker from "expo-image-picker";
 import { FIREBASE_STORAGE, FIRESTORE_DB } from "../firebaseConfig";
 import { addUserToDB, pickImage, uploadImage } from "../utilsFirebase";
 import { sharedStyles } from "../sharedStyles";
+// import { StatusBar } from "expo-status-bar";
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
@@ -167,55 +171,72 @@ export default function SignUpEnd() {
   // };
 
   const handlePress = async () => {
-    const uploadedImageUrl = await uploadImage(selectedImageUri);
-    const signedUpUID = await AsyncStorage.getItem("uid");
+    try {
+      const uploadedImageUrl = await uploadImage(selectedImageUri);
+      const signedUpUID = await AsyncStorage.getItem("uid");
 
-    if (signedUpUID === null) {
-      // Handle the case where signedUpUID is null
-      console.error("No UID found");
-      return; // Exit the function or handle this case appropriately
+      if (signedUpUID === null) {
+        // Handle the case where signedUpUID is null
+        console.error("No UID found");
+        return; // Exit the function or handle this case appropriately
+      }
+
+      const userObject: User = {
+        name: name,
+        profileName: profileName,
+        profilePicture: uploadedImageUrl,
+        dateOfBirth: new Date(dateOfBirth),
+        profileDescription: generalDescription,
+        followersCount: 0,
+        followingCount: 0,
+        domainsOfTaste: {
+          Music: {
+            isActive: musicIsSelected,
+            domainId: 0,
+            score: 0,
+          },
+          FilmsTVShows: {
+            isActive: filmsTVShowsIsSelected,
+            domainId: 1,
+            score: 0,
+          },
+          PodcastsEpisodes: {
+            isActive: podcastsEpisodesIsSelected,
+            domainId: 2,
+            score: 0,
+          },
+        },
+        followersUsersList: [],
+        followingUsersList: [],
+      };
+      console.log("WE'RE GETTING HERE");
+      await addUserToDB(userObject, signedUpUID);
+      // console.log("[USER]: ", userObject);
+      Alert.alert(
+        "Awesome! You've successfully signed up. Get started by checking out your profile."
+      );
+      mainNavigation.navigate("Tabs");
+    } catch (error) {
+      Alert.alert(
+        "Oops! We couldn't add the new user. Please try again.",
+        String(error)
+      );
     }
-
-    const userObject: User = {
-      name: name,
-      profileName: profileName,
-      profilePicture: uploadedImageUrl,
-      dateOfBirth: new Date(dateOfBirth),
-      profileDescription: generalDescription,
-      followersCount: 0,
-      followingCount: 0,
-      domainsOfTaste: {
-        Music: {
-          isActive: musicIsSelected,
-          domainId: 0,
-          score: 0,
-        },
-        FilmsTVShows: {
-          isActive: filmsTVShowsIsSelected,
-          domainId: 1,
-          score: 0,
-        },
-        PodcastsEpisodes: {
-          isActive: podcastsEpisodesIsSelected,
-          domainId: 2,
-          score: 0,
-        },
-      },
-      followersUsersList: [],
-      followingUsersList: [],
-    };
-    console.log("WE'RE GETTING HERE");
-    await addUserToDB(userObject, signedUpUID);
-    console.log("[USER]: ", userObject);
-    mainNavigation.navigate("Tabs");
   };
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
+      }}
     >
+      <StatusBar backgroundColor="transparent" barStyle="light-content" />
       <SafeAreaView
-        style={styles.container} // External Container
+        style={{
+          ...styles.container,
+          marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }}
       >
         <View
           style={{
@@ -476,6 +497,7 @@ export default function SignUpEnd() {
               borderWidth: normalize(4),
               shadowColor: "rgba(156, 75, 255, 1)",
               bottom: normalize(40),
+              // bottom: Platform.OS == "android" ? normalize(20) : normalize(40),
             }}
           >
             <Text style={sharedStyles.chooseButtonText}>ready to go!</Text>
@@ -485,6 +507,7 @@ export default function SignUpEnd() {
             style={{
               ...sharedStyles.chooseButtonContainer,
               bottom: normalize(40),
+              // bottom: Platform.OS == "android" ? normalize(20) : normalize(40),
             }}
           >
             <Text style={sharedStyles.chooseButtonText}>ready to go!</Text>
@@ -499,5 +522,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "flex-start",
   },
 });

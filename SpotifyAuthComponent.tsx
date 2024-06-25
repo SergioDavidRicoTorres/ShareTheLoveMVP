@@ -15,7 +15,6 @@ import { normalize } from "./utils";
 import { useSpotifyAuth } from "./SpotifyAuthContext";
 
 // Place it inside a useEffect to ensure it's called only once
-//   const redirectUri = AuthSession.makeRedirectUri({ scheme: 'ShareTheLoveMVP://', path: 'redirect'});
 //   console.log("this is the other redirectUri: ", redirectUri)
 
 export const SpotifyAuthComponent = ({
@@ -23,10 +22,8 @@ export const SpotifyAuthComponent = ({
 }: SpotifyAuthComponentProp) => {
   useEffect(() => {
     WebBrowser.maybeCompleteAuthSession();
-    // console.log("CHECKPOINT useEffect!");
   }, []);
   const navigation = useNavigation<AuthNavigationProp>();
-  // const mainNavigation = useNavigation<MainNavigationProp>();
   const { setIsSpotifyAuthenticated } = useSpotifyAuth();
 
   const login = async () => {

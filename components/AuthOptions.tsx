@@ -29,10 +29,10 @@ export default function AuthOptions({
             alignSelf: "center",
             alignItems: "center",
             width: normalize(363),
-            height: normalize(578),
+            // height: normalize(578),
             backgroundColor: "rgba(22, 0, 39, 1)",
             borderRadius: normalize(20),
-            paddingTop: normalize(15),
+            paddingVertical: normalize(15),
             paddingHorizontal: normalize(10),
           }}
         >
@@ -75,7 +75,7 @@ export default function AuthOptions({
               padding: normalize(10),
             }}
           >
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 navigation.navigate("SignUpPersonalInfoScreen");
                 onClose();
@@ -105,7 +105,7 @@ export default function AuthOptions({
               >
                 {authType} with Google
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("AuthEmailPasswordScreen", {
@@ -139,7 +139,7 @@ export default function AuthOptions({
                 {authType} with Email
               </Text>
             </TouchableOpacity>
-            <View
+            {/* <View
               style={{
                 width: normalize(300),
                 paddingVertical: normalize(10),
@@ -219,7 +219,7 @@ export default function AuthOptions({
               >
                 {authType} with Apple
               </Text>
-            </View>
+            </View> */}
           </View>
           <View
             style={{

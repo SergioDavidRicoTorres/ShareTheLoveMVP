@@ -10,6 +10,8 @@ import {
   Image,
   TouchableOpacity,
   ImageBackground,
+  Platform,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -25,6 +27,7 @@ import { FIREBASE_AUTH } from "../firebaseConfig";
 import { getCarouselNumColumns, normalize } from "../utils";
 import AddMood from "../components/AddPostComponents/AddMood";
 import AddPlaylist from "../components/AddPostComponents/AddPlaylist";
+// import { StatusBar } from "expo-status-bar";
 
 const { width } = Dimensions.get("window"); // screen width constant
 
@@ -171,9 +174,21 @@ export default function AddPlaylistScreen() {
   return (
     <LinearGradient
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingTop: Platform.OS === "android" ? normalize(50) : 0,
+      }}
     >
-      <SafeAreaView style={styles.container}>
+      <StatusBar
+        backgroundColor="rgba(105, 51, 172, 1)"
+        barStyle="light-content"
+      />
+      <SafeAreaView
+        style={{
+          ...styles.container,
+          marginTop: Platform.OS === "android" ? normalize(10) : 0,
+        }} // External Container
+      >
         <AddPlaylist
           visible={true}
           onClose={navigation.goBack}

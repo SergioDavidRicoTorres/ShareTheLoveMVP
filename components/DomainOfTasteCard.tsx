@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, Image, FlatList } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  FlatList,
+  Dimensions,
+} from "react-native";
 import {
   getButtonsAccentColor,
   getDomainOfTasteScoreIcon,
@@ -35,6 +42,7 @@ export default function DomainOfTasteCard({
 }: DomainOfTasteCardProp) {
   // console.log("DOMAINPOSTTYPE.get(category.domainId): ", DOMAINPOSTTYPE.get(category.domainId))
   // console.log("category.domainId ", category.domainId)
+  const { width } = Dimensions.get("window");
 
   const currentRouteName = useNavigationState((state) => {
     return state.routes[state.index].name;
@@ -82,8 +90,8 @@ export default function DomainOfTasteCard({
           "rgba(58, 17, 90, 1)",
         ]}
         style={{
-          width: normalize(270),
-          height: normalize(500),
+          width: width * 0.9,
+          height: width * 1.8,
           borderRadius: normalize(15),
           alignItems: "center",
           borderColor: getMoodContainerColor(
@@ -171,7 +179,9 @@ export default function DomainOfTasteCard({
         <FlatList
           style={{
             marginTop: normalize(18),
-            width: normalize(251),
+            // marginHorizontal: 0,
+            width: width * 0.8,
+            // backgroundColor: "white",
           }}
           // snapToAlignment={normalize(300)}
           scrollEnabled={false}
@@ -182,7 +192,7 @@ export default function DomainOfTasteCard({
           renderItem={({ item: playlist }) => (
             <View
               style={{
-                width: normalize(251),
+                // width: normalize(251),
                 // height: normalize(50),
                 paddingVertical: 0,
                 backgroundColor: getMoodContainerColor(
@@ -194,6 +204,7 @@ export default function DomainOfTasteCard({
                   DOMAINPOSTTYPE.get(playlist.domainId)
                 ),
                 borderWidth: normalize(2),
+                alignItems: "center",
               }}
             >
               {playlist.image && (
@@ -201,8 +212,8 @@ export default function DomainOfTasteCard({
                   source={{ uri: playlist.image }}
                   resizeMethod="resize"
                   style={{
-                    width: normalize(50),
-                    height: normalize(50),
+                    width: normalize(55),
+                    height: normalize(55),
                     borderTopLeftRadius: normalize(5),
                     borderBottomLeftRadius: normalize(5),
                   }}
@@ -211,7 +222,7 @@ export default function DomainOfTasteCard({
               <View
                 style={{
                   width: normalize(165),
-                  height: normalize(20),
+                  // height: normalize(20),
                   marginLeft: normalize(15),
                 }}
               >
@@ -230,9 +241,11 @@ export default function DomainOfTasteCard({
                   scrollEnabled={false}
                   keyExtractor={(playlist, index) => index.toString()}
                   style={{
-                    marginTop: normalize(7),
+                    marginTop: normalize(4),
+                    marginBottom: normalize(5),
                     width: normalize(186),
-                    height: normalize(18),
+                    // height: normalize(18),
+                    // paddingVertical: normalize(0),
                     gap: normalize(3),
                     flexDirection: "row",
                   }}

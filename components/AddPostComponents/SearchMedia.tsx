@@ -10,6 +10,7 @@ import {
   Image,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 // Spotify Authorization data
@@ -34,6 +35,7 @@ import { searchSong, searchPodcastEpisode } from "../../utilsData";
 import { SearchMediaProps } from "../../types";
 import { checkTokenValidity } from "../../AuthorizationSpotify";
 import { sharedStyles } from "../../sharedStyles";
+import { MEDIATYPENAME } from "../../constants";
 
 // const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
@@ -235,7 +237,7 @@ function SearchMedia({
       {/* Modal(SearchMedia) */}
       <Modal visible={visible} animationType="slide" transparent>
         {/* Modal Container */}
-        <View style={styles.modalContainer}>
+        <View style={{ ...styles.modalContainer }}>
           {/* Modal Background Gradient */}
           <LinearGradient
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
@@ -243,6 +245,7 @@ function SearchMedia({
               ...styles.backgroundGradient,
               borderColor: getButtonsAccentColor(postType),
               borderWidth: normalize(3),
+              // bottom: Platform.OS === "android" ? normalize(15) : 0,
             }}
           >
             {/* Modal Content */}
@@ -335,7 +338,7 @@ function SearchMedia({
                   onSubmitEditing={handleEnterPress}
                   returnKeyType="done"
                   style={styles.searchInput}
-                  placeholder={`Search ${postType}...`}
+                  placeholder={`Search ${MEDIATYPENAME.get(domainId)}...`}
                 />
               </View>
               {/* Search Result List */}
@@ -374,6 +377,7 @@ function SearchMedia({
                                   getMoodContainerColor(postType),
                                 borderColor: getMoodContainerColor(postType),
                                 borderWidth: normalize(3),
+                                alignItems: "center",
                               }, // Change style if selected
                         ]}
                       >
@@ -382,8 +386,8 @@ function SearchMedia({
                             // searchResultItemImage
                             source={getItemImage(item, domainId)}
                             style={{
-                              width: normalize(50),
-                              height: normalize(50),
+                              width: normalize(55),
+                              height: normalize(55),
                               borderTopLeftRadius: normalize(5),
                               borderBottomLeftRadius: normalize(5),
                             }}
@@ -395,12 +399,12 @@ function SearchMedia({
                         >
                           <Text
                             // searchResultItemText
-                            numberOfLines={1}
+                            numberOfLines={domainId == 2 ? 2 : 1}
                             style={styles.searchResultItemText}
                           >
                             {getItemTitle(item, domainId)}
                           </Text>
-                          {getItemSubTitle(item, domainId)}
+                          {domainId != 2 && getItemSubTitle(item, domainId)}
                         </View>
                       </View>
                     </TouchableWithoutFeedback>
@@ -429,7 +433,7 @@ function SearchMedia({
             <View style={sharedStyles.chooseButtonContainer}>
               <Text style={sharedStyles.chooseButtonText}>
                 Choose
-                {" " + postType}
+                {" " + MEDIATYPENAME.get(domainId)}
               </Text>
             </View>
           ) : (
@@ -571,7 +575,8 @@ const styles = StyleSheet.create({
   },
   searchResultItemContainer: {
     width: normalize(339),
-    height: normalize(50),
+    // height: normalize(50),
+    alignItems: "center",
     borderRadius: normalize(6),
     flexDirection: "row",
     backgroundColor: "rgba(203, 203, 203, 0.5)",
@@ -584,14 +589,13 @@ const styles = StyleSheet.create({
   // },
   searchResultItemImage: {
     width: normalize(50),
-    height: normalize(50),
+    // height: normalize(50),
     borderTopLeftRadius: normalize(5),
     borderBottomLeftRadius: normalize(5),
   },
   searchResultItemTextContainer: {
     width: normalize(265),
-    marginTop: normalize(4),
-    marginBottom: normalize(4),
+    paddingVertical: normalize(4),
     marginLeft: normalize(15),
   },
   searchResultItemText: {

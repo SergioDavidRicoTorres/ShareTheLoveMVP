@@ -8,6 +8,8 @@ import {
   Dimensions,
   ScrollView,
   FlatList,
+  Platform,
+  StatusBar,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -15,7 +17,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 // import { getCurrentUserData } from "../UserData";
 import Settings from "../components/Settings";
 import { useEffect, useState } from "react";
-import Carousel from "react-native-snap-carousel";
+// import Carousel from "react-native-snap-carousel";
+import Carousel from "react-native-reanimated-carousel";
 
 import { normalize } from "../utils";
 import {
@@ -31,18 +34,21 @@ import AddPlaylist from "../components/AddPostComponents/AddPlaylist";
 import DomainOfTasteCard from "../components/DomainOfTasteCard";
 import { fetchUserById } from "../utilsFirebase";
 import FollowButton from "../components/FollowButton";
+import { interpolate, useAnimatedStyle } from "react-native-reanimated";
+// import { StatusBar } from "expo-status-bar";
 
-const { width } = Dimensions.get("window"); // screen width constant
+const { width, height } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
 export default function ExternalProfileScreen() {
   const route = useRoute<ExternalProfileScreenRouteProp>();
-  const { user } = route.params;
+  const user = route.params?.user ?? DEFAULT_USER;
   const userId: string =
     user.userId !== undefined ? user.userId : "Error: NO USER ID";
   const [domainsArray, setDomainsArray] = useState<Domain[]>([]);
   const navigation = useNavigation();
   const [isFollowing, setIsFollowing] = useState(false);
+
   // console.log("userId: ", userId);
   // const [user, setUser] = useState<User>(DEFAULT_USER); // State to store the user data
   // Optional Modal Boolean State
@@ -90,9 +96,18 @@ export default function ExternalProfileScreen() {
   return (
     <LinearGradient
       colors={["rgba(1, 4, 43, 1)", "rgba(69, 22, 129, 1)"]} // Specify the colors for the gradient
-      style={styles.container}
+      style={{
+        ...styles.container,
+        // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
+      }}
     >
-      <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="rgba(1, 4, 43, 1)" barStyle="light-content" />
+      <SafeAreaView
+        style={{
+          ...styles.container,
+          // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        }} // External Container
+      >
         <View
           style={{
             // backgroundColor: getScreenGradientFirstColor(domainOfTaste),
@@ -220,84 +235,7 @@ export default function ExternalProfileScreen() {
                 marginTop: normalize(18),
               }}
             >
-              <FollowButton profileUserId={userId}></FollowButton>
-              {/* <TouchableOpacity
-                  style={{
-                    shadowColor: "rgba(156, 75, 255, 1)",
-                    shadowOffset: {
-                      width: 0,
-                      height: 0,
-                    },
-                    shadowOpacity: isFollowing ? 0:1,
-                    shadowRadius: 10,
-                    borderRadius: normalize(15),
-                    backgroundColor: "rgba(156, 75, 255, 1)",
-
-                  }}
-                  onPress={handlePress}
-                >
-                  {!isFollowing ? 
-                  <LinearGradient
-                    colors={[ "rgba(156, 75, 255, 1)", "rgba(95, 110, 231, 1)"]} // Specify the colors for the gradient
-                    style={{
-                      paddingVertical: normalize(2),
-                      paddingHorizontal: normalize(30),
-                      borderRadius: normalize(15),
-                      justifyContent: "center",
-                      alignItems: "center",
-                      // backgroundColor: "rgba(156, 75, 255, 1)",
-                      borderColor: "rgba(91, 46, 167, 1)",
-                      borderWidth: normalize(5),
-                    }}
-                  >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: normalize(25),
-                      fontWeight: "700",
-                    }}
-                    >
-                    Follow
-                  </Text>
-                  </LinearGradient>
-                  :
-                <View
-                  style={{
-                    paddingVertical: normalize(2),
-                    paddingHorizontal: normalize(30),
-                    borderRadius: normalize(15),
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "rgba(1, 4, 43, 1)",
-                    borderColor: "rgba(91, 46, 167, 1)",
-                    borderWidth: normalize(5),
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "rgba(186, 129, 255, 1)",
-                      fontSize: normalize(25),
-                      fontWeight: "700",
-                    }}
-                    >
-                    Following
-                  </Text>
-                </View>
-                }
-                </TouchableOpacity> */}
-              {/* <View style={{ justifyContent: "center", left: normalize(11) }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      toggleSettingsModal();
-                    }}
-                    style={{ position: "absolute" }}
-                  >
-                    <Image
-                      source={require("../assets/icons/ProfileSettingsButton.png")}
-                      style={{ width: normalize(40), height: normalize(35) }}
-                    />
-                  </TouchableOpacity>
-                </View> */}
+              <FollowButton profileUserId={userId} />
             </View>
             <View
               style={{
@@ -344,14 +282,21 @@ export default function ExternalProfileScreen() {
             </View>
             <View
               style={{
-                marginTop: normalize(25),
-                marginBottom: normalize(150),
+                marginTop: normalize(0),
+                marginBottom: normalize(0),
                 alignItems: "center",
                 // backgroundColor: "black"
               }}
             >
-              <Carousel
-                data={domainsArray}
+              {/* <Carousel
+                data={data}
+                renderItem={renderItem}
+                sliderWidth={width}
+                itemWidth={width * 0.75}
+                layout={"default"}
+              /> */}
+              {/* <Carousel
+                data={[0, 1, 2]}
                 sliderWidth={width}
                 firstItem={0}
                 inactiveSlideOpacity={0.5} // Sets the opacity of inactive items to 60%
@@ -363,7 +308,7 @@ export default function ExternalProfileScreen() {
                   //   style={{
                   //     width: 100,
                   //     height: 100,
-                  //     backgroundColor: "white"
+                  //     backgroundColor: "white",
                   //   }}
                   // />
                   <DomainOfTasteCard
@@ -374,9 +319,70 @@ export default function ExternalProfileScreen() {
                     toggleAddPlaylistModal={toggleAddPlaylistModal}
                     userId={userId}
                     isAddPlaylistModalVisible={isAddPlaylistModalVisible}
-                  ></DomainOfTasteCard>
+                  />
                 )}
+              /> */}
+              {/* <Carousel
+                data={domainsArray}
+                width={width}
+                height={normalize(500)}
+                autoPlay={false}
+                onSnapToItem={(index) => console.log("current index:", index)}
+                renderItem={({ item: category }) => (
+                  <View
+                    style={{
+                      width: normalize(270), // Adjusting item width
+                      alignItems: "center", // Center aligning the content
+                      marginLeft: (width - normalize(270)) / 2,
+                    }}
+                  >
+                    <DomainOfTasteCard
+                      isCurrentUser={false}
+                      navigation={navigation}
+                      category={category}
+                      user={user}
+                      toggleAddPlaylistModal={toggleAddPlaylistModal}
+                      userId={userId}
+                      isAddPlaylistModalVisible={isAddPlaylistModalVisible}
+                    />
+                  </View>
+                )}
+                pagingEnabled
+                snapEnabled
+              /> */}
+              <Carousel
+                width={width}
+                height={height}
+                data={domainsArray}
+                scrollAnimationDuration={1000}
+                autoPlayInterval={3000}
+                renderItem={({ item: category }) => (
+                  <View
+                    style={{
+                      marginLeft: (width - width * 0.9) / 2,
+                    }}
+                  >
+                    <DomainOfTasteCard
+                      isCurrentUser={true}
+                      navigation={navigation}
+                      category={category}
+                      user={user}
+                      toggleAddPlaylistModal={toggleAddPlaylistModal}
+                      userId={userId}
+                      isAddPlaylistModalVisible={isAddPlaylistModalVisible}
+                    />
+                  </View>
+                )}
+                mode="parallax"
+                autoPlay
               />
+              {/* <View
+                style={{
+                  height: 700,
+                  width: 100,
+                  backgroundColor: "white",
+                }}
+              /> */}
             </View>
           </View>
         </ScrollView>
