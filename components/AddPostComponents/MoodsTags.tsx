@@ -8,6 +8,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 // moods and tags catalogue:
@@ -149,6 +150,7 @@ function MoodsTags({
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
             style={{
               ...styles.backgroundGradient,
+              height: Platform.OS === "android" ? width * 1.75 : normalize(756),
               borderColor: getButtonsAccentColor(postType),
               borderWidth: normalize(3),
             }}
@@ -469,7 +471,6 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
     marginBottom: -normalize(22),
     width: normalize(360),
-    height: normalize(761),
   },
   modalContent: {
     flex: 1,

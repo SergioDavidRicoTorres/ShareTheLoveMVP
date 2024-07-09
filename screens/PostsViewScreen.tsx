@@ -247,7 +247,8 @@ export default function PostsViewScreen() {
               style={{
                 alignItems: "center",
                 width: normalize(327),
-                height: normalize(630),
+                height:
+                  Platform.OS === "android" ? width * 1.45 : normalize(630),
                 borderRadius: normalize(15),
                 justifyContent: "flex-end",
               }}

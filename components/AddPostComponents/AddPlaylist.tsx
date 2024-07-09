@@ -232,7 +232,6 @@ function AddPlaylist({
               image: uploadedImageUrl,
               moods: selectedMoodsTags,
               score: 0,
-              reviewsCount: 0,
               reviewsList: [],
             })
           : (newPlaylist = {
@@ -241,7 +240,6 @@ function AddPlaylist({
               name: playlistTitle,
               moods: selectedMoodsTags,
               score: 0,
-              reviewsCount: 0,
               reviewsList: [],
             });
         const newPlaylistId = await addPlaylistToDB(newPlaylist);
@@ -280,7 +278,7 @@ function AddPlaylist({
     }
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       {/* Modal(MoodsTags) */}
       <Modal visible={visible} animationType="slide" transparent>
         {/* Modal Container */}
@@ -290,14 +288,18 @@ function AddPlaylist({
           <View
             style={{
               padding: normalize(5),
-              height: normalize(766),
+              height: Platform.OS === "android" ? width * 1.77 : normalize(766),
               backgroundColor: "rgba(156, 75, 255, 1)",
               borderRadius: normalize(10),
             }}
           >
             <LinearGradient
               colors={["rgba(156, 75, 255, 1)", "rgba(58, 17, 90, 1)"]}
-              style={styles.backgroundGradient}
+              style={{
+                ...styles.backgroundGradient,
+                height:
+                  Platform.OS === "android" ? width * 1.75 : normalize(756),
+              }}
             >
               {/* Modal Content */}
               <View style={styles.modalContent}>
@@ -653,7 +655,7 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
     marginBottom: -normalize(22),
     width: normalize(360),
-    height: normalize(756),
+
     // borderColor: "rgba(72, 43, 255, 1)",
     // borderWidth: normalize(5),
     // padding: normalize(5),

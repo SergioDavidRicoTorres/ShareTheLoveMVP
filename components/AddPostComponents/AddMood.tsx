@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { normalize } from "../../utils";
@@ -54,9 +55,9 @@ function AddMood({ visible, onClose }: AddMoodProps) {
   // --------------------- STATES CURRENT MODAL (AddMood)---------------------
   //---------------------------------------------------------------------------------
   // input description text (string)
-  const [caption, setCaption] = useState("");
+  const [moodName, setMoodName] = useState("");
   // boolean variable that checks if something has been written in the description box (boolean)
-  const [hasCaption, setHasCaption] = useState(false);
+  const [hasMoodName, setHasMoodName] = useState(false);
   // check box boolean variable (boolean)
   const [isChecked, setIsChecked] = useState(false);
   //---------------------------------------------------------------------------------
@@ -68,11 +69,27 @@ function AddMood({ visible, onClose }: AddMoodProps) {
   //---------------------------------------------------------------------------------
   // HANDLE EVENT FUNCTIONS:
   // stores the given input(queue)
-  const handleCaptionChange = (value: string) => {
-    setCaption(value);
-    setHasCaption(value != "");
+  const handleMoodNameChange = (value: string) => {
+    setMoodName(value);
+    setHasMoodName(value != "");
   };
 
+  const handlePress = () => {
+    Alert.alert(
+      "Great Idea!!",
+      "Send your new MOOD idea to Rico (+436766683322 on whatsapp), he'll be VERY EXCITED to check it out!",
+      [
+        {
+          text: "OK",
+          onPress: () => {
+            console.log("Alert closed");
+            onClose();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   // const handleEnterPress = () => {
   //   try {
   //     toggleSearchPlaylistModal();
@@ -191,10 +208,10 @@ function AddMood({ visible, onClose }: AddMoodProps) {
                 >
                   <TextInput
                     // descriptionBoxTextInput
-                    value={caption}
+                    value={moodName}
                     onSubmitEditing={Keyboard.dismiss}
                     returnKeyType="done"
-                    onChangeText={handleCaptionChange}
+                    onChangeText={handleMoodNameChange}
                     style={{
                       flex: 1,
                       color: "white",
@@ -276,27 +293,27 @@ function AddMood({ visible, onClose }: AddMoodProps) {
                 onClose={toggleSearchPlaylistModal}
                 selectedMoodsTags={selectedMoodsTags}
                 selectedMedia={selectedMedia}
-                insertedCaption={caption}
+                insertedMoodName={moodName}
                 postType={postType}
               />
             )} */}
+            {hasMoodName === false ? (
+              <View style={styles.chooseButtonContainer}>
+                <Text style={styles.chooseButtonText}>Submit Mood</Text>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={{
+                  ...styles.touchableChooseButtonContainer,
+                  backgroundColor: "rgba(105, 51, 172, 1)",
+                  shadowColor: "rgba(58, 17, 90, 0.75)",
+                }}
+                onPress={handlePress}
+              >
+                <Text style={styles.chooseButtonText}>Submit Mood</Text>
+              </TouchableOpacity>
+            )}
           </View>
-          {hasCaption === false ? (
-            <View style={styles.chooseButtonContainer}>
-              <Text style={styles.chooseButtonText}>Submit Mood</Text>
-            </View>
-          ) : (
-            <TouchableOpacity
-              style={{
-                ...styles.touchableChooseButtonContainer,
-                backgroundColor: "rgba(105, 51, 172, 1)",
-                shadowColor: "rgba(58, 17, 90, 0.75)",
-              }}
-              onPress={onClose}
-            >
-              <Text style={styles.chooseButtonText}>Submit Mood</Text>
-            </TouchableOpacity>
-          )}
         </View>
       </Modal>
     </View>
@@ -320,7 +337,7 @@ const styles = StyleSheet.create({
   backgroundGradient: {
     borderRadius: normalize(10),
     width: normalize(363),
-    height: normalize(201),
+    // height: normalize(201),
     backgroundColor: "rgba(22, 0, 39, 1)",
     borderWidth: normalize(4),
     borderColor: "rgba(156, 75, 255, 1)",
@@ -333,17 +350,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   chooseButtonContainer: {
-    position: "absolute",
+    // position: "absolute",
     paddingHorizontal: normalize(20),
+    width: normalize(200),
     height: normalize(40),
     borderRadius: normalize(15),
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
     backgroundColor: "rgba(152, 152, 152, 1)",
-    bottom: normalize(12),
+    // bottom: normalize(12),
+    marginVertical: normalize(20),
   },
   touchableChooseButtonContainer: {
-    position: "absolute",
+    // position: "absolute",
     paddingHorizontal: normalize(20),
     height: normalize(40),
     borderRadius: normalize(15),
@@ -355,7 +375,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: normalize(10),
-    bottom: normalize(12),
+    // bottom: normalize(12),
+    width: normalize(200),
+    alignSelf: "center",
+    marginVertical: normalize(20),
   },
   chooseButtonText: {
     fontWeight: "700",

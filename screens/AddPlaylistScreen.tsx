@@ -152,7 +152,6 @@ export default function AddPlaylistScreen() {
           moods: selectedMoodsTags,
           score: 0,
           reviewsList: [],
-          reviewsCount: 0,
         };
 
         await addPlaylistToDB(newPlaylist);

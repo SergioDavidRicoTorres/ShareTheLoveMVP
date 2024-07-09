@@ -108,8 +108,8 @@ export default function PlaylistCard({
   const handleDonePress = () => {
     console.log("playlistId: ", playlistId);
 
-    if (playlist.playlistId && currentUser?.userId) {
-      updatePlaylistReview(playlist.playlistId, {
+    if (playlist && currentUser?.userId) {
+      updatePlaylistReview(playlist, {
         userId: currentUser.userId,
         score: sliderScore, // Replace this with the actual score you want to set
       }).catch((error) => {

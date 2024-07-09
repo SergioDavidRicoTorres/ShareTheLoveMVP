@@ -16,7 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useRoute } from "@react-navigation/native";
 // import { getCurrentUserData } from "../UserData";
 import Settings from "../components/Settings";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import Carousel from "react-native-snap-carousel";
 import {
   getDomainOfTasteScoreIcon,
@@ -144,7 +144,15 @@ export default function ProfileScreen() {
 
   const domainWidth = width * 0.7; // Adjust item width to decrease spacing
   const domainSpacing = (width - domainWidth) / 2; // Calculate spacing to center items
+  // Create a reference to the ScrollView
+  const scrollViewRef = useRef<ScrollView | null>(null);
 
+  // Function to scroll to the top of the ScrollView
+  const scrollToTop = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
+  };
   return (
     <LinearGradient
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
@@ -164,7 +172,7 @@ export default function ProfileScreen() {
           // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         }} // External Container
       >
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false}>
           <View style={{ alignItems: "center" }}>
             <Text
               style={{
@@ -400,6 +408,37 @@ export default function ProfileScreen() {
             </View>
           </View>
         </ScrollView>
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            flexDirection: "row",
+            alignSelf: "flex-end",
+            bottom: Platform.OS === "android" ? normalize(70) : normalize(110),
+            right: normalize(20),
+            // marginBottom: normalize(10),
+            backgroundColor: "rgba(58, 17, 90, 1)",
+            paddingVertical: normalize(10),
+            paddingHorizontal: normalize(15),
+            borderRadius: normalize(15),
+            borderColor: "rgba(156, 75, 255, 1)",
+            borderWidth: normalize(4),
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowOpacity: 1,
+            shadowRadius: 10,
+          }}
+          onPress={scrollToTop}
+        >
+          <Image
+            style={{
+              height: normalize(16),
+              width: normalize(18),
+            }}
+            source={require("../assets/icons/DoubleUpArrowIcon.png")}
+          />
+        </TouchableOpacity>
         {isSettingsModalVisible && (
           <Settings
             visible={isSettingsModalVisible}

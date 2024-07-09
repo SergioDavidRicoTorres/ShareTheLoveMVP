@@ -23,10 +23,17 @@ export interface Domain {
   isActive: boolean;
   domainId: number;
   score: number;
+  reviewsList: DomainReview[];
 }
 
 export interface PlaylistReview {
   userId: string;
+  score: number;
+}
+
+export interface DomainReview {
+  userId: string;
+  playlistId: string;
   score: number;
 }
 
@@ -39,7 +46,6 @@ export interface Playlist {
   moods: Mood[];
   score: number;
   reviewsList: PlaylistReview[];
-  reviewsCount: number;
 }
 
 export interface Mood {
@@ -310,6 +316,11 @@ export type DomainOfTasteCardProp = {
   userId: string;
   isAddPlaylistModalVisible?: boolean;
 };
+export type NewMoodRequest = {
+  moodName: string;
+  userId: string; 
+  wantsCredit: boolean;  
+}
 
 // // Define the props for ProfileScreenWrapper
 // export type ProfileScreenWrapperProps = {
@@ -344,6 +355,7 @@ export type AddPlaylistScreenRouteProp = RouteProp<
   ProfileNavigatorParamsList,
   "AddPlaylistScreen"
 >;
+
 
 // export type AuthEmailPasswordScreenNavigationProp = StackNavigationProp<AuthNavigatorParamsList,'AuthEmailPasswordScreen'>;
 // export type AuthEmailPasswordProps = {

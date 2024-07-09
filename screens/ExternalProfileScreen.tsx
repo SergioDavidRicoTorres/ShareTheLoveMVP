@@ -16,7 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useRoute } from "@react-navigation/native";
 // import { getCurrentUserData } from "../UserData";
 import Settings from "../components/Settings";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import Carousel from "react-native-snap-carousel";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -93,6 +93,14 @@ export default function ExternalProfileScreen() {
     }
   }, [route]); // Depends on userId
 
+  const scrollViewRef = useRef<ScrollView | null>(null);
+
+  // Function to scroll to the top of the ScrollView
+  const scrollToTop = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
+  };
   return (
     <LinearGradient
       colors={["rgba(1, 4, 43, 1)", "rgba(69, 22, 129, 1)"]} // Specify the colors for the gradient
@@ -133,7 +141,7 @@ export default function ExternalProfileScreen() {
             />
           </TouchableOpacity>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false}>
           <View style={{ alignItems: "center" }}>
             <Text
               style={{
@@ -386,6 +394,37 @@ export default function ExternalProfileScreen() {
             </View>
           </View>
         </ScrollView>
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            flexDirection: "row",
+            alignSelf: "flex-end",
+            bottom: Platform.OS === "android" ? normalize(70) : normalize(110),
+            right: normalize(20),
+            marginBottom: normalize(10),
+            backgroundColor: "rgba(58, 17, 90, 1)",
+            paddingVertical: normalize(10),
+            paddingHorizontal: normalize(15),
+            borderRadius: normalize(15),
+            borderColor: "rgba(156, 75, 255, 1)",
+            borderWidth: normalize(4),
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowOpacity: 1,
+            shadowRadius: 10,
+          }}
+          onPress={scrollToTop}
+        >
+          <Image
+            style={{
+              height: normalize(16),
+              width: normalize(18),
+            }}
+            source={require("../assets/icons/DoubleUpArrowIcon.png")}
+          />
+        </TouchableOpacity>
         {isSettingsModalVisible && (
           <Settings
             visible={isSettingsModalVisible}

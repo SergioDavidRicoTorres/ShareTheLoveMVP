@@ -58,7 +58,13 @@ function Tabs() {
           borderTopWidth: 0,
           position: "absolute",
           backgroundColor: "rgba(1, 4, 43, 1)",
-          height: normalize(90),
+          // height: normalize(90),
+          marginBottom: normalize(0),
+          marginHorizontal: normalize(10),
+          // borderRadius: normalize(15),
+          borderTopRightRadius: normalize(15),
+          borderTopLeftRadius: normalize(15),
+          // paddingVertical: normalize(10),
         },
       }}
     >

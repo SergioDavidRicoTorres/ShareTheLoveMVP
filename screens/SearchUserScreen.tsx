@@ -110,7 +110,7 @@ export default function SearchUser() {
             // paddingHorizontal: 30,
             // backgroundColor: "white",
             width: normalize(340),
-            height: normalize(650),
+            // height: Platform.OS === "android" ? width * 1.5 : normalize(630),
             backgroundColor: "rgba(58, 17, 90, 1)",
             borderRadius: normalize(15),
             shadowColor: "rgba(156, 75, 255, 1)",
@@ -124,13 +124,17 @@ export default function SearchUser() {
             alignItems: "center",
             justifyContent: "center",
             marginTop: normalize(50),
+            // marginBottom: normalize(20),
           }}
         >
           <LinearGradient
             colors={["rgba(105, 51, 172, 0)", "rgba(46, 27, 172, 1)"]} // Specify the colors for the gradient
             style={{
               width: normalize(340),
-              height: normalize(650),
+              // marginBottom: normalize(20),
+              // height: normalize(650),
+              height: Platform.OS === "android" ? width * 1.5 : normalize(630),
+
               borderRadius: normalize(15),
               borderColor: "rgba(156, 75, 255, 1)",
               borderWidth: normalize(5),

@@ -69,7 +69,7 @@ export default function Auth() {
             style={{
               color: "rgba(156, 75, 255, 1)",
               fontFamily: "Helvetica",
-              fontSize: normalize(60),
+              fontSize: Platform.OS === "ios" ? normalize(60) : normalize(50),
               fontWeight: "400",
               letterSpacing: -1.2,
             }}

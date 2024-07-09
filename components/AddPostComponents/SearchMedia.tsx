@@ -37,7 +37,7 @@ import { checkTokenValidity } from "../../AuthorizationSpotify";
 import { sharedStyles } from "../../sharedStyles";
 import { MEDIATYPENAME } from "../../constants";
 
-// const { width } = Dimensions.get("window"); // screen width constant
+const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
 function SearchMedia({
@@ -243,9 +243,9 @@ function SearchMedia({
             colors={[getGradientsFirstColor(postType), "rgba(58, 17, 90, 1)"]}
             style={{
               ...styles.backgroundGradient,
+              height: Platform.OS === "android" ? width * 1.75 : normalize(756),
               borderColor: getButtonsAccentColor(postType),
               borderWidth: normalize(3),
-              // bottom: Platform.OS === "android" ? normalize(15) : 0,
             }}
           >
             {/* Modal Content */}
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
     marginBottom: -normalize(22),
     width: normalize(360),
-    height: normalize(761),
+    // height: width * 1.8,
   },
   modalContent: {
     flex: 1,

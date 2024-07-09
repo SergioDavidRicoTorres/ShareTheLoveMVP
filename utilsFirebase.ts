@@ -10,7 +10,7 @@ import {
   FIRESTORE_DB,
 } from "./firebaseConfig";
 import * as ImagePicker from "expo-image-picker";
-import { Playlist, PlaylistReview, Post, User } from "./types";
+import { Domain, Playlist, PlaylistReview, Post, User } from "./types";
 import {
   arrayRemove,
   arrayUnion,
@@ -46,16 +46,19 @@ export const DEFAULT_USER: User = {
       domainId: 0,
       isActive: true,
       score: 0,
+      reviewsList: [],
     },
     FilmsTVShows: {
       domainId: 1,
       isActive: true,
       score: 0,
+      reviewsList: [],
     },
     PodcastsEpisodes: {
       domainId: 2,
       isActive: true,
       score: 0,
+      reviewsList: [],
     },
   },
 };
@@ -68,7 +71,6 @@ export const DEFAULT_PLAYLIST: Playlist = {
   moods: [],
   score: 0,
   reviewsList: [],
-  reviewsCount: 0,
 };
 
 export const addUserToDB = async (user: User, uid: string) => {
@@ -679,81 +681,270 @@ export async function toggleLikePost(
 //   }
 // };
 
+// export const updatePlaylistReview = async (
+//   playlistId: string,
+//   currentUserReview: PlaylistReview
+// ): Promise<void> => {
+//   const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
+//   const userRef = doc(FIRESTORE_DB, "users", currentUserReview.userId); // Reference to user's document
+
+//   // Pre-fetch the specific playlist document
+//   let playlistData;
+//   try {
+//     const playlistDoc = await getDoc(playlistRef);
+//     if (!playlistDoc.exists()) {
+//       console.error("Playlist does not exist!");
+//       return;
+//     }
+//     playlistData = playlistDoc.data() as Playlist;
+//   } catch (error) {
+//     console.error("Failed to fetch the playlist:", error);
+//     return;
+//   }
+
+//   // Fetch the user document to get the domain score
+//   const userDoc = await getDoc(userRef);
+//   if (!userDoc.exists()) {
+//     console.error("User does not exist!");
+//     return;
+//   }
+//   const userData = userDoc.data() as User;
+//   const domainKeys = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
+//   const domainToUpdate = domainKeys[playlistData.domainId];
+//   //const currentDomainScore = userData.domainsOfTaste[domainToUpdate].score;
+//   console.log("[userData: " + userData + "]");
+//   // Prepare to fetch related playlists to compute the current domain score
+//   const playlistsRef = collection(FIRESTORE_DB, "playlists");
+//   const playlistQuery = query(
+//     playlistsRef,
+//     where("userId", "==", playlistData.userId.toString()),
+//     where("domainId", "==", playlistData.domainId)
+//   );
+
+//   let totalScore = 0;
+//   let countPlaylistsScores = 0;
+
+//   try {
+//     const querySnapshot = await getDocs(playlistQuery);
+//     querySnapshot.forEach((doc) => {
+//       const data = doc.data();
+//       totalScore += data.score;
+//       countPlaylistsScores++;
+//     });
+//   } catch (error) {
+//     console.error(
+//       "Failed to fetch playlists for domain score calculation:",
+//       error
+//     );
+//     return;
+//   }
+
+//   const currentDomainScore = totalScore / countPlaylistsScores;
+
+//   // Begin the transaction for updates only
+//   try {
+//     await runTransaction(FIRESTORE_DB, async (transaction) => {
+//       let reviewsList = playlistData.reviewsList || [];
+//       const existingReviewIndex = reviewsList.findIndex(
+//         (review) => review.userId === currentUserReview.userId
+//       );
+
+//       let isNewReview = false;
+//       if (existingReviewIndex !== -1) {
+//         reviewsList[existingReviewIndex].score = currentUserReview.score;
+//       } else {
+//         reviewsList.push(currentUserReview);
+//         isNewReview = true;
+//       }
+
+//       const newTotalScore = reviewsList.reduce(
+//         (sum, review) => sum + review.score,
+//         0
+//       );
+//       const newPlaylistScore = newTotalScore / reviewsList.length;
+
+//       // Update the playlist document within the transaction
+//       transaction.update(playlistRef, {
+//         reviewsList: reviewsList,
+//         score: newPlaylistScore,
+//       });
+
+//       console.log("[currentDomainScore = " + currentDomainScore + "]");
+//       console.log("[countPlaylistsScores = " + countPlaylistsScores + "]");
+//       console.log("[newPlaylistScore = " + countPlaylistsScores + "]");
+//       // Compute new domain score
+//       const newDomainScore =
+//         (currentDomainScore * countPlaylistsScores + newPlaylistScore) /
+//         (countPlaylistsScores + 1);
+//       console.log(
+//         "[newDomainScore = " +
+//           newDomainScore +
+//           "] VS [currentDomainScore = " +
+//           currentDomainScore +
+//           "]"
+//       );
+
+//       const userRef = doc(
+//         FIRESTORE_DB,
+//         "users",
+//         playlistData.userId.toString()
+//       );
+//       const domainKeys = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
+//       const domainToUpdate = domainKeys[playlistData.domainId];
+
+//       // Update the user's domain score
+//       transaction.update(userRef, {
+//         [`domainsOfTaste.${domainToUpdate}.score`]: newDomainScore,
+//       });
+//     });
+//     console.log(
+//       "[updatePlaylistReview]: Playlist and domain score updated successfully!"
+//     );
+//   } catch (error) {
+//     console.error("Failed to update playlist review:", error);
+//     throw error;
+//   }
+// };
+type DomainKey = "Music" | "FilmsTVShows" | "PodcastsEpisodes";
+
+// export const updatePlaylistReview = async (
+//   playlistId: string,
+//   currentUserReview: PlaylistReview
+// ): Promise<void> => {
+//   const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
+//   const userRef = doc(FIRESTORE_DB, "users", currentUserReview.userId); // Reference to user's document
+
+//   // Pre-fetch the specific playlist document
+//   let playlistData: Playlist;
+//   try {
+//     const playlistDoc = await getDoc(playlistRef);
+//     if (!playlistDoc.exists()) {
+//       console.error("Playlist does not exist!");
+//       return;
+//     }
+//     playlistData = playlistDoc.data() as Playlist;
+//   } catch (error) {
+//     console.error("Failed to fetch the playlist:", error);
+//     return;
+//   }
+
+//   // Fetch the user document to get the domain score
+//   const userDoc = await getDoc(userRef);
+//   if (!userDoc.exists()) {
+//     console.error("User does not exist!");
+//     return;
+//   }
+//   const userData = userDoc.data() as User;
+//   const domainKeys = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
+//   const domainToUpdate = domainKeys[playlistData.domainId] as DomainKey;
+
+//   // Begin the transaction for updates only
+//   try {
+//     await runTransaction(FIRESTORE_DB, async (transaction) => {
+//       let reviewsList = playlistData.reviewsList || [];
+//       const existingReviewIndex = reviewsList.findIndex(
+//         (review) => review.userId === currentUserReview.userId
+//       );
+
+//       if (existingReviewIndex !== -1) {
+//         reviewsList[existingReviewIndex].score = currentUserReview.score;
+//       } else {
+//         reviewsList.push(currentUserReview);
+//       }
+
+//       const newTotalScore = reviewsList.reduce(
+//         (sum, review) => sum + review.score,
+//         0
+//       );
+//       const newPlaylistScore = newTotalScore / reviewsList.length;
+
+//       // Update the playlist document within the transaction
+//       transaction.update(playlistRef, {
+//         reviewsList: reviewsList,
+//         score: newPlaylistScore,
+//       });
+
+//       // Update the user's domain score
+//       let domain = userData.domainsOfTaste[domainToUpdate] as Domain;
+//       let domainReviewsList = domain.reviewsList || [];
+//       const domainReviewIndex = domainReviewsList.findIndex(
+//         (review) => review.userId === currentUserReview.userId && review.playlistId === playlistId
+//       );
+
+//       if (domainReviewIndex !== -1) {
+//         domainReviewsList[domainReviewIndex].score = currentUserReview.score;
+//       } else {
+//         domainReviewsList.push({
+//           userId: currentUserReview.userId,
+//           playlistId: playlistId,
+//           score: currentUserReview.score,
+//         });
+//       }
+
+//       const newDomainTotalScore = domainReviewsList.reduce(
+//         (sum, review) => sum + review.score,
+//         0
+//       );
+//       const newDomainScore = newDomainTotalScore / domainReviewsList.length;
+
+//       // Update the user's domain score and reviews list within the transaction
+//       transaction.update(userRef, {
+//         [`domainsOfTaste.${domainToUpdate}.score`]: newDomainScore,
+//         [`domainsOfTaste.${domainToUpdate}.reviewsList`]: domainReviewsList,
+//       });
+//     });
+
+//     console.log("Playlist and domain score updated successfully!");
+//   } catch (error) {
+//     console.error("Failed to update playlist review:", error);
+//     throw error;
+//   }
+// };
+
+// POSSIBLE STALE DATA DUE TO playlist NOT BEING FETCHED BUT PASSED
+// if problems related to this arise, TRY TO FETCH IT HERE!!!!!!!
+
 export const updatePlaylistReview = async (
-  playlistId: string,
+  playlist: Playlist,
   currentUserReview: PlaylistReview
 ): Promise<void> => {
-  const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
-  const userRef = doc(FIRESTORE_DB, "users", currentUserReview.userId); // Reference to user's document
-
-  // Pre-fetch the specific playlist document
-  let playlistData;
-  try {
-    const playlistDoc = await getDoc(playlistRef);
-    if (!playlistDoc.exists()) {
-      console.error("Playlist does not exist!");
-      return;
-    }
-    playlistData = playlistDoc.data() as Playlist;
-  } catch (error) {
-    console.error("Failed to fetch the playlist:", error);
+  if (!playlist.playlistId) {
+    console.error("Playlist ID is undefined!");
     return;
   }
+
+  const playlistRef = doc(FIRESTORE_DB, "playlists", playlist.playlistId);
+  const userRef = doc(FIRESTORE_DB, "users", playlist.userId.toString()); // Reference to the playlist creator's user document
 
   // Fetch the user document to get the domain score
-  const userDoc = await getDoc(userRef);
-  if (!userDoc.exists()) {
-    console.error("User does not exist!");
-    return;
-  }
-  const userData = userDoc.data() as User;
-  const domainKeys = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
-  const domainToUpdate = domainKeys[playlistData.domainId];
-  //const currentDomainScore = userData.domainsOfTaste[domainToUpdate].score;
-  console.log("[userData: " + userData + "]");
-  // Prepare to fetch related playlists to compute the current domain score
-  const playlistsRef = collection(FIRESTORE_DB, "playlists");
-  const playlistQuery = query(
-    playlistsRef,
-    where("userId", "==", playlistData.userId.toString()),
-    where("domainId", "==", playlistData.domainId)
-  );
-
-  let totalScore = 0;
-  let countPlaylistsScores = 0;
-
+  let userData: User;
   try {
-    const querySnapshot = await getDocs(playlistQuery);
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      totalScore += data.score;
-      countPlaylistsScores++;
-    });
+    const userDoc = await getDoc(userRef);
+    if (!userDoc.exists()) {
+      console.error("User does not exist!");
+      return;
+    }
+    userData = userDoc.data() as User;
   } catch (error) {
-    console.error(
-      "Failed to fetch playlists for domain score calculation:",
-      error
-    );
+    console.error("Failed to fetch the user:", error);
     return;
   }
 
-  const currentDomainScore = totalScore / countPlaylistsScores;
+  const domainKeys: DomainKey[] = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
+  const domainToUpdate = domainKeys[playlist.domainId] as DomainKey;
 
   // Begin the transaction for updates only
   try {
     await runTransaction(FIRESTORE_DB, async (transaction) => {
-      let reviewsList = playlistData.reviewsList || [];
+      let reviewsList = playlist.reviewsList || [];
       const existingReviewIndex = reviewsList.findIndex(
         (review) => review.userId === currentUserReview.userId
       );
 
-      let isNewReview = false;
       if (existingReviewIndex !== -1) {
         reviewsList[existingReviewIndex].score = currentUserReview.score;
       } else {
         reviewsList.push(currentUserReview);
-        playlistData.reviewsCount += 1;
-        isNewReview = true;
       }
 
       const newTotalScore = reviewsList.reduce(
@@ -766,40 +957,41 @@ export const updatePlaylistReview = async (
       transaction.update(playlistRef, {
         reviewsList: reviewsList,
         score: newPlaylistScore,
-        reviewsCount: playlistData.reviewsCount,
       });
-
-      console.log("[currentDomainScore = " + currentDomainScore + "]");
-      console.log("[countPlaylistsScores = " + countPlaylistsScores + "]");
-      console.log("[newPlaylistScore = " + countPlaylistsScores + "]");
-      // Compute new domain score
-      const newDomainScore =
-        (currentDomainScore * countPlaylistsScores + newPlaylistScore) /
-        (countPlaylistsScores + 1);
-      console.log(
-        "[newDomainScore = " +
-          newDomainScore +
-          "] VS [currentDomainScore = " +
-          currentDomainScore +
-          "]"
-      );
-
-      const userRef = doc(
-        FIRESTORE_DB,
-        "users",
-        playlistData.userId.toString()
-      );
-      const domainKeys = ["Music", "FilmsTVShows", "PodcastsEpisodes"];
-      const domainToUpdate = domainKeys[playlistData.domainId];
 
       // Update the user's domain score
+      let domain = userData.domainsOfTaste[domainToUpdate];
+      let domainReviewsList = domain.reviewsList || [];
+      const domainReviewIndex = domainReviewsList.findIndex(
+        (review) =>
+          review.userId === currentUserReview.userId &&
+          review.playlistId === playlist.playlistId
+      );
+
+      if (domainReviewIndex !== -1) {
+        domainReviewsList[domainReviewIndex].score = currentUserReview.score;
+      } else {
+        domainReviewsList.push({
+          userId: currentUserReview.userId,
+          playlistId: playlist.playlistId!,
+          score: currentUserReview.score,
+        });
+      }
+
+      const newDomainTotalScore = domainReviewsList.reduce(
+        (sum, review) => sum + review.score,
+        0
+      );
+      const newDomainScore = newDomainTotalScore / domainReviewsList.length;
+
+      // Update the user's domain score and reviews list within the transaction
       transaction.update(userRef, {
         [`domainsOfTaste.${domainToUpdate}.score`]: newDomainScore,
+        [`domainsOfTaste.${domainToUpdate}.reviewsList`]: domainReviewsList,
       });
     });
-    console.log(
-      "[updatePlaylistReview]: Playlist and domain score updated successfully!"
-    );
+
+    console.log("Playlist and domain score updated successfully!");
   } catch (error) {
     console.error("Failed to update playlist review:", error);
     throw error;
