@@ -1014,3 +1014,66 @@ export const SpotifyAuthComponent = ({authType}: SpotifyAuthComponentProp) => {
           </TouchableOpacity>
     );
 };
+
+
+
+
+
+
+
+/**
+ * Import function triggers from their respective submodules:
+ *
+ * import {onCall} from "firebase-functions/v2/https";
+ * import {onDocumentWritten} from "firebase-functions/v2/firestore";
+ *
+ * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ */
+
+// import {onRequest} from "firebase-functions/v2/https";
+// import * as logger from "firebase-functions/logger";
+
+// Start writing functions
+// https://firebase.google.com/docs/functions/typescript
+
+// export const helloWorld = onRequest((request, response) => {
+//   logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });
+
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import * as nodemailer from "nodemailer";
+import { NewMoodRequest } from "../../types"; // Adjust the path as necessary
+
+admin.initializeApp();
+// Configure the email transport using the default SMTP transport and a Gmail account.
+// Note: Enable "less secure apps" in your Google account: https://www.google.com/settings/security/lesssecureapps
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "sharethelove.03.12.2023@gmail.com",
+    pass: "PerhapsItIsMusicThatWillSaveTheWorld",
+  },
+});
+
+exports.sendNewMoodEmail = functions.https.onCall((data: NewMoodRequest) => {
+  const mailOptions = {
+    from: "sharethelove.03.12.2023@gmail.com",
+    to: "sharethelove.03.12.2023@gmail.com", // Sending the email to yourself
+    subject: "New Mood/Tag Request",
+    text: `A user has requested a new mood/tag:\n\nMood/Tag: ${data.moodName}\n\nUser ID: ${data.userId}\n\nWants credit: ${data.wantsCredit}`,
+    html: `<strong>A user has requested a new mood/tag:</strong><p>Mood/Tag: ${data.moodName}</p><p>User ID: ${data.userId}</p><p>Wants credit: ${data.wantsCredit}</p>`,
+  };
+
+  return transporter
+    .sendMail(mailOptions)
+    .then(() => {
+      console.log("Email sent successfully");
+      return { success: true };
+    })
+    .catch((error) => {
+      console.error("Error sending email:", error);
+      return { success: false, error: error.toString() };
+    });
+});

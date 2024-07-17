@@ -16,7 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useRoute } from "@react-navigation/native";
 // import { getCurrentUserData } from "../UserData";
 import Settings from "../components/Settings";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 // import Carousel from "react-native-snap-carousel";
 import {
   getDomainOfTasteScoreIcon,
@@ -42,6 +42,7 @@ import DomainOfTasteCard from "../components/DomainOfTasteCard";
 import { fetchUserById } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
 import Carousel from "react-native-reanimated-carousel";
+import { RefreshControl } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
@@ -91,7 +92,37 @@ export default function ProfileScreen() {
   const toggleAddPlaylistModal = () => {
     setIsAddPlaylistModalVisible(!isAddPlaylistModalVisible);
   };
+  const [refresh, setRefresh] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      // Fetch user data
+      // console.log("###################### USER #########################")
+      // console.log(user);
+      // const user: User | null = await fetchUserById(userId);
+      if (currentUser !== null) {
+        // setUser(user); // Set the user
+
+        // Now get domains
+        // console.log(":::::::::::::::::::: USER'S DOMAINS:::::::::::::::::")
+        // console.log(getUsersDomains(user));
+        setDomainsArray(getUsersDomains(currentUser));
+      } else {
+        setCurrentUser(DEFAULT_USER);
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  // Refresh function
+  const pullRefresh = useCallback(async () => {
+    setRefresh(true);
+    await fetchData();
+    setTimeout(() => {
+      setRefresh(false);
+    }, 5000);
+  }, [route]);
   // useEffect(() => {
   //   const getUserDataById = async () => {
   //     try {
@@ -115,30 +146,8 @@ export default function ProfileScreen() {
   // }, [userId]); // The useEffect hook will run when the userId changes
 
   useEffect(() => {
-    const getUserDataAndDomains = async () => {
-      try {
-        // Fetch user data
-        // console.log("###################### USER #########################")
-        // console.log(user);
-        // const user: User | null = await fetchUserById(userId);
-        if (currentUser !== null) {
-          // setUser(user); // Set the user
-
-          // Now get domains
-          // console.log(":::::::::::::::::::: USER'S DOMAINS:::::::::::::::::")
-          // console.log(getUsersDomains(user));
-          setDomainsArray(getUsersDomains(currentUser));
-        } else {
-          setCurrentUser(DEFAULT_USER);
-          throw new Error("User not found");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
     if (userId) {
-      getUserDataAndDomains();
+      fetchData();
     }
   }, [route]); // Depends on userId
 
@@ -173,6 +182,10 @@ export default function ProfileScreen() {
         }} // External Container
       >
         <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false}>
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={() => pullRefresh()}
+          />
           <View style={{ alignItems: "center" }}>
             <Text
               style={{
@@ -397,6 +410,8 @@ export default function ProfileScreen() {
                       toggleAddPlaylistModal={toggleAddPlaylistModal}
                       userId={userId}
                       isAddPlaylistModalVisible={isAddPlaylistModalVisible}
+                      refresh={refresh}
+                      setRefresh={setRefresh}
                     />
                   </View>
                 )}

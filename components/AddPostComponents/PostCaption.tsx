@@ -31,6 +31,7 @@ import {
 } from "../../utils";
 import { PostCaptionProps } from "../../types";
 import { sharedStyles } from "../../sharedStyles";
+import { useCurrentUser } from "../../CurrentUserContext";
 
 const { width } = Dimensions.get("window"); // screen width constant
 
@@ -43,6 +44,7 @@ function PostCaption({
   postSelectedMoodsTags,
   domainId,
 }: PostCaptionProps) {
+  const { currentUser } = useCurrentUser();
   //---------------------------------------------------------------------------------
   // ----------------------- NEXT MODAL (SearchPlaylist) -----------------------------
   //---------------------------------------------------------------------------------
@@ -270,7 +272,7 @@ function PostCaption({
                       borderWidth: normalize(4),
                     }}
                     source={{
-                      uri: getCurrentUserData().profilePicture,
+                      uri: currentUser?.profilePicture,
                     }}
                   />
                 </View>

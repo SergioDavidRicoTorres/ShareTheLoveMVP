@@ -39,6 +39,8 @@ export default function DomainOfTasteCard({
   toggleAddPlaylistModal,
   userId,
   isAddPlaylistModalVisible,
+  refresh,
+  setRefresh,
 }: DomainOfTasteCardProp) {
   // console.log("DOMAINPOSTTYPE.get(category.domainId): ", DOMAINPOSTTYPE.get(category.domainId))
   // console.log("category.domainId ", category.domainId)
@@ -51,22 +53,21 @@ export default function DomainOfTasteCard({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // console.log("userId=====================", user);
-        // if (user.userId !== undefined) {
         const data = await getDomainsPlaylistsData(userId, category.domainId);
-        // } else {
-        //   throw new Error('userId === undefined');
-        // }
-        // console.log("DOMAIN OF TASTES: ", data);
         setPlaylists(data);
       } catch (error) {
         console.error("Error fetching playlists data:", error);
-        // Handle the error appropriately
       }
     };
 
+    // Fetch data initially and also when userId, category.domainId, or refresh changes
     fetchData();
-  }, [userId, category.domainId]); // Dependencies
+
+    // Reset refresh state if it was triggered
+    if (refresh) {
+      setRefresh(false);
+    }
+  }, [userId, category.domainId, refresh, setRefresh]); // Include refresh and setRefresh as dependencies
 
   // const isCurrentUser = userId === FIREBASE_AUTH.currentUser?.uid;
   // const navigation = isCurrentUser ? useNavigation<ProfileNavigationProp>() : useNavigation<HomeNavigationProp>();

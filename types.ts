@@ -315,12 +315,14 @@ export type DomainOfTasteCardProp = {
   toggleAddPlaylistModal?: () => void;
   userId: string;
   isAddPlaylistModalVisible?: boolean;
+  refresh: boolean;
+  setRefresh: (refresh: boolean) => void;
 };
 export type NewMoodRequest = {
   moodName: string;
-  userId: string; 
-  wantsCredit: boolean;  
-}
+  userId: string;
+  wantsCredit: boolean;
+};
 
 // // Define the props for ProfileScreenWrapper
 // export type ProfileScreenWrapperProps = {
@@ -355,7 +357,6 @@ export type AddPlaylistScreenRouteProp = RouteProp<
   ProfileNavigatorParamsList,
   "AddPlaylistScreen"
 >;
-
 
 // export type AuthEmailPasswordScreenNavigationProp = StackNavigationProp<AuthNavigatorParamsList,'AuthEmailPasswordScreen'>;
 // export type AuthEmailPasswordProps = {

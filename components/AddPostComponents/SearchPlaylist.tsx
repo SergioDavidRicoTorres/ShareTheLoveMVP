@@ -157,26 +157,6 @@ function SearchPlaylist({
 }: SearchPlaylistProps) {
   const userId = FIREBASE_AUTH.currentUser?.uid;
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (userId === undefined) {
-          return [];
-        }
-        // console.log("[userId]: ", userId);
-        // console.log("[domainId]: ", domainId);
-        const data = await getDomainsPlaylistsData(userId, domainId);
-        // console.log("[playlists]: ", data);
-        setPlaylists(data);
-      } catch (error) {
-        console.error("Error fetching playlists data:", error);
-        // Handle the error appropriately
-      }
-    };
-
-    fetchData();
-  }, [userId, domainId]); // Dependencies
-  // const domainPlaylists = getDomainsPlaylistsData(userId, DOMAINID.get(postType));
 
   // Optional Modal Visible State
   const [isAddPlaylistModalVisible, setIsAddPlaylistModalVisible] =
@@ -193,6 +173,30 @@ function SearchPlaylist({
   const [searchInput, setSearchInput] = useState("");
   // search results
   const [searchResults, setSearchResults] = useState(playlists);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (userId === undefined) {
+          return [];
+        }
+        // console.log("[userId]: ", userId);
+        // console.log("[domainId]: ", domainId);
+        const data = await getDomainsPlaylistsData(userId, domainId);
+        // console.log("[playlists]: ", data);
+        setPlaylists(data);
+        if (searchInput == "") {
+          setSearchResults(data);
+        }
+      } catch (error) {
+        console.error("Error fetching playlists data:", error);
+        // Handle the error appropriately
+      }
+    };
+
+    fetchData();
+  }, [userId, domainId]); // Dependencies
+  // const domainPlaylists = getDomainsPlaylistsData(userId, DOMAINID.get(postType));
+
   // const handleSearch = (text: string) => {
   //   setSearchInput(text);
 
