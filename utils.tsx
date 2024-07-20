@@ -455,8 +455,8 @@ export const getImageWidth = (postType: string) => {
   // }
 };
 
-export const getScreenGradientFirstColor = (domain: Domain) => {
-  switch (domain.domainId) {
+export const getScreenGradientFirstColor = (domainId: number) => {
+  switch (domainId) {
     case 0:
       return "rgba(0, 98, 62, 1)";
     case 1:
@@ -986,6 +986,226 @@ export const getPlaylistsMediaItemComponent = ({
             backgroundColor: "rgba(105, 51, 172, 1)",
             marginRight: normalize(15),
             alignItems: "center",
+          }}
+        />
+      );
+    }
+  }
+};
+
+export const getLikeComponent = (
+  isLiked: boolean,
+  handleLikePress: () => void,
+  postType?: string
+) => {
+  switch (postType) {
+    case "Song": {
+      if (isLiked) {
+        return (
+          <TouchableOpacity
+            onPress={handleLikePress}
+            style={{
+              width: normalize(50),
+              height: normalize(50),
+              // right: normalize(21),
+              // bottom: normalize(442),
+              position: "absolute",
+              // zIndex: 1,
+              // top: normalize(33),
+              backgroundColor: "rgba(153, 255, 218, 1)",
+              shadowColor: "black",
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: normalize(10),
+              shadowOpacity: 0.6,
+              borderRadius: normalize(15),
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={require("./assets/icons/LikeSelectedIcon.png")}
+              style={{ width: normalize(29), height: normalize(26) }}
+            ></Image>
+          </TouchableOpacity>
+        );
+      } else {
+        return (
+          <TouchableOpacity
+            onPress={handleLikePress}
+            style={{
+              width: normalize(50),
+              height: normalize(50),
+              // right: normalize(21),
+              // bottom: normalize(425),
+              position: "absolute",
+              // zIndex: 1,
+              backgroundColor: "rgba(105, 51, 172, 1)",
+              shadowColor: "black",
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: normalize(10),
+              shadowOpacity: 0.6,
+              borderRadius: normalize(15),
+              alignItems: "center",
+              justifyContent: "center",
+              borderColor: getMoodTextColor(postType),
+              borderWidth: normalize(3),
+            }}
+          >
+            {/* <View
+              style={{
+                backgroundColor: "white",
+                width: normalize(1), 
+                height: normalize(50), 
+              }}
+            ></View> */}
+            <Image
+              source={require("./assets/icons/MusicLikeNotSelectedIcon.png")}
+              style={{ width: normalize(29), height: normalize(26) }}
+            ></Image>
+          </TouchableOpacity>
+        );
+      }
+    }
+    case "Film/TVShow": {
+      if (isLiked) {
+        return (
+          <TouchableOpacity
+            onPress={handleLikePress}
+            style={{
+              width: normalize(50),
+              height: normalize(50),
+              // right: normalize(21),
+              // bottom: normalize(592),
+              position: "absolute",
+              // zIndex: 1,
+              // top: normalize(33),
+              backgroundColor: "rgba(253, 153, 255, 1)",
+              shadowColor: "black",
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: normalize(10),
+              shadowOpacity: 0.6,
+              borderRadius: normalize(15),
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={require("./assets/icons/LikeSelectedIcon.png")}
+              style={{ width: normalize(29), height: normalize(26) }}
+            ></Image>
+          </TouchableOpacity>
+        );
+      } else {
+        return (
+          <TouchableOpacity
+            onPress={handleLikePress}
+            style={{
+              width: normalize(50),
+              height: normalize(50),
+              // right: normalize(21),
+              // bottom: normalize(592),
+              position: "absolute",
+              backgroundColor: "rgba(105, 51, 172, 1)",
+              shadowColor: "black",
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: normalize(10),
+              shadowOpacity: 0.6,
+              borderRadius: normalize(15),
+              alignItems: "center",
+              justifyContent: "center",
+              borderColor: getMoodTextColor(postType),
+              borderWidth: normalize(3),
+            }}
+          >
+            <Image
+              source={require("./assets/icons/FilmsTVShowsLikeNotSelectedIcon.png")}
+              style={{ width: normalize(29), height: normalize(26) }}
+            ></Image>
+          </TouchableOpacity>
+        );
+      }
+    }
+    case "PodcastEpisode": {
+      if (isLiked) {
+        return (
+          <TouchableOpacity
+            onPress={handleLikePress}
+            style={{
+              width: normalize(50),
+              height: normalize(50),
+              // right: normalize(21),
+              // bottom: normalize(442),
+              position: "absolute",
+              // top: normalize(33),
+              backgroundColor: "rgba(197, 238, 182, 1)",
+              shadowColor: "black",
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: normalize(10),
+              shadowOpacity: 0.6,
+
+              borderRadius: normalize(15),
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={require("./assets/icons/LikeSelectedIcon.png")}
+              style={{ width: normalize(29), height: normalize(26) }}
+            ></Image>
+          </TouchableOpacity>
+        );
+      } else {
+        return (
+          <TouchableOpacity
+            onPress={handleLikePress}
+            style={{
+              width: normalize(50),
+              height: normalize(50),
+              // right: normalize(21),
+              // bottom: normalize(442),
+              position: "absolute",
+              // top: normalize(33),
+              backgroundColor: "rgba(105, 51, 172, 1)",
+              shadowColor: "black",
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: normalize(10),
+              shadowOpacity: 0.6,
+
+              borderRadius: normalize(15),
+              alignItems: "center",
+              justifyContent: "center",
+              borderColor: getMoodTextColor(postType),
+              borderWidth: normalize(3),
+            }}
+          >
+            <Image
+              source={require("./assets/icons/PodcastsEpisodesLikeNotSelectedIcon.png")}
+              style={{ width: normalize(29), height: normalize(26) }}
+            ></Image>
+          </TouchableOpacity>
+        );
+      }
+    }
+    default: {
+      return (
+        <View
+          style={{
+            width: normalize(50),
+            height: normalize(50),
+            // right: normalize(21),
+            // bottom: normalize(442),
+            position: "absolute",
+            // zIndex: 1,
+            // top: normalize(33),
+            backgroundColor: "rgba(105, 51, 172, 1)",
+            shadowColor: "black",
+            shadowOffset: { width: 0, height: 0 },
+            shadowRadius: normalize(10),
+            shadowOpacity: 0.6,
+
+            borderRadius: normalize(15),
+            alignItems: "center",
+            justifyContent: "center",
           }}
         />
       );

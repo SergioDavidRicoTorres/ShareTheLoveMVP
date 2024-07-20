@@ -14,15 +14,8 @@ import {
   getAuthSpotifyUserData,
   checkTokenValidity,
 } from "./AuthorizationSpotify";
-import { FIRESTORE_DB } from "./firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { Audio, AVPlaybackStatus } from "expo-av";
+import { Linking } from "react-native";
 
 const convertUsersToDateObjects = (untypedUsers: any[]): User[] => {
   return untypedUsers.map((user) => {
@@ -34,8 +27,8 @@ const convertUsersToDateObjects = (untypedUsers: any[]): User[] => {
 };
 
 const USERS: User[] = convertUsersToDateObjects(untypedUsers);
-const PLAYLISTS: Playlist[] = untypedPlaylists;
-const POSTS: Post[] = untypedPosts;
+// const PLAYLISTS: Playlist[] = untypedPlaylists;
+// const POSTS: Post[] = untypedPosts;
 const MOODSANDTAGS: MoodsAndTagsCatalogue = untypedMoodsAndTags;
 
 export const DEFAULT_USER: User = {
@@ -54,16 +47,19 @@ export const DEFAULT_USER: User = {
       domainId: 0,
       isActive: true,
       score: 0,
+      reviewsList: [],
     },
     FilmsTVShows: {
       domainId: 1,
       isActive: true,
       score: 0,
+      reviewsList: [],
     },
     PodcastsEpisodes: {
       domainId: 2,
       isActive: true,
       score: 0,
+      reviewsList: [],
     },
   },
 };
@@ -76,9 +72,9 @@ export const getUsers = () => {
   return USERS;
 };
 
-export const getPosts = () => {
-  return POSTS;
-};
+// export const getPosts = () => {
+//   return POSTS;
+// };
 
 export const getUserData = (userId: number): User => {
   try {
@@ -118,18 +114,18 @@ export const getUserData = (userId: number): User => {
 //   }
 // };
 
-export const getPlaylistsPostsData = (playlistId: string) => {
-  try {
-    console.log("PLAYLISTID: ", playlistId);
-    const filteredPosts = POSTS.filter((post) => {
-      return post.playlistId === playlistId;
-    });
-    return filteredPosts;
-  } catch (error) {
-    console.error("Error fetching current user data:", error);
-    return [];
-  }
-};
+// export const getPlaylistsPostsData = (playlistId: string) => {
+//   try {
+//     console.log("PLAYLISTID: ", playlistId);
+//     const filteredPosts = POSTS.filter((post) => {
+//       return post.playlistId === playlistId;
+//     });
+//     return filteredPosts;
+//   } catch (error) {
+//     console.error("Error fetching current user data:", error);
+//     return [];
+//   }
+// };
 
 export const getUsersDomains = (user: User) => {
   // console.log("|||||||||||||||||||| getUserDomains() is getting called |||||||||||||")
@@ -143,13 +139,13 @@ export const getUsersDomains = (user: User) => {
   return fileteredDomains;
 };
 
-export const getPlaylistId = (playlist: Playlist) => {
-  return getPlaylistIndex(playlist.name);
-};
+// export const getPlaylistId = (playlist: Playlist) => {
+//   return getPlaylistIndex(playlist.name);
+// };
 
-export const getPlaylistIndex = (playlistName: string) => {
-  return PLAYLISTS.findIndex((playlist) => playlist.name == playlistName);
-};
+// export const getPlaylistIndex = (playlistName: string) => {
+//   return PLAYLISTS.findIndex((playlist) => playlist.name == playlistName);
+// };
 
 export const getDomainName = (playlistId: number) => {
   switch (playlistId) {
@@ -296,4 +292,57 @@ export const clusterPostsByPlaylistId = (
   });
 
   return clusters;
+};
+
+export const playSpotifyPreviewSound = async (
+  previewUrl: string,
+  setSound: Function,
+  setIsPlaying: Function
+) => {
+  try {
+    if (previewUrl) {
+      // Set audio mode to play in silent mode on iOS
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+      });
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: previewUrl },
+        { shouldPlay: true }
+      );
+      setSound(sound);
+      setIsPlaying(true);
+
+      sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
+        if ("isPlaying" in status) {
+          setIsPlaying(status.isPlaying);
+        }
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const stopSpotifyPreviewSound = async (
+  sound: Audio.Sound | null,
+  setIsPlaying: Function
+) => {
+  try {
+    if (sound) {
+      await sound.stopAsync();
+      setIsPlaying(false);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const openSpotifyLink = (url: string) => {
+  Linking.canOpenURL(url).then((supported) => {
+    if (supported) {
+      Linking.openURL(url);
+    } else {
+      console.log("Don't know how to open URI: " + url);
+    }
+  });
 };

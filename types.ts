@@ -315,8 +315,8 @@ export type DomainOfTasteCardProp = {
   toggleAddPlaylistModal?: () => void;
   userId: string;
   isAddPlaylistModalVisible?: boolean;
-  refresh: boolean;
-  setRefresh: (refresh: boolean) => void;
+  refresh?: boolean;
+  setRefresh?: (refresh: boolean) => void;
 };
 export type NewMoodRequest = {
   moodName: string;

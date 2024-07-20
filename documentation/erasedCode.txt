@@ -1077,3 +1077,32 @@ exports.sendNewMoodEmail = functions.https.onCall((data: NewMoodRequest) => {
       return { success: false, error: error.toString() };
     });
 });
+
+
+
+<View
+        style={{
+          backgroundColor: getScreenGradientFirstColor(currentPost.domainId),
+          borderRadius: normalize(15),
+          borderColor: getMoodTextColor(
+            DOMAINPOSTTYPE.get(currentPost.domainId)
+          ),
+          borderWidth: normalize(5),
+        }}
+      >
+        <Image
+          // postImage
+          resizeMethod="auto"
+          style={{
+            width: normalize(300),
+            height:
+              DOMAINPOSTTYPE.get(currentPost.domainId) === "Film/TVShow"
+                ? normalize(450)
+                : normalize(300),
+
+            opacity: 0.5,
+          }}
+          // source={{ uri: post.mediaItem.image }}
+          source={getItemImage(currentPost.mediaItem, post.domainId)}
+        />
+      </View>

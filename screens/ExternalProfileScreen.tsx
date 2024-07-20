@@ -371,7 +371,7 @@ export default function ExternalProfileScreen() {
                     }}
                   >
                     <DomainOfTasteCard
-                      isCurrentUser={true}
+                      isCurrentUser={false}
                       navigation={navigation}
                       category={category}
                       user={user}

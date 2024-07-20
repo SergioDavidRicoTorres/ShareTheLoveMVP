@@ -13,6 +13,7 @@ import {
   ImageBackground,
   Platform,
   StatusBar,
+  Alert,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -32,6 +33,12 @@ import {
 } from "../utils";
 import { DOMAINPOSTTYPE } from "../constants";
 import { normalize } from "../utils";
+import {
+  openSpotifyLink,
+  playSpotifyPreviewSound,
+  stopSpotifyPreviewSound,
+} from "../utilsData";
+import { Audio } from "expo-av";
 // import { StatusBar } from "expo-status-bar";
 
 const { width } = Dimensions.get("window"); // screen width constant
@@ -129,6 +136,8 @@ export default function PostsViewScreen() {
   };
   const route = useRoute<PostsViewScreenRouteProp>();
   const navigation = useNavigation<ProfileNavigationProp>();
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const { domainOfTaste, post, user } = route.params;
   //---------------------------------------------------------------------------------
@@ -144,17 +153,53 @@ export default function PostsViewScreen() {
   //---------------------------------------------------------------------------------
   // ----------------------- OPTIONAL MODAL (MediaItemInfo) ----------------------------
   //---------------------------------------------------------------------------------
+  const handleSoundButtonPress = () => {
+    if (post.domainId == 0 || post.domainId == 2) {
+      // console.log(
+      //   "currentPost.mediaItem.audio_preview_url",
+      //   currentPost.mediaItem.preview_url
+      // );
+      const previewUrl =
+        post.domainId == 0
+          ? post.mediaItem.preview_url
+          : post.mediaItem.audio_preview_url;
+      if (previewUrl != null && previewUrl != undefined) {
+        if (isPlaying) {
+          stopSpotifyPreviewSound(sound, setIsPlaying);
+        } else {
+          playSpotifyPreviewSound(previewUrl, setSound, setIsPlaying);
+        }
+      } else {
+        Alert.alert(
+          "Ups!",
+          `Sorry, no preview is available for "${post.mediaItem.name}". Please check it out on Spotify.`
+        );
+      }
+    } else {
+      Alert.alert(
+        "Ups!",
+        "Sorry, no previews are available for Movies and TV Shows"
+      );
+    }
+  };
 
+  const handleSpotifyButtonPress = () => {
+    const url = post.mediaItem.external_urls.spotify;
+    openSpotifyLink(url);
+  };
   return (
     <LinearGradient
-      colors={[getScreenGradientFirstColor(domainOfTaste), "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
+      colors={[
+        getScreenGradientFirstColor(domainOfTaste.domainId),
+        "rgba(1, 4, 43, 1)",
+      ]} // Specify the colors for the gradient
       style={{
         ...styles.container,
         // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
       }}
     >
       <StatusBar
-        backgroundColor={getScreenGradientFirstColor(domainOfTaste)}
+        backgroundColor={getScreenGradientFirstColor(domainOfTaste.domainId)}
         barStyle="light-content"
       />
       <SafeAreaView
@@ -253,13 +298,125 @@ export default function PostsViewScreen() {
                 justifyContent: "flex-end",
               }}
             >
+              {/* {(post.domainId == 0 || post.domainId == 2) && (
+                <View>
+                  <TouchableOpacity
+                    style={{
+                      position: "absolute",
+                      backgroundColor: "rgba(20, 97, 69, 1)",
+                      paddingVertical: normalize(5),
+                      paddingHorizontal: normalize(15),
+                      top: normalize(0),
+                      borderBottomRightRadius: normalize(15),
+                      borderTopLeftRadius: normalize(15),
+                      borderColor: "rgba(29, 185, 84, 1)",
+                      borderWidth: normalize(4),
+                    }}
+                    onPress={handleSpotifyButtonPress}
+                  >
+                    <Image
+                      style={{
+                        width: normalize(30),
+                        height: normalize(30),
+                        // alignItems: "center",
+                        // right: normalize(15),
+                      }}
+                      source={require("../assets/icons/SpotifyIcon.png")}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      position: "absolute",
+                      width: normalize(32),
+                      height: normalize(32),
+                      top: normalize(10),
+                      right: normalize(10),
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(28, 14, 52, 0.65)",
+                      borderRadius: normalize(100),
+                    }}
+                    onPress={handleSoundButtonPress}
+                  >
+                    <Image
+                      style={{
+                        width: isPlaying ? normalize(22) : normalize(18),
+                        height: normalize(18),
+                      }}
+                      source={
+                        isPlaying
+                          ? require("../assets/icons/MuteButtonIcon.png")
+                          : require("../assets/icons/SoundButtonIcon.png")
+                      }
+                    />
+                  </TouchableOpacity>
+                </View>
+              )} */}
+              {(post.domainId == 0 || post.domainId == 2) && (
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    backgroundColor: "rgba(20, 97, 69, 1)",
+                    paddingVertical: normalize(5),
+                    paddingHorizontal: normalize(15),
+                    left: normalize(0),
+                    top: normalize(0),
+                    borderBottomRightRadius: normalize(15),
+                    borderTopLeftRadius: normalize(15),
+                    borderColor: "rgba(29, 185, 84, 1)",
+                    borderWidth: normalize(4),
+                  }}
+                  onPress={handleSpotifyButtonPress}
+                >
+                  <Image
+                    style={{
+                      width: normalize(30),
+                      height: normalize(30),
+                      // alignItems: "center",
+                      // right: normalize(15),
+                    }}
+                    source={require("../assets/icons/SpotifyIcon.png")}
+                  />
+                </TouchableOpacity>
+              )}
+              {(post.domainId == 0 || post.domainId == 2) && (
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    width: normalize(32),
+                    height: normalize(32),
+                    top: normalize(10),
+                    right: normalize(10),
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(28, 14, 52, 0.65)",
+                    borderRadius: normalize(100),
+                  }}
+                  onPress={handleSoundButtonPress}
+                >
+                  <Image
+                    style={{
+                      width: isPlaying ? normalize(22) : normalize(18),
+                      height: normalize(18),
+                    }}
+                    source={
+                      isPlaying
+                        ? require("../assets/icons/MuteButtonIcon.png")
+                        : require("../assets/icons/SoundButtonIcon.png")
+                    }
+                  />
+                </TouchableOpacity>
+              )}
               {/* <View> */}
+
               <View
                 style={{
                   width: normalize(300),
                   height: normalize(180),
                   borderRadius: normalize(10),
-                  backgroundColor: "rgba(58, 17, 90, 0.9)",
+                  backgroundColor: getScreenGradientFirstColor(
+                    domainOfTaste.domainId
+                  ),
                   backfaceVisibility: "hidden",
                   marginBottom: normalize(10),
                   alignItems: "center",

@@ -8,6 +8,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import {
@@ -18,12 +19,21 @@ import {
   normalize,
   getItemImage,
   getItemTitle,
+  getLikeComponent,
+  getScreenGradientFirstColor,
 } from "../utils";
 import { Post, PostCardProps } from "../types";
 import { DOMAINPOSTTYPE } from "../constants";
-import { DEFAULT_USER, getUserData } from "../utilsData";
+import {
+  DEFAULT_USER,
+  getUserData,
+  openSpotifyLink,
+  playSpotifyPreviewSound,
+  stopSpotifyPreviewSound,
+} from "../utilsData";
 import { fetchUserById, toggleLikePost } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
+import { Audio } from "expo-av";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 
@@ -32,7 +42,8 @@ export default function PostCard({ post }: PostCardProps) {
   const [currentPost, setCurrentPost] = useState<Post>(post);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState(DEFAULT_USER);
-  // console.log("FUK YESSSSS");
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     // Ensure currentUser and currentUser.userId are defined
@@ -59,7 +70,13 @@ export default function PostCard({ post }: PostCardProps) {
     };
 
     fetchUser();
-  }, [currentPost, currentUser]); // Keep currentUser as a dependency
+
+    return () => {
+      if (sound) {
+        sound.unloadAsync(); // Cleanup sound
+      }
+    };
+  }, [currentPost, currentUser, sound]); // Keep currentUser as a dependency
 
   const handleLikePress = async () => {
     try {
@@ -80,222 +97,38 @@ export default function PostCard({ post }: PostCardProps) {
     }
   };
 
-  // console.log("[USER]: ", user);
-  // const user = getUserData(0);    //const user = getUserData(currentPost.userId);
+  const handleSpotifyButtonPress = () => {
+    const url = currentPost.mediaItem.external_urls.spotify;
+    openSpotifyLink(url);
+  };
 
-  const getLikeComponent = (postType?: string) => {
-    switch (postType) {
-      case "Song": {
-        if (isLiked) {
-          return (
-            <TouchableOpacity
-              onPress={handleLikePress}
-              style={{
-                width: normalize(50),
-                height: normalize(50),
-                // right: normalize(21),
-                // bottom: normalize(442),
-                position: "absolute",
-                // zIndex: 1,
-                // top: normalize(33),
-                backgroundColor: "rgba(153, 255, 218, 1)",
-                shadowColor: "black",
-                shadowOffset: { width: 0, height: 0 },
-                shadowRadius: normalize(10),
-                shadowOpacity: 0.6,
-                borderRadius: normalize(15),
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Image
-                source={require("../assets/icons/LikeSelectedIcon.png")}
-                style={{ width: normalize(29), height: normalize(26) }}
-              ></Image>
-            </TouchableOpacity>
-          );
+  const handleSoundButtonPress = () => {
+    if (currentPost.domainId == 0 || currentPost.domainId == 2) {
+      // console.log(
+      //   "currentPost.mediaItem.audio_preview_url",
+      //   currentPost.mediaItem.preview_url
+      // );
+      const previewUrl =
+        currentPost.domainId == 0
+          ? currentPost.mediaItem.preview_url
+          : currentPost.mediaItem.audio_preview_url;
+      if (previewUrl != null && previewUrl != undefined) {
+        if (isPlaying) {
+          stopSpotifyPreviewSound(sound, setIsPlaying);
         } else {
-          return (
-            <TouchableOpacity
-              onPress={handleLikePress}
-              style={{
-                width: normalize(50),
-                height: normalize(50),
-                // right: normalize(21),
-                // bottom: normalize(425),
-                position: "absolute",
-                // zIndex: 1,
-                backgroundColor: "rgba(105, 51, 172, 1)",
-                shadowColor: "black",
-                shadowOffset: { width: 0, height: 0 },
-                shadowRadius: normalize(10),
-                shadowOpacity: 0.6,
-                borderRadius: normalize(15),
-                alignItems: "center",
-                justifyContent: "center",
-                borderColor: getMoodTextColor(postType),
-                borderWidth: normalize(3),
-              }}
-            >
-              {/* <View
-                style={{
-                  backgroundColor: "white",
-                  width: normalize(1), 
-                  height: normalize(50), 
-                }}
-              ></View> */}
-              <Image
-                source={require("../assets/icons/MusicLikeNotSelectedIcon.png")}
-                style={{ width: normalize(29), height: normalize(26) }}
-              ></Image>
-            </TouchableOpacity>
-          );
+          playSpotifyPreviewSound(previewUrl, setSound, setIsPlaying);
         }
-      }
-      case "Film/TVShow": {
-        if (isLiked) {
-          return (
-            <TouchableOpacity
-              onPress={handleLikePress}
-              style={{
-                width: normalize(50),
-                height: normalize(50),
-                // right: normalize(21),
-                // bottom: normalize(592),
-                position: "absolute",
-                // zIndex: 1,
-                // top: normalize(33),
-                backgroundColor: "rgba(253, 153, 255, 1)",
-                shadowColor: "black",
-                shadowOffset: { width: 0, height: 0 },
-                shadowRadius: normalize(10),
-                shadowOpacity: 0.6,
-                borderRadius: normalize(15),
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Image
-                source={require("../assets/icons/LikeSelectedIcon.png")}
-                style={{ width: normalize(29), height: normalize(26) }}
-              ></Image>
-            </TouchableOpacity>
-          );
-        } else {
-          return (
-            <TouchableOpacity
-              onPress={handleLikePress}
-              style={{
-                width: normalize(50),
-                height: normalize(50),
-                // right: normalize(21),
-                // bottom: normalize(592),
-                position: "absolute",
-                backgroundColor: "rgba(105, 51, 172, 1)",
-                shadowColor: "black",
-                shadowOffset: { width: 0, height: 0 },
-                shadowRadius: normalize(10),
-                shadowOpacity: 0.6,
-                borderRadius: normalize(15),
-                alignItems: "center",
-                justifyContent: "center",
-                borderColor: getMoodTextColor(postType),
-                borderWidth: normalize(3),
-              }}
-            >
-              <Image
-                source={require("../assets/icons/FilmsTVShowsLikeNotSelectedIcon.png")}
-                style={{ width: normalize(29), height: normalize(26) }}
-              ></Image>
-            </TouchableOpacity>
-          );
-        }
-      }
-      case "PodcastEpisode": {
-        if (isLiked) {
-          return (
-            <TouchableOpacity
-              onPress={handleLikePress}
-              style={{
-                width: normalize(50),
-                height: normalize(50),
-                // right: normalize(21),
-                // bottom: normalize(442),
-                position: "absolute",
-                // top: normalize(33),
-                backgroundColor: "rgba(197, 238, 182, 1)",
-                shadowColor: "black",
-                shadowOffset: { width: 0, height: 0 },
-                shadowRadius: normalize(10),
-                shadowOpacity: 0.6,
-
-                borderRadius: normalize(15),
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Image
-                source={require("../assets/icons/LikeSelectedIcon.png")}
-                style={{ width: normalize(29), height: normalize(26) }}
-              ></Image>
-            </TouchableOpacity>
-          );
-        } else {
-          return (
-            <TouchableOpacity
-              onPress={handleLikePress}
-              style={{
-                width: normalize(50),
-                height: normalize(50),
-                // right: normalize(21),
-                // bottom: normalize(442),
-                position: "absolute",
-                // top: normalize(33),
-                backgroundColor: "rgba(105, 51, 172, 1)",
-                shadowColor: "black",
-                shadowOffset: { width: 0, height: 0 },
-                shadowRadius: normalize(10),
-                shadowOpacity: 0.6,
-
-                borderRadius: normalize(15),
-                alignItems: "center",
-                justifyContent: "center",
-                borderColor: getMoodTextColor(postType),
-                borderWidth: normalize(3),
-              }}
-            >
-              <Image
-                source={require("../assets/icons/PodcastsEpisodesLikeNotSelectedIcon.png")}
-                style={{ width: normalize(29), height: normalize(26) }}
-              ></Image>
-            </TouchableOpacity>
-          );
-        }
-      }
-      default: {
-        return (
-          <View
-            style={{
-              width: normalize(50),
-              height: normalize(50),
-              // right: normalize(21),
-              // bottom: normalize(442),
-              position: "absolute",
-              // zIndex: 1,
-              // top: normalize(33),
-              backgroundColor: "rgba(105, 51, 172, 1)",
-              shadowColor: "black",
-              shadowOffset: { width: 0, height: 0 },
-              shadowRadius: normalize(10),
-              shadowOpacity: 0.6,
-
-              borderRadius: normalize(15),
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          />
+      } else {
+        Alert.alert(
+          "Ups!",
+          `Sorry, no preview is available for "${currentPost.mediaItem.name}". Please check it out on Spotify.`
         );
       }
+    } else {
+      Alert.alert(
+        "Ups!",
+        "Sorry, no previews are available for Movies and TV Shows"
+      );
     }
   };
 
@@ -308,7 +141,7 @@ export default function PostCard({ post }: PostCardProps) {
         gap: normalize(7),
       }}
     >
-      <View
+      {/* <View
         style={{
           zIndex: 1,
           alignItems: "center",
@@ -318,65 +151,76 @@ export default function PostCard({ post }: PostCardProps) {
           right: normalize(46),
         }}
       >
-        {getLikeComponent(DOMAINPOSTTYPE.get(currentPost.domainId))}
-      </View>
-      {/* 
-      <ScrollView
-        horizontal
-      > */}
-      <ScrollView
-        // postTitleContainer
-        // style={styles.postTitleContainer}
-        style={{
-          maxWidth: normalize(300),
-          // borderColor: "white",
-          // borderWidth: normalize(4),
-          // alignItems: "center",
-          // justifyContent: "center",
-        }}
-        horizontal
-      >
-        <Text
-          // postTitleText
-          // style={[
-          //   { ...styles.postTitleText },
-          //   DOMAINPOSTTYPE.get(post.domainId) === "Song"
-          //     ? styles.textTitleMusic
-          //     : styles.textTitleFilms_TV,
-          // ]}
-          numberOfLines={1}
-          style={{
-            color: getMoodTextColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
-            fontSize: normalize(25),
-            fontWeight: "500",
-            textAlign: "center",
-            // borderColor: "white",
-            // borderRadius: normalize(10),
-            // borderWidth: normalize(4),
-          }}
-        >
-          {getItemTitle(currentPost.mediaItem, currentPost.domainId)}
-        </Text>
-      </ScrollView>
-      {/* </ScrollView> */}
-
-      {/* POST SUBTITLE */}
+        {getLikeComponent(
+          isLiked,
+          handleLikePress,
+          DOMAINPOSTTYPE.get(currentPost.domainId)
+        )}
+      </View> */}
 
       <View
         style={{
-          maxWidth: normalize(300),
+          width: normalize(300),
+          height: normalize(90),
+          borderTopLeftRadius: normalize(15),
+          borderTopRightRadius: normalize(15),
+          backgroundColor: getMoodContainerColor(
+            DOMAINPOSTTYPE.get(currentPost.domainId)
+          ),
+          bottom: normalize(-20),
+          alignItems: "center",
+          paddingTop: normalize(10),
+          paddingBottom: normalize(24),
+          // justifyContent: "center",
+          // gap: normalize(0),
         }}
       >
-        {getItemSubTitle(currentPost.mediaItem, currentPost.domainId)}
-      </View>
+        <ScrollView
+          style={{
+            maxWidth: normalize(300),
 
+            // borderColor: "white",
+            // borderWidth: normalize(4),
+            // alignItems: "center",
+            // justifyContent: "center",
+          }}
+          horizontal
+        >
+          <Text
+            // postTitleText
+            numberOfLines={1}
+            style={{
+              color: getMoodTextColor(DOMAINPOSTTYPE.get(currentPost.domainId)),
+              fontSize: normalize(25),
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            {getItemTitle(currentPost.mediaItem, currentPost.domainId)}
+          </Text>
+        </ScrollView>
+        <View
+          style={{
+            // marginTop: normalize(10),
+            maxWidth: normalize(300),
+          }}
+        >
+          {getItemSubTitle(currentPost.mediaItem, currentPost.domainId)}
+        </View>
+      </View>
       {/* POST IMAGE */}
       <View
         style={{
-          backgroundColor: getMoodTextColor(
-            DOMAINPOSTTYPE.get(currentPost.domainId)
-          ),
+          backgroundColor: getScreenGradientFirstColor(currentPost.domainId),
           borderRadius: normalize(15),
+          ...(isPlaying
+            ? {
+                borderColor: getMoodTextColor(
+                  DOMAINPOSTTYPE.get(currentPost.domainId)
+                ),
+                borderWidth: normalize(5),
+              }
+            : {}),
         }}
       >
         <Image
@@ -389,15 +233,98 @@ export default function PostCard({ post }: PostCardProps) {
                 ? normalize(450)
                 : normalize(300),
             borderRadius: normalize(15),
-            borderColor: getMoodContainerColor(
-              DOMAINPOSTTYPE.get(currentPost.domainId)
-            ),
-            borderWidth: normalize(2),
-            opacity: 1,
+            opacity: isPlaying ? 0.5 : 1,
+            ...(isPlaying
+              ? {}
+              : {
+                  borderColor: getMoodContainerColor(
+                    DOMAINPOSTTYPE.get(currentPost.domainId)
+                  ),
+                  borderWidth: normalize(2),
+                }),
           }}
           // source={{ uri: post.mediaItem.image }}
           source={getItemImage(currentPost.mediaItem, post.domainId)}
         />
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            zIndex: 0,
+            width: normalize(60),
+            height: normalize(40),
+            right: 0,
+            borderTopRightRadius: normalize(15),
+            borderBottomLeftRadius: normalize(15),
+            backgroundColor: isLiked
+              ? "rgba(156, 75, 255, 0.9)"
+              : "rgba(82, 42, 154, 0.75)",
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+          onPress={handleLikePress}
+        >
+          <Image
+            style={{
+              width: normalize(25),
+              height: normalize(35),
+            }}
+            source={require("../assets/icons/RocksButtonIcon.png")}
+          />
+        </TouchableOpacity>
+        {(currentPost.domainId == 0 || currentPost.domainId == 2) && (
+          <View>
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                backgroundColor: "rgba(20, 97, 69, 1)",
+                paddingVertical: normalize(5),
+                paddingHorizontal: normalize(15),
+                bottom: normalize(0),
+                borderBottomLeftRadius: normalize(15),
+                borderTopRightRadius: normalize(15),
+                borderColor: "rgba(29, 185, 84, 1)",
+                borderWidth: normalize(4),
+              }}
+              onPress={handleSpotifyButtonPress}
+            >
+              <Image
+                style={{
+                  width: normalize(30),
+                  height: normalize(30),
+                  // alignItems: "center",
+                  // right: normalize(15),
+                }}
+                source={require("../assets/icons/SpotifyIcon.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                width: normalize(32),
+                height: normalize(32),
+                bottom: normalize(10),
+                right: normalize(10),
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(28, 14, 52, 0.65)",
+                borderRadius: normalize(100),
+              }}
+              onPress={handleSoundButtonPress}
+            >
+              <Image
+                style={{
+                  width: isPlaying ? normalize(22) : normalize(18),
+                  height: normalize(18),
+                }}
+                source={
+                  isPlaying
+                    ? require("../assets/icons/MuteButtonIcon.png")
+                    : require("../assets/icons/SoundButtonIcon.png")
+                }
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       {/* MOODS */}

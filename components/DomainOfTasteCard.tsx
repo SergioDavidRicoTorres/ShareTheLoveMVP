@@ -64,7 +64,7 @@ export default function DomainOfTasteCard({
     fetchData();
 
     // Reset refresh state if it was triggered
-    if (refresh) {
+    if (refresh && setRefresh) {
       setRefresh(false);
     }
   }, [userId, category.domainId, refresh, setRefresh]); // Include refresh and setRefresh as dependencies

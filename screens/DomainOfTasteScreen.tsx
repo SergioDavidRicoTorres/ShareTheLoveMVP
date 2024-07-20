@@ -132,14 +132,17 @@ export default function DomainOfTasteScreen() {
 
   return (
     <LinearGradient
-      colors={[getScreenGradientFirstColor(domainOfTaste), "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
+      colors={[
+        getScreenGradientFirstColor(domainOfTaste.domainId),
+        "rgba(1, 4, 43, 1)",
+      ]} // Specify the colors for the gradient
       style={{
         ...styles.container,
         // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
       }}
     >
       <StatusBar
-        backgroundColor={getScreenGradientFirstColor(domainOfTaste)}
+        backgroundColor={getScreenGradientFirstColor(domainOfTaste.domainId)}
         barStyle="light-content"
       />
       <SafeAreaView

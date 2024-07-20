@@ -31,7 +31,6 @@ import {
 } from "../types";
 
 import { DOMAINPOSTTYPE } from "../constants";
-import { getPlaylistId, getPlaylistsPostsData, getPosts } from "../utilsData";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -168,8 +167,10 @@ export default function PlaylistCard({
               borderBottomRightRadius: normalize(0),
               borderBottomLeftRadius: normalize(10),
               // borderWidth: normalize(4),
-              backgroundColor: getScreenGradientFirstColor(domainOfTaste),
-              borderColor: getScreenGradientFirstColor(domainOfTaste),
+              backgroundColor: getScreenGradientFirstColor(
+                domainOfTaste.domainId
+              ),
+              borderColor: getScreenGradientFirstColor(domainOfTaste.domainId),
             }}
             onPress={() => confirmDeletePlaylist(playlistId)}
           >

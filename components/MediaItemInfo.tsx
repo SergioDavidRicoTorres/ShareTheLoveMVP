@@ -13,6 +13,7 @@ import {
 import { getItemTitle, normalize } from "../utils";
 import { MediaItemInfoProps, Post } from "../types";
 import { DOMAINPOSTTYPE } from "../constants";
+import { openSpotifyLink } from "../utilsData";
 
 const { width } = Dimensions.get("window"); // screen width constant
 
@@ -376,13 +377,7 @@ export default function MediaItemInfo({
 }: MediaItemInfoProps) {
   const handleSpotifyButtonPress = () => {
     const url = post.mediaItem.external_urls.spotify;
-    Linking.canOpenURL(url).then((supported) => {
-      if (supported) {
-        Linking.openURL(url);
-      } else {
-        console.log("Don't know how to open URI: " + url);
-      }
-    });
+    openSpotifyLink(url);
   };
 
   return (
