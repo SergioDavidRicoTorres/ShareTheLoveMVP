@@ -160,7 +160,7 @@ export default function PlaylistCard({
           width: normalize(373),
           //   height: 360,
           paddingBottom: 0,
-          borderRadius: normalize(15),
+          borderRadius: normalize(11),
           backgroundColor: getPlaylistBigCardBackgroundColor(domainOfTaste),
         }}
       >
