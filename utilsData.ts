@@ -9,7 +9,6 @@ import {
   MoodsAndTagsCatalogue,
   MoodsAndTagsCategory,
 } from "./types";
-import untypedMoodsAndTags from "./Database/moodsAndTags.json";
 import {
   getAuthSpotifyUserData,
   checkTokenValidity,
@@ -29,7 +28,7 @@ const convertUsersToDateObjects = (untypedUsers: any[]): User[] => {
 const USERS: User[] = convertUsersToDateObjects(untypedUsers);
 // const PLAYLISTS: Playlist[] = untypedPlaylists;
 // const POSTS: Post[] = untypedPosts;
-const MOODSANDTAGS: MoodsAndTagsCatalogue = untypedMoodsAndTags;
+// const MOODSANDTAGS: MoodsAndTagsCatalogue = untypedMoodsAndTags;
 
 export const DEFAULT_USER: User = {
   name: "Default User Name",
@@ -174,56 +173,67 @@ export const getChronologicallySortedPosts = (posts: Post[]) => {
   return [...posts].sort((a, b) => b.creationTime - a.creationTime);
 };
 
-export const getMoodsAndTagsCategories = (postType: string) => {
-  switch (postType) {
-    case "Song":
-      return MOODSANDTAGS.Music;
-    case "Film/TVShow":
-      return MOODSANDTAGS.FilmsAndTVShows;
-    case "PodcastEpisode":
-      return MOODSANDTAGS.PodcastsEpisodes;
-    default:
-      return [];
-  }
-};
+// export const getMoodsAndTagsCategories = (
+//   MOODSANDTAGS: MoodsAndTagsCatalogue,
+//   postType: string
+// ) => {
+//   switch (postType) {
+//     case "Song":
+//       return MOODSANDTAGS.Music;
+//     case "Film/TVShow":
+//       return MOODSANDTAGS.FilmsAndTVShows;
+//     case "PodcastEpisode":
+//       return MOODSANDTAGS.PodcastsEpisodes;
+//     default:
+//       return [];
+//   }
+// };
 
-export const getAllMusicMoodAndTags = () => {
-  let allMusicMoods: Mood[] = [];
-  const musicMoodsCategories = MOODSANDTAGS.Music;
-  for (const category of musicMoodsCategories) {
-    allMusicMoods = allMusicMoods.concat(category.moodsTagsList);
-  }
-  return allMusicMoods;
-};
+// export const getAllMusicMoodAndTags = (MOODSANDTAGS: MoodsAndTagsCatalogue) => {
+//   let allMusicMoods: Mood[] = [];
+//   const musicMoodsCategories = MOODSANDTAGS.Music;
+//   for (const category of musicMoodsCategories) {
+//     allMusicMoods = allMusicMoods.concat(category.moodsTagsList);
+//   }
+//   return allMusicMoods;
+// };
 
-export const getAllFilmsTVShowsMoodAndTags = () => {
-  let allFilmsTVShowsMoods: Mood[] = [];
-  const filmsTVShowsMoodsCategories = MOODSANDTAGS.FilmsAndTVShows;
-  for (const category of filmsTVShowsMoodsCategories) {
-    allFilmsTVShowsMoods = allFilmsTVShowsMoods.concat(category.moodsTagsList);
-  }
-  return allFilmsTVShowsMoods;
-};
+// export const getAllFilmsTVShowsMoodAndTags = (
+//   MOODSANDTAGS: MoodsAndTagsCatalogue
+// ) => {
+//   let allFilmsTVShowsMoods: Mood[] = [];
+//   const filmsTVShowsMoodsCategories = MOODSANDTAGS.FilmsAndTVShows;
+//   for (const category of filmsTVShowsMoodsCategories) {
+//     allFilmsTVShowsMoods = allFilmsTVShowsMoods.concat(category.moodsTagsList);
+//   }
+//   return allFilmsTVShowsMoods;
+// };
 
-export const getAllPodcastsEpisodesMoodAndTags = () => {
-  let allPodcastsEpisodesMoods: Mood[] = [];
-  const podcastsEpisodesMoodsCategories = MOODSANDTAGS.PodcastsEpisodes;
-  for (const category of podcastsEpisodesMoodsCategories) {
-    allPodcastsEpisodesMoods = allPodcastsEpisodesMoods.concat(
-      category.moodsTagsList
-    );
-  }
-  return allPodcastsEpisodesMoods;
-};
+// export const getAllPodcastsEpisodesMoodAndTags = (
+//   MOODSANDTAGS: MoodsAndTagsCatalogue
+// ) => {
+//   let allPodcastsEpisodesMoods: Mood[] = [];
+//   const podcastsEpisodesMoodsCategories = MOODSANDTAGS.PodcastsEpisodes;
+//   for (const category of podcastsEpisodesMoodsCategories) {
+//     allPodcastsEpisodesMoods = allPodcastsEpisodesMoods.concat(
+//       category.moodsTagsList
+//     );
+//   }
+//   return allPodcastsEpisodesMoods;
+// };
 
-export const getAllMoodsAndTagsArray = () => {
-  let allMoods: Mood[] = [];
-  allMoods = allMoods.concat(getAllMusicMoodAndTags());
-  allMoods = allMoods.concat(getAllFilmsTVShowsMoodAndTags());
-  allMoods = allMoods.concat(getAllPodcastsEpisodesMoodAndTags());
-  // console.log(allMoods)
-  return allMoods;
-};
+// export const getAllMoodsAndTagsArray = (
+//   moodsAndTags: MoodsAndTagsCatalogue
+// ) => {
+//   console.log("[getAllMusicMoodAndTagsArrays()]: MOODSANDTAGS :", moodsAndTags);
+
+//   let allMoods: Mood[] = [];
+//   allMoods = allMoods.concat(getAllMusicMoodAndTags(moodsAndTags));
+//   allMoods = allMoods.concat(getAllFilmsTVShowsMoodAndTags(moodsAndTags));
+//   allMoods = allMoods.concat(getAllPodcastsEpisodesMoodAndTags(moodsAndTags));
+//   // console.log(allMoods)
+//   return allMoods;
+// };
 
 export const searchPodcastEpisode = async (searchName: string) => {
   try {

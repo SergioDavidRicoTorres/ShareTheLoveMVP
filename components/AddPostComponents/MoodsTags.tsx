@@ -29,8 +29,9 @@ import {
   transformMoodsToStringArray,
 } from "../../utils";
 import { Mood, MoodsAndTagsCategory, MoodsTagsProps } from "../../types";
-import { getMoodsAndTagsCategories } from "../../utilsData";
+// import { getMoodsAndTagsCategories } from "../../utilsData";
 import { sharedStyles } from "../../sharedStyles";
+import { useMoodsAndTags } from "../../MoodsAndTagsContext";
 
 // screen WIDTH constant:
 const { width } = Dimensions.get("window");
@@ -43,6 +44,8 @@ function MoodsTags({
   postType,
   domainId,
 }: MoodsTagsProps) {
+  const { moodsAndTags, getMoodsAndTagsCategories } = useMoodsAndTags();
+
   const MOODSANDTAGS = getMoodsAndTagsCategories(postType);
 
   // const MOODSANDTAGS = getMoodsAndTagsCategories(postType).map(category => ({

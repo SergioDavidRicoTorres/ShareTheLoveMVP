@@ -469,8 +469,21 @@ export const getScreenGradientFirstColor = (domainId: number) => {
   }
 };
 
-export const getDomainsOfTasteGradientsFirstColor = (domain: Domain) => {
-  switch (domain.domainId) {
+// export const getDomainsOfTasteGradientsFirstColor = (domain: Domain) => {
+//   switch (domain.domainId) {
+//     case 0:
+//       return "rgba(0, 209, 134, 0.75)";
+//     case 1:
+//       return "rgba(207, 0, 211, 0.75)";
+//     case 2:
+//       return "rgba(110, 212, 73, 0.75)";
+//     default:
+//       console.log('Invalid "domain" was passed!');
+//       return "rgba(105, 51, 172, 1)";
+//   }
+// };
+export const getDomainsOfTasteGradientsFirstColor = (domainId: number) => {
+  switch (domainId) {
     case 0:
       return "rgba(0, 209, 134, 0.75)";
     case 1:
@@ -634,19 +647,15 @@ export const getPlaylistsMediaItemComponent = ({
   profileContentNavigation,
   user,
   isCurrentUser,
+  index,
+  handlePostPress,
 }: PlaylistsMediaItemComponentProps) => {
   switch (domainOfTaste.domainId) {
     case 0: {
       return (
         // <Text>{post.toString()}</Text>
         <TouchableOpacity
-          onPress={() => {
-            profileContentNavigation.navigate("PostsViewScreen", {
-              domainOfTaste,
-              post,
-              user,
-            });
-          }}
+          onPress={() => handlePostPress(index)}
           style={{
             paddingTop: normalize(10),
           }}
@@ -788,13 +797,7 @@ export const getPlaylistsMediaItemComponent = ({
     case 1: {
       return (
         <TouchableOpacity
-          onPress={() => {
-            profileContentNavigation.navigate("PostsViewScreen", {
-              domainOfTaste,
-              post,
-              user,
-            });
-          }}
+          onPress={() => handlePostPress(index)}
           style={{
             paddingTop: normalize(10),
           }}
@@ -858,13 +861,7 @@ export const getPlaylistsMediaItemComponent = ({
     case 2: {
       return (
         <TouchableOpacity
-          onPress={() => {
-            profileContentNavigation.navigate("PostsViewScreen", {
-              domainOfTaste,
-              post,
-              user,
-            });
-          }}
+          onPress={() => handlePostPress(index)}
           style={{
             paddingTop: normalize(10),
           }}

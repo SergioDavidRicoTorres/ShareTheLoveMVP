@@ -10,7 +10,14 @@ import {
   FIRESTORE_DB,
 } from "./firebaseConfig";
 import * as ImagePicker from "expo-image-picker";
-import { Domain, Playlist, PlaylistReview, Post, User } from "./types";
+import {
+  Domain,
+  MoodsAndTagsCatalogue,
+  Playlist,
+  PlaylistReview,
+  Post,
+  User,
+} from "./types";
 import {
   arrayRemove,
   arrayUnion,
@@ -393,6 +400,24 @@ export const fetchAllUsers = async () => {
     return [];
   }
 };
+
+export const fetchAllMoodsAndTags =
+  async (): Promise<MoodsAndTagsCatalogue> => {
+    try {
+      const docRef = doc(FIRESTORE_DB, "MoodsAndTags", "MoodsAndTagsData");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        return docSnap.data() as MoodsAndTagsCatalogue;
+      } else {
+        console.error("No such document!");
+        return { Music: [], FilmsAndTVShows: [], PodcastsEpisodes: [] };
+      }
+    } catch (error) {
+      console.error("Error fetching moodsAndTags: ", error);
+      return { Music: [], FilmsAndTVShows: [], PodcastsEpisodes: [] };
+    }
+  };
 
 export const getDomainsPlaylistsData = async (
   userId: string,

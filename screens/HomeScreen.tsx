@@ -17,7 +17,6 @@ import { useNavigation } from "@react-navigation/native";
 import PostCard from "../components/PostCard";
 import { normalize } from "../utils";
 import { HomeNavigationProp, Post } from "../types";
-import { getChronologicallySortedPosts, getPosts } from "../utilsData";
 import { fetchLastPosts } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
 // import { StatusBar } from "expo-status-bar";
@@ -136,7 +135,6 @@ export default function HomeScreen() {
   //   }));
   //   // Now 'posts' is an array of objects, each with an 'id' property
   // });
-  console.log("width: ", width);
   return (
     <LinearGradient // Background Color
       colors={["rgba(105, 51, 172, 1)", "rgba(1, 4, 43, 1)"]}

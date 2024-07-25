@@ -218,7 +218,7 @@ export default function SignUpEnd() {
       Alert.alert(
         "Awesome! You've successfully signed up. Get started by checking out your profile."
       );
-      mainNavigation.navigate("Tabs");
+      // mainNavigation.navigate("Tabs");
     } catch (error) {
       Alert.alert(
         "Oops! We couldn't add the new user. Please try again.",

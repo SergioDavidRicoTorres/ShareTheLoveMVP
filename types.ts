@@ -183,10 +183,10 @@ export type ProfileContentNavigatorParamsList = {
     selectedUserId?: string;
   };
   PostsViewScreen: {
-    domainOfTaste: Domain;
-    post: Post;
+    posts: Post[];
+    playlist: Playlist;
     user: User;
-    selectedUserId?: string;
+    index: number;
   };
   ExternalProfileScreen: {
     selectedUserId?: string;
@@ -218,7 +218,7 @@ export type AuthOptionsProps = {
 };
 
 export type PlaylistCardProps = {
-  playlistId: string;
+  playlist: Playlist;
   domainOfTaste: Domain;
   profileNavigation?: ProfileNavigationProp;
   user: User;
@@ -232,8 +232,20 @@ export type SettingsProps = {
   // authType: string;
 };
 
+export type PostLikesProps = {
+  visible: boolean;
+  onClose: () => void;
+  likesUsersIdsList: string[];
+};
+
 export type PostCardProps = {
   post: Post;
+};
+
+export type BigPostCardProps = {
+  post: Post;
+  domainId: number;
+  user: User;
 };
 
 export type PlaylistsMediaItemComponentProps = {
@@ -242,6 +254,8 @@ export type PlaylistsMediaItemComponentProps = {
   profileContentNavigation: ProfileContentNavigationProp;
   user: User;
   isCurrentUser: boolean;
+  index: number;
+  handlePostPress: (index: number) => void;
 };
 
 export type MediaItemInfoProps = {

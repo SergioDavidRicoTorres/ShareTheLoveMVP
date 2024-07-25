@@ -69,7 +69,8 @@ export default function Auth() {
             style={{
               color: "rgba(156, 75, 255, 1)",
               fontFamily: "Helvetica",
-              fontSize: Platform.OS === "ios" ? normalize(60) : normalize(50),
+              fontSize:
+                Platform.OS === "android" ? normalize(55) : normalize(60),
               fontWeight: "400",
               letterSpacing: -1.2,
             }}
@@ -90,7 +91,7 @@ export default function Auth() {
             borderRadius: normalize(20),
             backgroundColor: "rgba(156, 75, 255, 1)",
             marginTop:
-              Platform.OS == "android" ? normalize(110) : normalize(141),
+              Platform.OS == "android" ? normalize(80) : normalize(141),
           }}
           onPress={() => {
             setAuthType("Sign Up");

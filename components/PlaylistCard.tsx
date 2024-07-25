@@ -45,15 +45,16 @@ const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
 
 export default function PlaylistCard({
-  playlistId,
+  playlist,
   domainOfTaste,
   profileNavigation,
   user,
   posts,
 }: PlaylistCardProps) {
+  const playlistId = playlist.playlistId;
   const { currentUser } = useCurrentUser();
   const isCurrentUser = currentUser?.userId == user.userId;
-  const [playlist, setPlaylist] = useState<Playlist>(DEFAULT_PLAYLIST);
+  // const [playlist, setPlaylist] = useState<Playlist>(DEFAULT_PLAYLIST);
   const [currentReviewScore, setCurrentReviewScore] = useState<number>(0); // Original score from database
   const [sliderScore, setSliderScore] = useState<number>(0); // Score being manipulated by slider
   const [isScoreUpToDate, setIsScoreUpToDate] = useState(
@@ -62,39 +63,48 @@ export default function PlaylistCard({
   // const [isScoreUpToDate, setIsScoreUpToDate] = useState (true); // true
   const profileContentNavigation =
     useNavigation<ProfileContentNavigationProp>();
-  useEffect(() => {
-    if (!playlistId) return;
-    const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
+  // useEffect(() => {
+  //   if (!playlistId) return;
+  //   const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
 
-    const unsubscribe = onSnapshot(
-      playlistRef,
-      (docSnap) => {
-        if (docSnap.exists()) {
-          let fetchedPlaylist = docSnap.data() as Playlist;
-          fetchedPlaylist = { ...fetchedPlaylist, playlistId: playlistId }; // Adding playlistId to the fetched object
-          setPlaylist(fetchedPlaylist);
+  //   const unsubscribe = onSnapshot(
+  //     playlistRef,
+  //     (docSnap) => {
+  //       if (docSnap.exists()) {
+  //         let fetchedPlaylist = docSnap.data() as Playlist;
+  //         fetchedPlaylist = { ...fetchedPlaylist, playlistId: playlistId }; // Adding playlistId to the fetched object
+  //         setPlaylist(fetchedPlaylist);
 
-          const userReview = fetchedPlaylist.reviewsList?.find(
-            (review) => review.userId === currentUser?.userId
-          );
-          const fetchedScore = userReview ? userReview.score : 0;
-          setCurrentReviewScore(fetchedScore);
-          setSliderScore(fetchedScore); // Initialize slider with the fetched score
-        } else {
-          console.error("Playlist not found");
-          setCurrentReviewScore(0);
-          setSliderScore(0);
-        }
-      },
-      (err) => {
-        console.error("Error fetching playlist:", err.message);
-        setCurrentReviewScore(0);
-        setSliderScore(0);
-      }
-    );
+  //         const userReview = fetchedPlaylist.reviewsList?.find(
+  //           (review) => review.userId === currentUser?.userId
+  //         );
+  //         const fetchedScore = userReview ? userReview.score : 0;
+  //         setCurrentReviewScore(fetchedScore);
+  //         setSliderScore(fetchedScore); // Initialize slider with the fetched score
+  //       } else {
+  //         console.error("Playlist not found");
+  //         setCurrentReviewScore(0);
+  //         setSliderScore(0);
+  //       }
+  //     },
+  //     (err) => {
+  //       console.error("Error fetching playlist:", err.message);
+  //       setCurrentReviewScore(0);
+  //       setSliderScore(0);
+  //     }
+  //   );
 
-    return () => unsubscribe();
-  }, [playlistId, currentUser?.userId]);
+  //   return () => unsubscribe();
+  // }, [playlistId, currentUser?.userId]);
+
+  const handlePostPress = (index: number) => {
+    profileContentNavigation.navigate("PostsViewScreen", {
+      playlist,
+      posts,
+      user,
+      index,
+    });
+  };
 
   const handleScoreChange = (newScore: number) => {
     const updatedScore = parseFloat(newScore.toFixed(1));
@@ -239,7 +249,7 @@ export default function PlaylistCard({
             style={{ marginTop: normalize(12), marginLeft: normalize(10) }}
             data={posts}
             horizontal
-            renderItem={({ item }) =>
+            renderItem={({ item, index }) =>
               // <Text>
               //   {item.toString()}
               // </Text>
@@ -249,6 +259,8 @@ export default function PlaylistCard({
                 profileContentNavigation: profileContentNavigation,
                 user,
                 isCurrentUser,
+                index,
+                handlePostPress,
               })
             }
             keyExtractor={(post, index) => index.toString()}

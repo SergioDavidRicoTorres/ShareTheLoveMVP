@@ -15,7 +15,6 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import allMoods from "../../DummyData/AllMoods.json";
-import MOODSANDTAGS from "../../Database/moodsAndTags.json";
 import AddMood from "./AddMood";
 import {
   getGradientsFirstColor,
@@ -32,7 +31,7 @@ import {
   Playlist,
   Post,
 } from "../../types";
-import { getAllMoodsAndTagsArray } from "../../utilsData";
+// import { getAllMoodsAndTagsArray } from "../../utilsData";
 import { DOMAINPOSTTYPE } from "../../constants";
 import {
   addPlaylistToDB,
@@ -42,6 +41,7 @@ import {
 } from "../../utilsFirebase";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { MEDIATYPENAME } from "../../constants";
+import { useMoodsAndTags } from "../../MoodsAndTagsContext";
 
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
@@ -57,7 +57,8 @@ function AddPlaylist({
   domainId,
   hasNewPost,
 }: AddPlaylistProps) {
-  // const postType = DOMAINPOSTTYPE.get(domainId);
+  const { getAllMoodsAndTagsArray } = useMoodsAndTags();
+
   const [playlistTitle, setPlaylistTitle] = useState("");
   const handleTitleChange = (value: string) => {
     setPlaylistTitle(value);
@@ -288,7 +289,7 @@ function AddPlaylist({
           <View
             style={{
               padding: normalize(5),
-              height: Platform.OS === "android" ? width * 1.77 : normalize(766),
+              height: Platform.OS === "android" ? width * 1.8 : normalize(766),
               backgroundColor: "rgba(156, 75, 255, 1)",
               borderRadius: normalize(10),
             }}
@@ -298,7 +299,7 @@ function AddPlaylist({
               style={{
                 ...styles.backgroundGradient,
                 height:
-                  Platform.OS === "android" ? width * 1.75 : normalize(756),
+                  Platform.OS === "android" ? width * 1.77 : normalize(756),
               }}
             >
               {/* Modal Content */}
@@ -418,7 +419,10 @@ function AddPlaylist({
                     onChangeText={handleTitleChange}
                     style={{
                       color: "white",
-                      fontSize: normalize(22),
+                      fontSize:
+                        Platform.OS == "android"
+                          ? normalize(20)
+                          : normalize(22),
                       marginHorizontal: normalize(8),
                     }}
                     placeholder="Write Your Playlist Title..."
@@ -450,9 +454,7 @@ function AddPlaylist({
                         ? normalize(360)
                         : normalize(363),
                     height:
-                      Platform.OS == "android"
-                        ? normalize(312)
-                        : normalize(290),
+                      Platform.OS == "android" ? width * 0.64 : normalize(290),
                     backgroundColor: "rgba(203, 203, 203, 0.5)",
                     borderRadius: normalize(10),
                     justifyContent: "center",
@@ -489,7 +491,10 @@ function AddPlaylist({
                             getCarouselNumColumns(allMoods.length)
                           )}
                           data={category.moodsTagsList}
-                          style={{ paddingTop: normalize(10) }}
+                          style={{
+                            paddingTop: normalize(10),
+                            // height: normalize(100),
+                          }}
                           renderItem={({ item, index: itemIndex }) => {
                             return (
                               <TouchableOpacity
@@ -518,7 +523,10 @@ function AddPlaylist({
                                         justifyContent: "center",
                                         alignItems: "center",
                                         borderRadius: normalize(10),
-                                        marginVertical: normalize(8),
+                                        marginVertical:
+                                          Platform.OS == "android"
+                                            ? normalize(4)
+                                            : normalize(8),
                                         // Platform.OS == "android"
                                         //   ? normalize(4)
                                         //   : normalize(8),
@@ -532,7 +540,10 @@ function AddPlaylist({
                                 <Text
                                   style={{
                                     fontWeight: "600",
-                                    fontSize: normalize(18),
+                                    fontSize:
+                                      Platform.OS == "android"
+                                        ? normalize(12)
+                                        : normalize(18),
                                     color: "rgba(201, 157, 255, 1)",
                                     // color: getMoodTextColor(postType),
                                   }}
@@ -555,7 +566,8 @@ function AddPlaylist({
                     }}
                     style={{
                       top: normalize(16),
-                      paddingVertical: normalize(5),
+                      paddingVertical:
+                        Platform.OS == "android" ? normalize(4) : normalize(5),
                       paddingHorizontal: normalize(10),
                       justifyContent: "center",
                       alignItems: "center",

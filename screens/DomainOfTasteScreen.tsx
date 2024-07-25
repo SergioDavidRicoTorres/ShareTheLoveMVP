@@ -80,7 +80,6 @@ export default function DomainOfTasteScreen() {
     user.userId !== undefined
       ? user.userId
       : "Cannot define userId: no user was passed";
-  console.log("userId: ", userId);
   // const userId = isCurrentUser ? selectedUserId : (FIREBASE_AUTH.currentUser?.uid || "defaultUserId");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [clusteredPlaylistsPosts, setClusteredPlaylistsPosts] =
@@ -247,11 +246,7 @@ export default function DomainOfTasteScreen() {
                 // <View>
                 //   <Text>{playlist.playlistId}</Text>
                 <PlaylistCard
-                  playlistId={
-                    playlist.playlistId !== undefined
-                      ? playlist.playlistId
-                      : "DEFAULT_PLAYLIST_ID"
-                  }
+                  playlist={playlist}
                   domainOfTaste={domainOfTaste}
                   profileNavigation={
                     isCurrentUser ? profileNavigation : undefined

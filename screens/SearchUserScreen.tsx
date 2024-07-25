@@ -20,10 +20,17 @@ import { normalize } from "../utils";
 import { HomeNavigationProp, ProfileNavigationProp, User } from "../types";
 import { getUsers } from "../utilsData";
 import { fetchAllUsers } from "../utilsFirebase";
+import { useCurrentUser } from "../CurrentUserContext";
 // import { StatusBar } from "expo-status-bar";
 
 export default function SearchUser() {
   // const USERS = getUsers();
+  const { currentUser } = useCurrentUser();
+  if (!currentUser) {
+    // Handle the case where currentUser is null
+    // This could be a loading indicator, a message, or a redirect
+    return <div>Loading user data...</div>;
+  }
   const { width } = Dimensions.get("window"); // screen width constant
   const homeNavigation = useNavigation<HomeNavigationProp>();
   // const profileNavigation = useNavigation<ProfileNavigationProp>();
@@ -133,7 +140,7 @@ export default function SearchUser() {
               width: normalize(340),
               // marginBottom: normalize(20),
               // height: normalize(650),
-              height: Platform.OS === "android" ? width * 1.5 : normalize(630),
+              height: Platform.OS === "android" ? width * 1.55 : normalize(630),
 
               borderRadius: normalize(15),
               borderColor: "rgba(156, 75, 255, 1)",
@@ -187,126 +194,116 @@ export default function SearchUser() {
                     }}
                   />
                 )}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={{
-                      // width: normalize(276),
-                      marginHorizontal: normalize(20),
-                      // height: normalize(50),
-                      paddingVertical: normalize(0),
-                      flexDirection: "row",
-                      // backgroundColor: "white",
-                    }}
-                    onPress={() => handlePress(item)}
-                  >
-                    <Image
+                renderItem={({ item }) =>
+                  currentUser.userId !== item.userId ? (
+                    <TouchableOpacity
                       style={{
-                        width: normalize(60),
-                        height: normalize(60),
-                        borderRadius: normalize(100),
-                        borderColor: "rgba(201, 157, 255, 1)",
-                        borderWidth: normalize(3),
+                        marginHorizontal: normalize(20),
+                        paddingVertical: normalize(0),
+                        flexDirection: "row",
                       }}
-                      source={{ uri: item.profilePicture }}
-                    />
+                      onPress={() => handlePress(item)}
+                    >
+                      <Image
+                        style={{
+                          width: normalize(60),
+                          height: normalize(60),
+                          borderRadius: normalize(100),
+                          borderColor: "rgba(201, 157, 255, 1)",
+                          borderWidth: normalize(3),
+                        }}
+                        source={{ uri: item.profilePicture }}
+                      />
+                      <View
+                        style={{
+                          justifyContent: "center",
+                          marginLeft: normalize(10),
+                          backgroundColor: "rgba(84, 42, 147, 1)",
+                          paddingHorizontal: normalize(12),
+                          width: normalize(220),
+                          borderRadius: normalize(10),
+                          borderColor: "rgba(201, 157, 255, 1)",
+                          borderWidth: normalize(3),
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "rgba(201, 157, 255, 1)",
+                            fontSize: normalize(19),
+                            fontWeight: "700",
+                          }}
+                          numberOfLines={1}
+                        >
+                          {item.name}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: normalize(17),
+                            fontWeight: "300",
+                          }}
+                          numberOfLines={1}
+                        >
+                          @{item.profileName}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
                     <View
                       style={{
-                        justifyContent: "center",
-                        marginLeft: normalize(10),
-                        backgroundColor: "rgba(84, 42, 147, 1)",
-                        paddingHorizontal: normalize(12),
-                        width: normalize(220),
-                        borderRadius: normalize(10),
-                        borderColor: "rgba(201, 157, 255, 1)",
-                        borderWidth: normalize(3),
+                        marginHorizontal: normalize(20),
+                        paddingVertical: normalize(0),
+                        flexDirection: "row",
                       }}
                     >
-                      <Text
+                      <Image
                         style={{
-                          color: "rgba(201, 157, 255, 1)",
-                          fontSize: normalize(19),
-                          fontWeight: "700",
+                          width: normalize(60),
+                          height: normalize(60),
+                          borderRadius: normalize(100),
+                          borderColor: "rgba(201, 157, 255, 0.2)",
+                          borderWidth: normalize(3),
+                          opacity: 0.5,
                         }}
-                        numberOfLines={1}
-                      >
-                        {item.name}
-                      </Text>
-                      <Text
+                        source={{ uri: item.profilePicture }}
+                      />
+                      <View
                         style={{
-                          color: "white",
-                          fontSize: normalize(17),
-                          fontWeight: "300",
+                          justifyContent: "center",
+                          marginLeft: normalize(10),
+                          backgroundColor: "rgba(84, 42, 147, 0.2)",
+                          paddingHorizontal: normalize(12),
+                          width: normalize(220),
+                          borderRadius: normalize(10),
+                          borderColor: "rgba(201, 157, 255, 0.2)",
+                          borderWidth: normalize(3),
                         }}
-                        numberOfLines={1}
                       >
-                        @{item.profileName}
-                      </Text>
+                        <Text
+                          style={{
+                            color: "rgba(201, 157, 255, 0.2)",
+                            fontSize: normalize(19),
+                            fontWeight: "700",
+                          }}
+                          numberOfLines={1}
+                        >
+                          {item.name}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "rgba(255,255,255,0.2)",
+                            fontSize: normalize(17),
+                            fontWeight: "300",
+                          }}
+                          numberOfLines={1}
+                        >
+                          @{item.profileName}
+                        </Text>
+                      </View>
                     </View>
-                  </TouchableOpacity>
-                )}
+                  )
+                }
               />
-              {/* <FlatList
-                        style={{
-                          marginTop: normalize(18),
-                          width: normalize(300),
-                        }}
-                        // snapToAlignment={normalize(300)}
-                        scrollEnabled={false}
-                        data={searchResults}
-                        ItemSeparatorComponent={() => (
-                            <View style={{ height: normalize(20) }} />
-                            )}
-                            renderItem={({ item: user }) => (
-                              <View>
-
-                              {user.profilePicture && (
-                                  <Image
-                                  source={{ uri: user.profilePicture }}
-                                  resizeMethod='resize'
-                                  style={{
-                                      width: normalize(50),
-                                      height: normalize(50),
-                                      borderTopLeftRadius: normalize(5),
-                                      borderBottomLeftRadius: normalize(5),
-                                  }}
-                                  />
-                              )}
-                                <View
-                                style={{
-                                    width: normalize(300),
-                                    // height: normalize(50),
-                                    paddingVertical: 0,
-                                    backgroundColor: "rgba(162, 148, 255, 0.7)", 
-                                        borderRadius: normalize(5),
-                                        flexDirection: "row",
-                                        borderColor: "rgba(162, 148, 255, 1)",
-                                        borderWidth: normalize(2), 
-                                    }}
-                                    >
-                            <View
-                              style={{
-                                  width: normalize(165),
-                                  height: normalize(20),
-                                  marginLeft: normalize(15),
-                                }}
-                                >
-                              <Text
-                                numberOfLines={1}
-                                style={{
-                                    color: "white",
-                                    fontSize: normalize(20),
-                                    fontWeight: "700",
-                                }}
-                                >
-                                {user.name}
-                              </Text>
-                              
-                            </View>
-                          </View>
-                              </View>
-                        )}
-                        keyExtractor={(domain, index) => index.toString()}  //fetch and use element id from firestore
-                              /> */}
             </View>
           </LinearGradient>
         </View>

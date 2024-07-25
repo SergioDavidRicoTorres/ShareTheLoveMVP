@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,6 +14,7 @@ import {
   Platform,
   StatusBar,
   Alert,
+  Button,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -30,6 +31,8 @@ import {
   getMoodTextColor,
   getMoodContainerColor,
   getItemImage,
+  getItemTitle,
+  getSearchBarColor,
 } from "../utils";
 import { DOMAINPOSTTYPE } from "../constants";
 import { normalize } from "../utils";
@@ -39,537 +42,215 @@ import {
   stopSpotifyPreviewSound,
 } from "../utilsData";
 import { Audio } from "expo-av";
-// import { StatusBar } from "expo-status-bar";
+import BigPostCard from "../components/BigPostCard";
+import Carousel from "react-native-reanimated-carousel";
 
 const { width } = Dimensions.get("window"); // screen width constant
-// const normalize = (value: number) => width * (value / 390);
-
-const user = getCurrentUserData();
-
-// const getGradientFirstColor = (domain: Domain) => {
-//   // try {
-//     if (domain.domainId === 0) {
-//       return "rgba(0, 98, 62, 1)";
-//     }
-//     if (domain.domainId === 1) {
-//       return "rgba(99, 0, 101, 1)";
-//     }
-//     if (domain.domainId === 2) {
-//       return "rgba(75, 117, 59, 1)";
-//     }
-//     console.log('Invalid "domain" was passed!');
-//     return "rgba(105, 51, 172, 1)"
-//   // } catch (error) {
-//   //   console.error(error);
-//   //   return [];
-//   // }
-// };
-
-// const getPlaylistContainerColor = (category) => {
-//   try {
-//     if (category.domainId === 0) {
-//       return "rgba(0, 255, 163, 0.3)";
-//     }
-//     if (category.domainId === 1) {
-//       return "rgba(250, 0, 255, 0.3)";
-//     }
-//     if (category.domainId === 2) {
-//       return "rgba(120, 190, 94, 0.3)";
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return [];
-//   }
-// };
-
-// const getMoodTextColor = (category: Domain) => {
-//   try {
-//     if (category.domainId === 0) {
-//       return "rgba(153, 255, 218, 1)";
-//     }
-//     if (category.domainId === 1) {
-//       return "rgba(253, 153, 255, 1)";
-//     }
-//     if (category.domainId === 2) {
-//       return "rgba(197, 238, 182, 1)";
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return [];
-//   }
-// };
-
-const getPlaylistAccentColor = (category: Domain) => {
-  if (category.domainId === 0) {
-    return "rgba(0, 255, 163, 1)";
-  }
-  if (category.domainId === 1) {
-    return "rgba(250, 0, 255, 1)";
-  }
-  if (category.domainId === 2) {
-    return "rgba(154, 255, 118, 1)";
-  }
-  console.log('Invalid "domain" was passed!');
-  return "rgba(105, 51, 172, 1)";
-};
-
-// const getMoodContainerColor = (category) => {
-//   try {
-//     if (category.domainId === 0) {
-//       return "rgba(0, 255, 163, 0.6)";
-//     }
-//     if (category.domainId === 1) {
-//       return "rgba(250, 0, 255, 0.6)";
-//     }
-//     if (category.domainId === 2) {
-//       return "rgba(110, 212, 73, 0.6)";
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return [];
-//   }
-// };
 
 export default function PostsViewScreen() {
-  const handleButtonPress = () => {
-    // Handle button press event
-  };
   const route = useRoute<PostsViewScreenRouteProp>();
   const navigation = useNavigation<ProfileNavigationProp>();
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const { posts, playlist, user, index } = route.params;
+  const domainId = playlist.domainId;
+  const postCardSeparatorWidth = normalize(0); // Width of the separator
 
-  const { domainOfTaste, post, user } = route.params;
-  //---------------------------------------------------------------------------------
-  // ----------------------- OPTIONAL MODAL (MediaItemInfo) ----------------------------
-  //---------------------------------------------------------------------------------
   // Optional Modal Boolean State
   const [isMediaItemInfoModalVisible, setIsMediaItemInfoModalVisible] =
     useState(false);
+
   // Optional Modal show Function
   const toggleMediaItemInfoModal = () => {
     setIsMediaItemInfoModalVisible(!isMediaItemInfoModalVisible);
   };
-  //---------------------------------------------------------------------------------
-  // ----------------------- OPTIONAL MODAL (MediaItemInfo) ----------------------------
-  //---------------------------------------------------------------------------------
-  const handleSoundButtonPress = () => {
-    if (post.domainId == 0 || post.domainId == 2) {
-      // console.log(
-      //   "currentPost.mediaItem.audio_preview_url",
-      //   currentPost.mediaItem.preview_url
-      // );
-      const previewUrl =
-        post.domainId == 0
-          ? post.mediaItem.preview_url
-          : post.mediaItem.audio_preview_url;
-      if (previewUrl != null && previewUrl != undefined) {
-        if (isPlaying) {
-          stopSpotifyPreviewSound(sound, setIsPlaying);
-        } else {
-          playSpotifyPreviewSound(previewUrl, setSound, setIsPlaying);
-        }
-      } else {
-        Alert.alert(
-          "Ups!",
-          `Sorry, no preview is available for "${post.mediaItem.name}". Please check it out on Spotify.`
-        );
-      }
-    } else {
-      Alert.alert(
-        "Ups!",
-        "Sorry, no previews are available for Movies and TV Shows"
-      );
+
+  // Ref and state for FlatList
+  const flatListRef = useRef<FlatList>(null);
+  const [currentIndex, setCurrentIndex] = useState(index || 0);
+
+  const scrollToIndex = (index: number) => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToIndex({ index, animated: true });
+      setCurrentIndex(index);
     }
   };
 
-  const handleSpotifyButtonPress = () => {
-    const url = post.mediaItem.external_urls.spotify;
-    openSpotifyLink(url);
+  const handleNext = () => {
+    if (currentIndex < posts.length - 1) {
+      scrollToIndex(currentIndex + 1);
+    }
   };
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      scrollToIndex(currentIndex - 1);
+    }
+  };
+
   return (
     <LinearGradient
-      colors={[
-        getScreenGradientFirstColor(domainOfTaste.domainId),
-        "rgba(1, 4, 43, 1)",
-      ]} // Specify the colors for the gradient
-      style={{
-        ...styles.container,
-        // paddingVertical: Platform.OS === "android" ? normalize(50) : 0,
-      }}
+      colors={[getScreenGradientFirstColor(domainId), "rgba(1, 4, 43, 1)"]} // Specify the colors for the gradient
+      style={styles.container}
     >
       <StatusBar
-        backgroundColor={getScreenGradientFirstColor(domainOfTaste.domainId)}
+        backgroundColor={getScreenGradientFirstColor(domainId)}
         barStyle="light-content"
       />
-      <SafeAreaView
-        style={{
-          ...styles.container,
-          // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        }} // External Container
-      >
-        {/* <ScrollView> */}
-        <View
-          style={{
-            // backgroundColor: getGradientFirstColor(domainOfTaste),
-            width,
-            // paddingBottom: normalize(2),
-          }}
-        >
+      <SafeAreaView style={styles.container}>
+        <View style={{ width }}>
           {/* Back Button */}
           <TouchableOpacity
-            // backButtonContainer
             onPress={() => navigation.goBack()}
-            style={{
-              left: normalize(10),
-            }}
+            style={{ left: normalize(10) }}
           >
-            {/* Back Button Image */}
             <Image
               source={require("../assets/icons/ArrowBack.png")}
-              style={{
-                width: normalize(17),
-                height: normalize(28),
-              }}
+              style={styles.backButtonImage}
             />
           </TouchableOpacity>
         </View>
-        {/* <ScrollView
-          style={{
-            maxWidth: normalize(325)
-          }}
-          horizontal
-        > */}
-
-        <Text
-          style={{
-            marginBottom: normalize(10),
-            color: "white",
-            fontSize: normalize(24),
-            fontWeight: "700",
-            textAlign: "center",
-            maxWidth: normalize(325),
-          }}
-          numberOfLines={1}
-        >
-          {post.mediaItem.name}
-        </Text>
-        {/* </ScrollView> */}
 
         <View
           style={{
             width: normalize(325),
-            alignItems: "center",
-            backgroundColor: getPlaylistAccentColor(domainOfTaste),
-            //   height: 660,
-            shadowColor: getPlaylistAccentColor(domainOfTaste),
-            shadowOffset: {
-              width: 0,
-              height: 0,
-            },
-            shadowOpacity: 1,
-            shadowRadius: normalize(8),
-            bottom: normalize(2),
+            paddingVertical: normalize(5),
+            backgroundColor: getMoodContainerColor(
+              DOMAINPOSTTYPE.get(domainId)
+            ),
             borderRadius: normalize(15),
-            // borderColor: getMoodContainerColor(DOMAINPOSTTYPE.get(domainOfTaste.domainId)),
-            // borderWidth: normalize(2)
-            //   overflow: "hidden", // Clip the shadow if needed
+            marginBottom: normalize(10),
           }}
         >
-          <ImageBackground
-            source={
-              // { uri: post.mediaItem.image }
-              getItemImage(post.mediaItem, domainOfTaste.domainId)
-            }
-            resizeMode="cover"
-            imageStyle={{
-              opacity: 0.9,
-              borderRadius: normalize(15),
+          <Text
+            style={{
+              color: getMoodTextColor(DOMAINPOSTTYPE.get(domainId)),
+              fontSize: normalize(24),
+              fontWeight: "700",
+              textAlign: "center",
+              alignSelf: "center",
             }}
-            blurRadius={3}
+            numberOfLines={1}
           >
+            {playlist.name}
+          </Text>
+        </View>
+
+        <FlatList
+          ref={flatListRef}
+          style={{ width: width }}
+          data={posts}
+          horizontal
+          scrollEnabled={false}
+          initialScrollIndex={index}
+          snapToAlignment="center"
+          snapToInterval={width}
+          getItemLayout={(data, index) => ({
+            length: width,
+            offset: width * index,
+            index,
+          })}
+          ItemSeparatorComponent={() => (
             <View
               style={{
-                alignItems: "center",
-                width: normalize(327),
-                height:
-                  Platform.OS === "android" ? width * 1.45 : normalize(630),
-                borderRadius: normalize(15),
-                justifyContent: "flex-end",
+                width: postCardSeparatorWidth,
               }}
-            >
-              {/* {(post.domainId == 0 || post.domainId == 2) && (
-                <View>
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      backgroundColor: "rgba(20, 97, 69, 1)",
-                      paddingVertical: normalize(5),
-                      paddingHorizontal: normalize(15),
-                      top: normalize(0),
-                      borderBottomRightRadius: normalize(15),
-                      borderTopLeftRadius: normalize(15),
-                      borderColor: "rgba(29, 185, 84, 1)",
-                      borderWidth: normalize(4),
-                    }}
-                    onPress={handleSpotifyButtonPress}
-                  >
-                    <Image
-                      style={{
-                        width: normalize(30),
-                        height: normalize(30),
-                        // alignItems: "center",
-                        // right: normalize(15),
-                      }}
-                      source={require("../assets/icons/SpotifyIcon.png")}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      width: normalize(32),
-                      height: normalize(32),
-                      top: normalize(10),
-                      right: normalize(10),
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: "rgba(28, 14, 52, 0.65)",
-                      borderRadius: normalize(100),
-                    }}
-                    onPress={handleSoundButtonPress}
-                  >
-                    <Image
-                      style={{
-                        width: isPlaying ? normalize(22) : normalize(18),
-                        height: normalize(18),
-                      }}
-                      source={
-                        isPlaying
-                          ? require("../assets/icons/MuteButtonIcon.png")
-                          : require("../assets/icons/SoundButtonIcon.png")
-                      }
-                    />
-                  </TouchableOpacity>
-                </View>
-              )} */}
-              {(post.domainId == 0 || post.domainId == 2) && (
-                <TouchableOpacity
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "rgba(20, 97, 69, 1)",
-                    paddingVertical: normalize(5),
-                    paddingHorizontal: normalize(15),
-                    left: normalize(0),
-                    top: normalize(0),
-                    borderBottomRightRadius: normalize(15),
-                    borderTopLeftRadius: normalize(15),
-                    borderColor: "rgba(29, 185, 84, 1)",
-                    borderWidth: normalize(4),
-                  }}
-                  onPress={handleSpotifyButtonPress}
-                >
-                  <Image
-                    style={{
-                      width: normalize(30),
-                      height: normalize(30),
-                      // alignItems: "center",
-                      // right: normalize(15),
-                    }}
-                    source={require("../assets/icons/SpotifyIcon.png")}
-                  />
-                </TouchableOpacity>
-              )}
-              {(post.domainId == 0 || post.domainId == 2) && (
-                <TouchableOpacity
-                  style={{
-                    position: "absolute",
-                    width: normalize(32),
-                    height: normalize(32),
-                    top: normalize(10),
-                    right: normalize(10),
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "rgba(28, 14, 52, 0.65)",
-                    borderRadius: normalize(100),
-                  }}
-                  onPress={handleSoundButtonPress}
-                >
-                  <Image
-                    style={{
-                      width: isPlaying ? normalize(22) : normalize(18),
-                      height: normalize(18),
-                    }}
-                    source={
-                      isPlaying
-                        ? require("../assets/icons/MuteButtonIcon.png")
-                        : require("../assets/icons/SoundButtonIcon.png")
-                    }
-                  />
-                </TouchableOpacity>
-              )}
-              {/* <View> */}
-
+            />
+          )}
+          renderItem={({ item: post, index }) => (
+            <>
               <View
                 style={{
-                  width: normalize(300),
-                  height: normalize(180),
-                  borderRadius: normalize(10),
-                  backgroundColor: getScreenGradientFirstColor(
-                    domainOfTaste.domainId
-                  ),
-                  backfaceVisibility: "hidden",
-                  marginBottom: normalize(10),
-                  alignItems: "center",
-                  borderColor: getMoodTextColor(
-                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
-                  ),
-                  borderWidth: normalize(2),
+                  marginHorizontal: (width - normalize(325)) / 2,
                 }}
               >
-                <View
+                <BigPostCard post={post} domainId={domainId} user={user} />
+              </View>
+              {index != 0 && (
+                <TouchableOpacity
                   style={{
-                    backgroundColor: "white",
-                    width: normalize(70),
-                    height: normalize(70),
-                    borderRadius: normalize(70),
-                    shadowColor: getPlaylistAccentColor(domainOfTaste),
-                    shadowOffset: {
-                      width: 0,
-                      height: 0,
-                    },
-                    shadowOpacity: 1,
-                    shadowRadius: normalize(8),
-                    bottom: normalize(50),
+                    position: "absolute",
+                    alignSelf: "flex-start",
+                    top: normalize(250),
+                    left: normalize(5),
                   }}
+                  onPress={handlePrevious}
                 >
-                  {/* <Text>{user.name}</Text> */}
                   <Image
                     style={{
-                      width: normalize(70),
-                      height: normalize(70),
-                      borderRadius: normalize(70),
-                      borderColor: getMoodTextColor(
-                        DOMAINPOSTTYPE.get(domainOfTaste.domainId)
-                      ),
-                      borderWidth: normalize(3),
+                      width: normalize(40),
+                      height: normalize(36),
+                      tintColor: getMoodTextColor(DOMAINPOSTTYPE.get(domainId)),
                     }}
-                    source={{ uri: user.profilePicture }}
+                    source={require("../assets/icons/DoubleLeftArrowIcon.png")}
                   />
-                </View>
-                <View style={{ height: normalize(25), bottom: normalize(40) }}>
-                  <FlatList
-                    data={post.moods}
-                    // style={{ marginLeft: normalize(10), marginRight: 5 }}
-                    horizontal
-                    renderItem={({ item: mood }) => (
-                      // Mood
+                </TouchableOpacity>
+              )}
 
-                      <View
-                        // moodContainer
-                        style={{
-                          ...styles.moodContainer,
-                          backgroundColor: getMoodContainerColor(
-                            DOMAINPOSTTYPE.get(domainOfTaste.domainId)
-                          ),
-                        }}
-                      >
-                        <Text
-                          // moodText
-                          style={{
-                            ...styles.moodText,
-                            color: getMoodTextColor(
-                              DOMAINPOSTTYPE.get(domainOfTaste.domainId)
-                            ),
-                          }}
-                        >
-                          {mood.name}
-                        </Text>
-                      </View>
-                    )}
-                    keyExtractor={(mood) => mood.id.toString()}
-                  />
-                </View>
-                <View
-                  style={{ alignItems: "flex-start", bottom: normalize(30) }}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: normalize(18),
-                      fontWeight: "600",
-                      marginHorizontal: normalize(2),
-                    }}
-                  >
-                    @{user.profileName}
-                  </Text>
-                  <View style={{ width: normalize(280) }}>
-                    <Text
-                      style={{
-                        color: "white",
-                        fontSize: normalize(18),
-                        fontWeight: "300",
-                        marginHorizontal: normalize(10),
-                      }}
-                      numberOfLines={4}
-                    >
-                      {post.caption}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  toggleMediaItemInfoModal();
-                }}
-                style={{
-                  backgroundColor: getMoodContainerColor(
-                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
-                  ),
-                  paddingHorizontal: normalize(20),
-                  paddingVertical: 5,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: normalize(10),
-                  marginBottom: normalize(30),
-                  borderColor: getMoodTextColor(
-                    DOMAINPOSTTYPE.get(domainOfTaste.domainId)
-                  ),
-                  borderWidth: normalize(2),
-                }}
-              >
-                <Text
+              {index < posts.length - 1 && (
+                <TouchableOpacity
                   style={{
-                    color: getMoodTextColor(
-                      DOMAINPOSTTYPE.get(domainOfTaste.domainId)
-                    ),
-                    fontSize: normalize(20),
-                    fontWeight: "700",
-                    // marginHorizontal: normalize(20),
-
-                    // marginVertical: normalize(10),
+                    position: "absolute",
+                    alignSelf: "flex-end",
+                    top: normalize(250),
+                    right: normalize(5),
                   }}
+                  onPress={handleNext}
                 >
-                  More Info
-                </Text>
-              </TouchableOpacity>
-              {/* </View> */}
-            </View>
-          </ImageBackground>
-        </View>
-        {isMediaItemInfoModalVisible && (
-          <MediaItemInfo
-            visible={isMediaItemInfoModalVisible}
-            // onCloseAll={() => {
-            //   setIsMediaItemInfoModalVisible(false);
-            //   onCloseAll();
-            // }}
-            onClose={toggleMediaItemInfoModal}
-            post={post}
+                  <Image
+                    style={{
+                      width: normalize(40),
+                      height: normalize(36),
+                      tintColor: getMoodTextColor(DOMAINPOSTTYPE.get(domainId)),
+                    }}
+                    source={require("../assets/icons/DoubleRightArrowIcon.png")}
+                  />
+                </TouchableOpacity>
+              )}
+            </>
+          )}
+          keyExtractor={(post, index) => index.toString()}
+        />
+        {/* <TouchableOpacity
+          style={{
+            position: "absolute",
+            alignSelf: "flex-start",
+            top: normalize(400),
+            left: normalize(5),
+          }}
+          onPress={handlePrevious}
+        >
+          <Image
+            style={{
+              width: normalize(40),
+              height: normalize(36),
+            }}
+            source={require("../assets/icons/DoubleLeftArrowIcon.png")}
           />
-        )}
-        {/* </View> */}
-        {/* </ScrollView> */}
-        {/* </View> */}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            alignSelf: "flex-end",
+            top: normalize(400),
+            right: normalize(5),
+          }}
+          onPress={handleNext}
+        >
+          <Image
+            style={{
+              width: normalize(40),
+              height: normalize(36),
+            }}
+            source={require("../assets/icons/DoubleRightArrowIcon.png")}
+          />
+        </TouchableOpacity> */}
+
+        {/* <View style={styles.navigationButtons}>
+          <Button title="Previous" onPress={handlePrevious} />
+          <Button title="Next" onPress={handleNext} />
+        </View> */}
       </SafeAreaView>
     </LinearGradient>
   );
@@ -579,29 +260,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
   },
-
-  // moodContainer: {
-  //   paddingVertical: moodContainerPaddingVertical,
-  //   paddingHorizontal: moodContainerPaddingHorizontal,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   borderRadius: moodContainerBorderRadius,
-  //   // marginVertical: moodContainerMarginVertical,
-  //   marginHorizontal: moodContainerMarginHorizontal,
-  // },
-  // moodText: {
-  //   fontWeight: "600",
-  //   fontSize: moodTextFontSize,
-  // },
   moodContainer: {
     paddingVertical: normalize(2),
     paddingHorizontal: normalize(20),
     justifyContent: "center",
     alignItems: "center",
     borderRadius: normalize(10),
-    // marginVertical: normalize(8),
     marginHorizontal: normalize(5),
   },
   moodText: {
@@ -609,7 +274,17 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
   },
   backButtonImage: {
-    width: normalize(14),
-    height: normalize(23),
+    width: normalize(17),
+    height: normalize(28),
+  },
+  navigationButtons: {
+    position: "absolute",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // alignSelf: "center",
+    top: normalize(300),
+    margin: 10,
+    width: "80%",
+    gap: normalize(300),
   },
 });

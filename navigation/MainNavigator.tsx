@@ -1,144 +1,123 @@
-// MainNavigator.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import Tabs from "./Tabs";
 import AuthNavigator from "./AuthNavigator";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, onIdTokenChanged } from "firebase/auth";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../firebaseConfig";
 import { Unsubscribe, doc, onSnapshot } from "firebase/firestore";
 import { useSpotifyAuth } from "../SpotifyAuthContext";
 import { CurrentUserProvider } from "../CurrentUserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SplashScreen from "expo-splash-screen";
 import { Text, View } from "react-native";
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { checkTokenValidity, refreshToken } from "../AuthorizationSpotify";
+import { MoodsAndTagsProvider } from "../MoodsAndTagsContext";
+
+SplashScreen.preventAutoHideAsync();
 
 function MainNavigator() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [appIsReady, setAppIsReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSpotifyAuthChecked, setIsSpotifyAuthChecked] = useState(false); // New state
   const { isSpotifyAuthenticated, setIsSpotifyAuthenticated } =
     useSpotifyAuth();
 
-  //------ USE EFFECT TO KEEP ------------------
+  const checkSpotifyToken = async () => {
+    const result = await checkTokenValidity();
+    setIsSpotifyAuthenticated(result);
+    setIsSpotifyAuthChecked(true); // Mark Spotify authentication check as complete
+    return result;
+  };
+
   useEffect(() => {
     let firestoreUnsubscribe: Unsubscribe | null = null;
+    let refreshInterval: NodeJS.Timeout | null = null;
 
-    const checkSpotifyToken = async () => {
-      const spotifyAccessToken = await AsyncStorage.getItem("accessToken");
-      const spotifyExpirationDate = await AsyncStorage.getItem(
-        "expirationDate"
+    const initializeAuth = async () => {
+      const spotifyTokenValid = await checkSpotifyToken();
+
+      const authUnsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+        if (user) {
+          const userRef = doc(FIRESTORE_DB, "users", user.uid);
+          firestoreUnsubscribe = onSnapshot(userRef, (docSnapshot) => {
+            if (isSpotifyAuthChecked) {
+              // Only update authentication status if Spotify check is complete
+              setIsAuthenticated(
+                docSnapshot.exists() && isSpotifyAuthenticated
+              );
+              setIsLoading(false);
+            }
+          });
+        } else {
+          setIsAuthenticated(false);
+          setIsLoading(false);
+          if (firestoreUnsubscribe) {
+            firestoreUnsubscribe();
+          }
+        }
+      });
+
+      const idTokenUnsubscribe = onIdTokenChanged(
+        FIREBASE_AUTH,
+        async (user) => {
+          if (user) {
+            const token = await user.getIdToken();
+            // console.log("Token refreshed: ", token);
+            await checkSpotifyToken(); // Re-check Spotify token validity
+          }
+        }
       );
 
-      if (spotifyAccessToken && spotifyExpirationDate) {
-        const isTokenValid =
-          new Date().getTime() < parseInt(spotifyExpirationDate);
-        setIsSpotifyAuthenticated(isTokenValid);
-        // Add logic to refresh the token if it's not valid.
-      } else {
-        setIsSpotifyAuthenticated(false);
-      }
-    };
+      refreshInterval = setInterval(async () => {
+        const result = await refreshToken();
+        if (!result) {
+          setIsAuthenticated(false);
+          if (refreshInterval) clearInterval(refreshInterval);
+        }
+      }, 45 * 60 * 1000); // Refresh every 45 minutes
 
-    checkSpotifyToken();
+      setAppIsReady(true);
 
-    const authUnsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      if (user) {
-        const userRef = doc(FIRESTORE_DB, "users", user.uid);
-        firestoreUnsubscribe = onSnapshot(userRef, (docSnapshot) => {
-          setIsAuthenticated(docSnapshot.exists() && isSpotifyAuthenticated);
-        });
-      } else {
-        setIsAuthenticated(false);
+      return () => {
+        authUnsubscribe();
+        idTokenUnsubscribe();
         if (firestoreUnsubscribe) {
           firestoreUnsubscribe();
         }
-      }
-    });
-
-    return () => {
-      authUnsubscribe();
-      if (firestoreUnsubscribe) {
-        firestoreUnsubscribe();
-      }
+        if (refreshInterval) {
+          clearInterval(refreshInterval);
+        }
+      };
     };
-  }, [isSpotifyAuthenticated]); // Include isSpotifyAuthenticated in the dependencies array
 
-  //--------------------- FOR DELETION ----------------------
-  // useEffect(() => {
-  //   let firestoreUnsubscribe: Unsubscribe | null = null;
-  //   const spotifyAccessToken = await AsyncStorage.getItem("accessToken");
-  //   const spotifyExpirationDate = await AsyncStorage.getItem("expirationDate");
+    initializeAuth();
+  }, [isSpotifyAuthenticated, isSpotifyAuthChecked]); // Add isSpotifyAuthChecked as dependency
 
-  //   // const checkSpotifyToken = async () => {
-  //   //   const spotifyAccessToken = await AsyncStorage.getItem("accessToken");
-  //   //   setSpotifyAuthenticated(!!spotifyAccessToken);
-  //   // };
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
 
-  //   const authUnsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
-  //     if (user) {
-  //       const userRef = doc(FIRESTORE_DB, 'users', user.uid);
-  //       firestoreUnsubscribe = onSnapshot(userRef, (docSnapshot) => {
-  //         setIsAuthenticated(docSnapshot.exists() && spotifyAccessToken && spotifyExpirationDate);
-  //         // setIsAuthenticated(docSnapshot.exists() && isSpotifyAuthenticated);
-  //         // setIsAuthenticated(isSpotifyAuthenticated);
-  //         // console.log(docSnapshot.exists());
-  //         // setIsAuthenticated(docSnapshot.exists()); //have to add the spotify auth check
-  //         // setIsAuthenticated(true);
-  //       });
-  //     } else {
-  //       setIsAuthenticated(false);
-  //       if (firestoreUnsubscribe) {
-  //         firestoreUnsubscribe();
-  //       }
-  //     }
-  //   });
+  if (!appIsReady || isLoading) {
+    return null;
+  }
 
-  //   return () => {
-  //     authUnsubscribe();
-  //     if (firestoreUnsubscribe) {
-  //       firestoreUnsubscribe();
-  //     }
-  //   };
-  // }, [isSpotifyAuthenticated]); // Include isSpotifyAuthenticated in the dependencies array
-
-  //--------------------- FOR DELETION ----------------------
-
-  console.log("[ISAUTHENTICATED]: ", isAuthenticated);
   return (
-    <NavigationContainer>
-      {isAuthenticated ? (
-        <CurrentUserProvider>
-          <Tabs />
-        </CurrentUserProvider>
-      ) : (
-        <AuthNavigator />
-      )}
-    </NavigationContainer>
-
-    // <View
-    //   style={{
-    //     flex: 1,
-    //     alignItems: "center",
-    //     justifyContent: "center",
-    //   }}
-    // >
-    //   {isAuthenticated ? (
-    //     <Text>Yes Authenticated</Text>
-    //   ) : (
-    //     <Text>Not Authenticated</Text>
-    //   )}
-    // </View>
-    // <NavigationContainer>
-    //   <AuthNavigator />
-    // </NavigationContainer>
-
-    // <NavigationContainer>
-    //   <CurrentUserProvider>
-    //     <Tabs />
-    //   </CurrentUserProvider>
-    // </NavigationContainer>
-
-    //     <CurrentUserProvider>
-    //       <Tabs />
-    //     </CurrentUserProvider>
+    <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+      <NavigationContainer>
+        {isAuthenticated ? (
+          <CurrentUserProvider>
+            <MoodsAndTagsProvider>
+              <Tabs />
+            </MoodsAndTagsProvider>
+          </CurrentUserProvider>
+        ) : (
+          <AuthNavigator />
+        )}
+      </NavigationContainer>
+    </View>
   );
 }
 

@@ -34,6 +34,7 @@ import {
 import { fetchUserById, toggleLikePost } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
 import { Audio } from "expo-av";
+import PostLikes from "./PostLikes";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 
@@ -44,7 +45,11 @@ export default function PostCard({ post }: PostCardProps) {
   const [user, setUser] = useState(DEFAULT_USER);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPostLikesModalVisible, setIsPostLikesModalVisible] = useState(false);
 
+  const togglePostLikesModal = () => {
+    setIsPostLikesModalVisible(!isPostLikesModalVisible);
+  };
   useEffect(() => {
     // Ensure currentUser and currentUser.userId are defined
     if (
@@ -246,6 +251,41 @@ export default function PostCard({ post }: PostCardProps) {
           // source={{ uri: post.mediaItem.image }}
           source={getItemImage(currentPost.mediaItem, post.domainId)}
         />
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            zIndex: 0,
+            width: normalize(40),
+            paddingRight: normalize(7),
+            // paddingHorizontal: normalize(12),
+            height: normalize(40),
+            right: normalize(-40),
+            backgroundColor: getMoodContainerColor(
+              DOMAINPOSTTYPE.get(post.domainId)
+            ),
+            borderTopRightRadius: normalize(10),
+            borderBottomRightRadius: normalize(10),
+            alignItems: "flex-end",
+            justifyContent: "center",
+            alignSelf: "flex-end",
+            // borderWidth: normalize(4),
+            // borderColor: "rgba(156, 75, 255, 1)",
+          }}
+          onPress={togglePostLikesModal}
+        >
+          <Text
+            // postTitleText
+            numberOfLines={1}
+            style={{
+              color: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+              fontSize: normalize(25),
+              fontWeight: "600",
+              textAlign: "center",
+            }}
+          >
+            {post.likesUserIdsList.length}
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={{
             position: "absolute",
@@ -453,6 +493,13 @@ export default function PostCard({ post }: PostCardProps) {
           </View>
         </View>
       </View>
+      {isPostLikesModalVisible && (
+        <PostLikes
+          visible={isPostLikesModalVisible}
+          onClose={togglePostLikesModal}
+          likesUsersIdsList={post.likesUserIdsList}
+        />
+      )}
     </View>
   );
 }

@@ -75,10 +75,6 @@ export default function ExternalProfileScreen() {
       try {
         if (user !== null) {
           const userDomains = getUsersDomains(user);
-          console.log(
-            "[ExternalProfileScreen]: this are the userDomains:",
-            userDomains
-          );
           setDomainsArray(userDomains);
         } else {
           throw new Error("User not found");

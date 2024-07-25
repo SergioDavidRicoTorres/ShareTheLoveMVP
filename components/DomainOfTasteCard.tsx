@@ -87,7 +87,7 @@ export default function DomainOfTasteCard({
     >
       <LinearGradient
         colors={[
-          getDomainsOfTasteGradientsFirstColor(category),
+          getDomainsOfTasteGradientsFirstColor(category.domainId),
           "rgba(58, 17, 90, 1)",
         ]}
         style={{

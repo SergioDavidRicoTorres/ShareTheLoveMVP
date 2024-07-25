@@ -319,24 +319,24 @@ function PostCaption({
               />
             )}
           </LinearGradient>
-          {hasCaption === false ? (
+          {/* {hasCaption === false ? (
             <View style={sharedStyles.chooseButtonContainer}>
               <Text style={sharedStyles.chooseButtonText}>Save Post</Text>
             </View>
-          ) : (
-            <TouchableOpacity
-              style={{
-                ...sharedStyles.touchableChooseButtonContainer,
-                backgroundColor: getGradientsFirstColor(postType),
-                borderColor: getButtonsAccentColor(postType),
-                borderWidth: normalize(4),
-                shadowColor: getButtonsAccentColor(postType),
-              }}
-              onPress={toggleSearchPlaylistModal}
-            >
-              <Text style={sharedStyles.chooseButtonText}>Save Post</Text>
-            </TouchableOpacity>
-          )}
+          ) : ( */}
+          <TouchableOpacity
+            style={{
+              ...sharedStyles.touchableChooseButtonContainer,
+              backgroundColor: getGradientsFirstColor(postType),
+              borderColor: getButtonsAccentColor(postType),
+              borderWidth: normalize(4),
+              shadowColor: getButtonsAccentColor(postType),
+            }}
+            onPress={toggleSearchPlaylistModal}
+          >
+            <Text style={sharedStyles.chooseButtonText}>Save Post</Text>
+          </TouchableOpacity>
+          {/* )} */}
         </View>
       </Modal>
     </View>
