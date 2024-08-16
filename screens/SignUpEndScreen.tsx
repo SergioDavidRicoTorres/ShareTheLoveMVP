@@ -211,6 +211,7 @@ export default function SignUpEnd() {
         },
         followersUsersList: [],
         followingUsersList: [],
+        playlistsCount: 0,
       };
       console.log("WE'RE GETTING HERE");
       await addUserToDB(userObject, signedUpUID);

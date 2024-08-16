@@ -36,6 +36,7 @@ import { DOMAINPOSTTYPE } from "../../constants";
 import {
   addPlaylistToDB,
   addPostToDB,
+  increaseUserPlaylistsCount,
   pickImage,
   uploadImage,
 } from "../../utilsFirebase";
@@ -234,6 +235,9 @@ function AddPlaylist({
               moods: selectedMoodsTags,
               score: 0,
               reviewsList: [],
+              postsCount: 0,
+              spotifyId: "",
+              isSpotifySynced: false,
             })
           : (newPlaylist = {
               userId: currentUserId,
@@ -242,8 +246,12 @@ function AddPlaylist({
               moods: selectedMoodsTags,
               score: 0,
               reviewsList: [],
+              postsCount: 0,
+              spotifyId: "",
+              isSpotifySynced: false,
             });
         const newPlaylistId = await addPlaylistToDB(newPlaylist);
+        await increaseUserPlaylistsCount(currentUserId);
         Alert.alert(
           "Hurray! You've added your new playlist successfully.",
           "It may take a short while to show up on your profile, but you can start adding some " +

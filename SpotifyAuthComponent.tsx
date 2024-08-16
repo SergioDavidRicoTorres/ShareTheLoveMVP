@@ -32,7 +32,7 @@ export const SpotifyAuthComponent = ({
       const authRequestConfig = {
         responseType: AuthSession.ResponseType.Code,
         clientId: spotifyCredentials.clientId,
-        scopes: [], // Add additional scopes as needed
+        scopes: ["playlist-modify-public", "playlist-modify-private"], // Add additional scopes as needed
         redirectUri: spotifyCredentials.redirectUri,
         usePKCE: true,
         extraParams: {

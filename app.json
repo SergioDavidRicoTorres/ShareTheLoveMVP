@@ -3,7 +3,7 @@
     "scheme": "sharethelovemvp",
     "name": "ShareTheLoveMVP",
     "slug": "ShareTheLoveMVP",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sergiodavidricotorres.ShareTheLoveMVP"
+      "bundleIdentifier": "com.sergiodavidricotorres.ShareTheLoveMVP",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +28,8 @@
       "package": "com.sergiodavidricotorres.ShareTheLoveMVP",
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ], 
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"

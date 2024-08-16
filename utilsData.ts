@@ -41,6 +41,7 @@ export const DEFAULT_USER: User = {
   followingCount: 0,
   followersUsersList: [],
   followingUsersList: [],
+  playlistsCount: 0,
   domainsOfTaste: {
     Music: {
       domainId: 0,
@@ -349,10 +350,10 @@ export const stopSpotifyPreviewSound = async (
 
 export const openSpotifyLink = (url: string) => {
   Linking.canOpenURL(url).then((supported) => {
-    if (supported) {
-      Linking.openURL(url);
-    } else {
-      console.log("Don't know how to open URI: " + url);
-    }
+    // if (supported) {
+    Linking.openURL(url);
+    // } else {
+    //   console.log("Don't know how to open URI: " + url);
+    // }
   });
 };

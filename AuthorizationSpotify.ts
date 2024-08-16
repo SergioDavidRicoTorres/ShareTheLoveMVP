@@ -47,7 +47,7 @@ const refreshToken = async () => {
         clientId: spotifyCredentials.clientId,
         clientSecret: spotifyCredentials.clientSecret,
         refreshToken: oldRefreshToken,
-        scopes: ["user-read-private", "user-read-email"],
+        // scopes: ["playlist-modify-public", "playlist-modify-private"],
         extraParams: {
           grant_type: "refresh_token",
         },

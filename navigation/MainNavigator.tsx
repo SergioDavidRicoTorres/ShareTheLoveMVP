@@ -19,16 +19,16 @@ function MainNavigator() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSpotifyAuthChecked, setIsSpotifyAuthChecked] = useState(false); // New state
+  const [isSpotifyAuthChecked, setIsSpotifyAuthChecked] = useState(false);
   const { isSpotifyAuthenticated, setIsSpotifyAuthenticated } =
     useSpotifyAuth();
 
-  const checkSpotifyToken = async () => {
+  const checkSpotifyToken = useCallback(async () => {
     const result = await checkTokenValidity();
     setIsSpotifyAuthenticated(result);
-    setIsSpotifyAuthChecked(true); // Mark Spotify authentication check as complete
+    setIsSpotifyAuthChecked(true);
     return result;
-  };
+  }, [setIsSpotifyAuthenticated]);
 
   useEffect(() => {
     let firestoreUnsubscribe: Unsubscribe | null = null;
@@ -42,7 +42,6 @@ function MainNavigator() {
           const userRef = doc(FIRESTORE_DB, "users", user.uid);
           firestoreUnsubscribe = onSnapshot(userRef, (docSnapshot) => {
             if (isSpotifyAuthChecked) {
-              // Only update authentication status if Spotify check is complete
               setIsAuthenticated(
                 docSnapshot.exists() && isSpotifyAuthenticated
               );
@@ -63,8 +62,7 @@ function MainNavigator() {
         async (user) => {
           if (user) {
             const token = await user.getIdToken();
-            // console.log("Token refreshed: ", token);
-            await checkSpotifyToken(); // Re-check Spotify token validity
+            await checkSpotifyToken();
           }
         }
       );
@@ -92,7 +90,13 @@ function MainNavigator() {
     };
 
     initializeAuth();
-  }, [isSpotifyAuthenticated, isSpotifyAuthChecked]); // Add isSpotifyAuthChecked as dependency
+
+    return () => {
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+      }
+    };
+  }, [checkSpotifyToken, isSpotifyAuthenticated, isSpotifyAuthChecked]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {

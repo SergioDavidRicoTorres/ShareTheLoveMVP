@@ -68,6 +68,7 @@ export const DEFAULT_USER: User = {
       reviewsList: [],
     },
   },
+  playlistsCount: 0,
 };
 
 export const DEFAULT_PLAYLIST: Playlist = {
@@ -78,6 +79,9 @@ export const DEFAULT_PLAYLIST: Playlist = {
   moods: [],
   score: 0,
   reviewsList: [],
+  postsCount: 0,
+  spotifyId: "",
+  isSpotifySynced: false,
 };
 
 export const addUserToDB = async (user: User, uid: string) => {
@@ -120,6 +124,7 @@ export const addPlaylistToDB = async (playlist: Playlist) => {
 
 export const uploadImage = async (uri: string) => {
   try {
+    console.log("utilsFirebase::uploadImage() was called!");
     const response = await fetch(uri);
     const blob = await response.blob();
 
@@ -130,9 +135,9 @@ export const uploadImage = async (uri: string) => {
     // Get download URL
     const downloadURL = await getDownloadURL(imageRef);
 
-    //   console.log('Image uploaded successfully!');
-    //   console.log('Download URL:', downloadURL);
-    //   console.log("[STEP 2 WORKED]");
+    console.log("Image uploaded successfully!");
+    console.log("Download URL:", downloadURL);
+    console.log("[STEP 2 WORKED]");
     return downloadURL;
   } catch (error) {
     console.error("Error at utilsFirebase::uploadImage(): ", error);
@@ -143,6 +148,7 @@ export const uploadImage = async (uri: string) => {
 export const pickImage = async (setSelectedImageUri: (uri: string) => void) => {
   // Request permission
   try {
+    console.log("utilsFirebase::pickImage() was called!");
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
@@ -1020,5 +1026,53 @@ export const updatePlaylistReview = async (
   } catch (error) {
     console.error("Failed to update playlist review:", error);
     throw error;
+  }
+};
+
+export const increaseUserPlaylistsCount = async (userId: string) => {
+  try {
+    const userRef = doc(FIRESTORE_DB, "users", userId);
+    await updateDoc(userRef, {
+      playlistsCount: increment(1),
+    });
+    console.log("User's playlists count increased by 1.");
+  } catch (error) {
+    console.error("Error increasing user's playlists count:", error);
+  }
+};
+
+export const decreaseUserPlaylistsCount = async (userId: string) => {
+  try {
+    const userRef = doc(FIRESTORE_DB, "users", userId);
+    await updateDoc(userRef, {
+      playlistsCount: increment(-1),
+    });
+    console.log("User's playlists count decreased by 1.");
+  } catch (error) {
+    console.error("Error decreasing user's playlists count:", error);
+  }
+};
+
+export const increasePlaylistPostsCount = async (playlistId: string) => {
+  try {
+    const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
+    await updateDoc(playlistRef, {
+      postsCount: increment(1),
+    });
+    console.log("Playlist's posts count increased by 1.");
+  } catch (error) {
+    console.error("Error increasing playlist's posts count:", error);
+  }
+};
+
+export const decreasePlaylistPostsCount = async (playlistId: string) => {
+  try {
+    const playlistRef = doc(FIRESTORE_DB, "playlists", playlistId);
+    await updateDoc(playlistRef, {
+      postsCount: increment(-1),
+    });
+    console.log("Playlist's posts count decreased by 1.");
+  } catch (error) {
+    console.error("Error decreasing playlist's posts count:", error);
   }
 };

@@ -17,6 +17,7 @@ export interface User {
   };
   followersUsersList: string[];
   followingUsersList: string[];
+  playlistsCount: number;
 }
 
 export interface Domain {
@@ -46,6 +47,9 @@ export interface Playlist {
   moods: Mood[];
   score: number;
   reviewsList: PlaylistReview[];
+  isSpotifySynced: boolean;
+  spotifyId: string;
+  postsCount: number;
 }
 
 export interface Mood {

@@ -234,7 +234,7 @@ export default function DomainOfTasteScreen() {
 
             <FlatList
               scrollEnabled={false}
-              data={playlists}
+              data={[...playlists].sort((a, b) => b.postsCount - a.postsCount)}
               style={{ marginBottom: normalize(70) }}
               ItemSeparatorComponent={() => (
                 <View style={{ height: normalize(20) }} />

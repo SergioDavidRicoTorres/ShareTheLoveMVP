@@ -12,7 +12,11 @@ import React from "react";
 // import * as Crypto from 'expo-crypto';
 import { Domain, Mood, PlaylistsMediaItemComponentProps } from "./types";
 import { DOMAINPOSTTYPE } from "./constants";
-import { deletePlaylistAndRelatedData, deletePost } from "./utilsFirebase";
+import {
+  decreasePlaylistPostsCount,
+  deletePlaylistAndRelatedData,
+  deletePost,
+} from "./utilsFirebase";
 // import { Song, FilmOrTVShow, PodcastEpisode } from "./types";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
@@ -301,7 +305,7 @@ export const getItemImage = (item: any, domainId: number) => {
   try {
     switch (domainId) {
       case 0:
-        return { uri: item.album.images[0].url };
+        if (item.album.images[0].url) return { uri: item.album.images[0].url };
       case 2:
         return { uri: item.images[0].url };
       case 1:
@@ -692,6 +696,7 @@ export const getPlaylistsMediaItemComponent = ({
                 }}
                 onPress={() => {
                   confirmDeletePost(post.postId);
+                  decreasePlaylistPostsCount(post.playlistId);
                 }}
               >
                 <Image

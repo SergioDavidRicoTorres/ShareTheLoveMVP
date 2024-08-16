@@ -179,10 +179,16 @@ export default function SearchUser() {
                 placeholderTextColor={"rgba(162, 148, 255, 1)"}
               />
             </View>
-            <View style={{ alignItems: "center", marginTop: normalize(18) }}>
+            <View
+              style={{
+                alignItems: "center",
+                marginTop: normalize(18),
+                paddingBottom: normalize(10),
+              }}
+            >
               <FlatList
                 data={searchResults}
-                style={{ marginBottom: 10 }}
+                style={{ marginBottom: normalize(10), height: normalize(510) }}
                 ItemSeparatorComponent={() => (
                   <View
                     style={{

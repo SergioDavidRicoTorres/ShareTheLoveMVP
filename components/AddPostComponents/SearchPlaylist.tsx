@@ -29,8 +29,13 @@ import { getCurrentUserData } from "../../UserData";
 import { DOMAINID, MEDIATYPENAME } from "../../constants";
 import { Playlist, Post, SearchPlaylistProps } from "../../types";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
-import { addPostToDB, getDomainsPlaylistsData } from "../../utilsFirebase";
+import {
+  addPostToDB,
+  getDomainsPlaylistsData,
+  increasePlaylistPostsCount,
+} from "../../utilsFirebase";
 import { sharedStyles } from "../../sharedStyles";
+import { addTrackToSpotifyPlaylist } from "../../SpotifyUtils";
 
 // screen WIDTH constant:
 const { width } = Dimensions.get("window");
@@ -256,7 +261,13 @@ function SearchPlaylist({
       };
 
       await addPostToDB(postObject);
-      console.log("[USER]: ", postObject);
+      await increasePlaylistPostsCount(selectedPlaylist.playlistId);
+      if (selectedPlaylist.isSpotifySynced)
+        await addTrackToSpotifyPlaylist(
+          postSelectedMedia.id,
+          selectedPlaylist.spotifyId
+        );
+
       Alert.alert(
         "Hurray! You've added your new " +
           MEDIATYPENAME.get(domainId) +
@@ -655,6 +666,7 @@ const styles = StyleSheet.create({
   },
   playlistSearchResults: {
     marginTop: normalize(22),
+    height: normalize(560),
   },
   playlistContainer: {
     width: normalize(340),

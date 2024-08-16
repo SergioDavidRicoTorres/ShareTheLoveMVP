@@ -186,7 +186,7 @@ export default function DomainOfTasteCard({
           }}
           // snapToAlignment={normalize(300)}
           scrollEnabled={false}
-          data={playlists}
+          data={[...playlists].sort((a, b) => b.postsCount - a.postsCount)}
           ItemSeparatorComponent={() => (
             <View style={{ height: normalize(20) }} />
           )}
