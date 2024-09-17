@@ -22,7 +22,7 @@ import {
   getLikeComponent,
   getScreenGradientFirstColor,
 } from "../utils";
-import { Post, PostCardProps } from "../types";
+import { HomeNavigationProp, Post, PostCardProps } from "../types";
 import { DOMAINPOSTTYPE } from "../constants";
 import {
   DEFAULT_USER,
@@ -35,6 +35,7 @@ import { fetchUserById, toggleLikePost } from "../utilsFirebase";
 import { useCurrentUser } from "../CurrentUserContext";
 import { Audio } from "expo-av";
 import PostLikes from "./PostLikes";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window"); // Window Dimensions
 
@@ -46,6 +47,12 @@ export default function PostCard({ post }: PostCardProps) {
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPostLikesModalVisible, setIsPostLikesModalVisible] = useState(false);
+
+  const profileNavigation = useNavigation<HomeNavigationProp>();
+
+  const handleProfileNavigation = () => {
+    profileNavigation.navigate("ExternalProfileScreen", { user });
+  };
 
   const togglePostLikesModal = () => {
     setIsPostLikesModalVisible(!isPostLikesModalVisible);
@@ -425,16 +432,32 @@ export default function PostCard({ post }: PostCardProps) {
           gap: normalize(8),
         }}
       >
-        <Image
-          // profilePicture
-          source={{ uri: user.profilePicture }}
+        <TouchableOpacity
           style={{
             borderRadius: normalize(100),
             width: normalize(50),
             height: normalize(50),
+            backgroundColor: getMoodTextColor(
+              DOMAINPOSTTYPE.get(post.domainId)
+            ),
           }}
-          resizeMethod="auto"
-        />
+          onPress={() => {
+            handleProfileNavigation();
+          }}
+        >
+          <Image
+            // profilePicture
+            source={{ uri: user.profilePicture }}
+            style={{
+              borderRadius: normalize(100),
+              width: normalize(50),
+              height: normalize(50),
+              borderWidth: normalize(2),
+              borderColor: getMoodTextColor(DOMAINPOSTTYPE.get(post.domainId)),
+            }}
+            resizeMethod="auto"
+          />
+        </TouchableOpacity>
         <View
           // captionBox
           style={{

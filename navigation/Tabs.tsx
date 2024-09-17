@@ -11,6 +11,9 @@ import { User } from "../types";
 import { useEffect, useState } from "react";
 import { useCurrentUser } from "../CurrentUserContext";
 import DebuggingScreen from "../screens/DebuggingScreen";
+import ExploreScreen from "../screens/ExploreScreen";
+import { ExploreNavigator } from "./ExploreNavigator";
+import NotificationsScreen from "../screens/NotificationScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -55,16 +58,17 @@ function Tabs() {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {
+          alignSelf: "center",
           borderTopWidth: 0,
           position: "absolute",
           backgroundColor: "rgba(1, 4, 43, 1)",
           // height: normalize(90),
-          marginBottom: normalize(0),
+          // marginBottom: normalize(0),
           marginHorizontal: normalize(10),
           // borderRadius: normalize(15),
           borderTopRightRadius: normalize(15),
           borderTopLeftRadius: normalize(15),
-          // paddingVertical: normalize(10),
+          paddingVertical: normalize(10),
         },
       }}
     >
@@ -101,6 +105,35 @@ function Tabs() {
               />
             </View>
           ),
+          tabBarLabel: "home",
+        }}
+      />
+      <Tab.Screen
+        name="Explore"
+        component={ExploreNavigator} // has to be changed
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                source={
+                  focused
+                    ? require("../assets/icons/SelectedExploreButtonIcon.png")
+                    : require("../assets/icons/UnselectedExploreButtonIcon.png")
+                }
+                resizeMode="contain"
+                style={{
+                  width: normalize(35),
+                  height: normalize(35),
+                }}
+              />
+            </View>
+          ),
         }}
       />
 
@@ -112,6 +145,34 @@ function Tabs() {
 
           tabBarButton: () => <AddButtons />,
         })}
+      />
+      <Tab.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                source={
+                  focused
+                    ? require("../assets/icons/SelectedNotificationsButtonIcon.png")
+                    : require("../assets/icons/UnselectedNotificationsButtonIcon.png")
+                }
+                resizeMode="contain"
+                style={{
+                  width: normalize(35),
+                  height: normalize(35),
+                }}
+              />
+            </View>
+          ),
+        }}
       />
 
       <Tab.Screen

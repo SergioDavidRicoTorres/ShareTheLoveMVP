@@ -23,12 +23,26 @@ const { width } = Dimensions.get("window"); // Window Dimensions
 export const normalize = (value: number) => width * (value / 390);
 
 // get Search Result Item subtitle, depending on the media type:
-export const getItemSubTitle = (mediaItem: any, domainId: number) => {
-  // try {
+export const getItemSubTitle = (
+  mediaItem: any,
+  domainId: number,
+  styles?: any
+) => {
+  // If no styles are provided, use default styles
+  const defaultStyles = StyleSheet.create({
+    itemSubtitle: {
+      color: "white",
+      fontSize: 18, // Adjust if normalize is not defined
+      fontWeight: "400",
+    },
+  });
+
+  const appliedStyles = styles || defaultStyles; // Use provided styles or fallback to default
+
   switch (domainId) {
     case 0: {
       return (
-        <Text numberOfLines={1} style={styles.itemSubtitle}>
+        <Text numberOfLines={1} style={appliedStyles.itemSubtitle}>
           {mediaItem.artists
             ?.map(
               (artist: any, index: number) => (index ? " - " : "") + artist.name
@@ -39,29 +53,26 @@ export const getItemSubTitle = (mediaItem: any, domainId: number) => {
     }
     case 2: {
       return (
-        <Text numberOfLines={1} style={styles.itemSubtitle}>
+        <Text numberOfLines={1} style={appliedStyles.itemSubtitle}>
           {mediaItem.description}
         </Text>
       );
     }
     case 1: {
       return (
-        <Text numberOfLines={1} style={styles.itemSubtitle}>
+        <Text numberOfLines={1} style={appliedStyles.itemSubtitle}>
           {mediaItem.media_type}
         </Text>
       );
     }
     default: {
       return (
-        <Text numberOfLines={1} style={styles.itemSubtitle}>
+        <Text numberOfLines={1} style={appliedStyles.itemSubtitle}>
           Error: Invalid post type!
         </Text>
       );
     }
   }
-  // } catch (error) {
-  //   console.error(error);
-  // }
 };
 
 // export const getItemImage = (item: any, postType: string) => {
@@ -1239,6 +1250,21 @@ export const getLikeComponent = (
 //     console.log("Processing podcast episode:", mediaItem.name, mediaItem.description);
 //   }
 // };
+
+export const getPlaylistPreviewColor = (domainId: number) => {
+  switch (domainId) {
+    case 0:
+      return "rgba(0, 176, 113, 1)";
+    case 1:
+      return "rgba(176, 77, 178, 1)";
+    case 2:
+      return "rgba(136, 177, 121, 1)";
+    default:
+      console.log('Invalid "domain" was passed!');
+      return "rgba(105, 51, 172, 1)";
+  }
+};
+
 export const transformMoodsToStringArray = (moods: Mood[]): string[] => {
   return moods.map((mood) => mood.name);
 };
@@ -1280,10 +1306,23 @@ export const pullRefresh = (
   }, 5000);
 };
 
-const styles = StyleSheet.create({
-  itemSubtitle: {
-    color: "white",
-    fontSize: normalize(18),
-    fontWeight: "400",
-  },
-});
+// Fisher-Yates shuffle algorithm to randomize the array
+export const shuffleArray = (array: any) => {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+};

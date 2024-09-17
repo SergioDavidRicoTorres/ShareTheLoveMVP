@@ -455,6 +455,25 @@ export const getDomainsPlaylistsData = async (
     return [];
   }
 };
+export const fetchAllUsersPlaylists = async (userId: string) => {
+  try {
+    const playlistsRef = collection(FIRESTORE_DB, "playlists");
+
+    const q = query(playlistsRef, where("userId", "==", userId));
+
+    const querySnapshot = await getDocs(q);
+    const playlists: Playlist[] = [];
+    querySnapshot.forEach((doc) => {
+      const playlistData = doc.data() as Playlist;
+      playlistData.playlistId = doc.id;
+      playlists.push(playlistData);
+    });
+    return playlists;
+  } catch (error) {
+    console.error("Error getting documents: ", error);
+    return [];
+  }
+};
 
 export const getDomainsPostsData = async (
   userId: string,
@@ -1074,5 +1093,117 @@ export const decreasePlaylistPostsCount = async (playlistId: string) => {
     console.log("Playlist's posts count decreased by 1.");
   } catch (error) {
     console.error("Error decreasing playlist's posts count:", error);
+  }
+};
+
+export const fetchAllPlaylists = async () => {
+  try {
+    const playlistsRef = collection(FIRESTORE_DB, "playlists");
+
+    const querySnapshot = await getDocs(playlistsRef);
+    const playlists: Playlist[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const playlistData = doc.data() as Playlist;
+      playlistData.playlistId = doc.id;
+      playlists.push(playlistData);
+    });
+
+    return playlists;
+  } catch (error) {
+    console.error("Error getting playlists: ", error);
+    return [];
+  }
+};
+
+export const fetchUsersExcludingUser = async (userId: string) => {
+  try {
+    const usersRef = collection(FIRESTORE_DB, "users");
+
+    // Create a query that excludes the document with the given userId as its ID
+    const usersQuery = query(usersRef, where("__name__", "!=", userId));
+
+    const querySnapshot = await getDocs(usersQuery);
+    const users: User[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const userData = doc.data() as User;
+      userData.userId = doc.id; // Assigning the document ID to the userId field
+      users.push(userData);
+    });
+
+    return users;
+  } catch (error) {
+    console.error("Error fetching users: ", error);
+    return [];
+  }
+};
+
+export const fetchPlaylistsExcludingUser = async (userId: string) => {
+  try {
+    const playlistsRef = collection(FIRESTORE_DB, "playlists");
+
+    // Create a query that filters out playlists from the given userId
+    const playlistsQuery = query(playlistsRef, where("userId", "!=", userId));
+
+    const querySnapshot = await getDocs(playlistsQuery);
+    const playlists: Playlist[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const playlistData = doc.data() as Playlist;
+      playlistData.playlistId = doc.id;
+      playlists.push(playlistData);
+    });
+
+    return playlists;
+  } catch (error) {
+    console.error("Error getting playlists: ", error);
+    return [];
+  }
+};
+
+export const fetchPostsExcludingUser = async (userId: string) => {
+  try {
+    const postsRef = collection(FIRESTORE_DB, "posts");
+
+    // Create a query that filters out posts from the given userId
+    const postsQuery = query(postsRef, where("userId", "!=", userId));
+
+    const querySnapshot = await getDocs(postsQuery);
+    const posts: Post[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const postData = doc.data() as Post;
+      postData.postId = doc.id;
+      posts.push(postData);
+    });
+
+    return posts;
+  } catch (error) {
+    console.error("Error fetching posts: ", error);
+    return [];
+  }
+};
+
+export const getPlaylistsPostsData = async (playlistId: string | undefined) => {
+  if (playlistId === undefined) {
+    return [];
+  }
+
+  try {
+    const postsRef = collection(FIRESTORE_DB, "posts");
+    const q = query(postsRef, where("playlistId", "==", playlistId));
+
+    const querySnapshot = await getDocs(q);
+    const posts: Post[] = [];
+    querySnapshot.forEach((doc) => {
+      const postData = doc.data() as Post;
+      postData.postId = doc.id;
+      posts.push(postData);
+    });
+    return posts;
+  } catch (error) {
+    console.error("Error getting documents: ", error);
+    return [];
   }
 };

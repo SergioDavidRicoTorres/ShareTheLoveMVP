@@ -149,9 +149,16 @@ export type TabsNavigatorParamsList = {
 };
 
 export type HomeNavigatorParamsList = {
-  DebuggingScreen: undefined;
   HomeScreen: undefined;
   SearchUserScreen: undefined;
+  ExternalProfileScreen: {
+    user: User;
+  };
+  ProfileContentNavigator: undefined;
+};
+
+export type ExploreNavigatorParamsList = {
+  ExploreScreen: undefined;
   ExternalProfileScreen: {
     user: User;
   };
@@ -205,6 +212,8 @@ export type ProfileNavigationProp =
 export type TabsNavigationProp = StackNavigationProp<TabsNavigatorParamsList>;
 export type ProfileContentNavigationProp =
   StackNavigationProp<ProfileContentNavigatorParamsList>;
+export type ExploreNavigationProp =
+  StackNavigationProp<ExploreNavigatorParamsList>;
 
 // export type AuthScreenNavigationProp = StackNavigationProp<AuthNavigatorParamsList,'AuthScreen'>;
 // export type AuthProps = {
@@ -227,6 +236,20 @@ export type PlaylistCardProps = {
   profileNavigation?: ProfileNavigationProp;
   user: User;
   posts: Post[];
+};
+
+export type PlaylistPreviewCardProps = {
+  posts: Post[];
+  playlist: Playlist;
+  user: User;
+};
+export type UserPreviewCardProps = {
+  user: User;
+  playlists: Playlist[];
+  usersCount: number;
+  index: number;
+  handleNext: () => void;
+  handlePrevious: () => void;
 };
 
 export type SettingsProps = {
