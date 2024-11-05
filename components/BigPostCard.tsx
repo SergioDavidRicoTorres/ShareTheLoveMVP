@@ -400,6 +400,7 @@ export default function BigPostCard({
             </View>
             <View style={{ height: normalize(25), bottom: normalize(40) }}>
               <FlatList
+                showsHorizontalScrollIndicator={false}
                 data={post.moods}
                 // style={{ marginLeft: normalize(10), marginRight: 5 }}
                 horizontal

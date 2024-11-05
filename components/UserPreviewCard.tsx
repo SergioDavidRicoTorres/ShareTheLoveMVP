@@ -85,7 +85,7 @@ export default function UserPreviewCard({
             <Text
               style={{
                 fontSize: normalize(23),
-                fontWeight: 700,
+                fontWeight: "700",
                 color: "rgba(194, 144, 255, 1)",
               }}
             >
@@ -94,7 +94,7 @@ export default function UserPreviewCard({
             <Text
               style={{
                 fontSize: normalize(18),
-                fontWeight: 500,
+                fontWeight: "500",
                 color: "white",
               }}
             >
@@ -156,12 +156,14 @@ export default function UserPreviewCard({
                       paddingVertical: normalize(8),
                       borderWidth: normalize(4),
                       borderColor: "rgba(153, 255, 218, 1)",
+                      overflow: "hidden",
+                      paddingHorizontal: normalize(10),
                     }}
                   >
                     <Text
                       style={{
                         fontSize: normalize(20),
-                        fontWeight: 700,
+                        fontWeight: "700",
                         color: "rgba(153, 255, 218, 1)",
                       }}
                     >
@@ -170,14 +172,15 @@ export default function UserPreviewCard({
                     <FlatList
                       scrollEnabled={true}
                       horizontal={true}
+                      showsHorizontalScrollIndicator={false}
                       nestedScrollEnabled={true}
                       data={playlists.filter(
                         (playlist) => playlist.domainId === 0
                       )}
                       style={{
+                        width: normalize(250),
                         flexDirection: "row",
                         marginTop: normalize(8),
-                        width: normalize(270),
                         paddingLeft: normalize(10),
                       }}
                       ItemSeparatorComponent={() => (
@@ -207,7 +210,7 @@ export default function UserPreviewCard({
                             style={{
                               // marginTop: normalize(2),
                               fontSize: normalize(20),
-                              fontWeight: 700,
+                              fontWeight: "700",
                               color: "rgba(153, 255, 218, 1)",
                             }}
                           >
@@ -216,7 +219,7 @@ export default function UserPreviewCard({
                           <Text
                             style={{
                               fontSize: normalize(15),
-                              fontWeight: 400,
+                              fontWeight: "400",
                               color: "rgba(153, 255, 218, 1)",
                             }}
                           >
@@ -260,7 +263,7 @@ export default function UserPreviewCard({
                                   // moodText
                                   style={{
                                     fontSize: normalize(16),
-                                    fontWeight: 500,
+                                    fontWeight: "500",
                                     color: getMoodTextColor(
                                       DOMAINPOSTTYPE.get(0)
                                     ),
@@ -333,12 +336,14 @@ export default function UserPreviewCard({
                       paddingVertical: normalize(8),
                       borderWidth: normalize(4),
                       borderColor: "rgba(253, 153, 255, 1)",
+                      paddingHorizontal: normalize(10),
+                      overflow: "hidden",
                     }}
                   >
                     <Text
                       style={{
                         fontSize: normalize(20),
-                        fontWeight: 700,
+                        fontWeight: "700",
                         color: "rgba(253, 153, 255, 1)",
                       }}
                     >
@@ -347,6 +352,7 @@ export default function UserPreviewCard({
 
                     <FlatList
                       scrollEnabled={true}
+                      showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       data={playlists.filter(
                         (playlist) => playlist.domainId === 1
@@ -384,7 +390,7 @@ export default function UserPreviewCard({
                             style={{
                               // marginTop: normalize(2),
                               fontSize: normalize(20),
-                              fontWeight: 700,
+                              fontWeight: "700",
                               color: "rgba(253, 153, 255, 1)",
                             }}
                           >
@@ -393,7 +399,7 @@ export default function UserPreviewCard({
                           <Text
                             style={{
                               fontSize: normalize(15),
-                              fontWeight: 400,
+                              fontWeight: "400",
                               color: "rgba(253, 153, 255, 1)",
                             }}
                           >
@@ -437,7 +443,7 @@ export default function UserPreviewCard({
                                   // moodText
                                   style={{
                                     fontSize: normalize(16),
-                                    fontWeight: 500,
+                                    fontWeight: "500",
                                     color: getMoodTextColor(
                                       DOMAINPOSTTYPE.get(1)
                                     ),
@@ -495,13 +501,14 @@ export default function UserPreviewCard({
                     <Text
                       style={{
                         fontSize: normalize(20),
-                        fontWeight: 700,
+                        fontWeight: "700",
                         color: "rgba(197, 238, 182, 1)",
                       }}
                     >
                       Podcasts
                     </Text>
                     <FlatList
+                      showsHorizontalScrollIndicator={false}
                       scrollEnabled={true}
                       horizontal={true}
                       data={playlists.filter(
@@ -540,7 +547,7 @@ export default function UserPreviewCard({
                             style={{
                               // marginTop: normalize(2),
                               fontSize: normalize(20),
-                              fontWeight: 700,
+                              fontWeight: "700",
                               color: "rgba(197, 238, 182, 1)",
                             }}
                           >
@@ -549,7 +556,7 @@ export default function UserPreviewCard({
                           <Text
                             style={{
                               fontSize: normalize(15),
-                              fontWeight: 400,
+                              fontWeight: "400",
                               color: "rgba(197, 238, 182, 1)",
                             }}
                           >
@@ -557,14 +564,13 @@ export default function UserPreviewCard({
                           </Text>
                           <FlatList
                             scrollEnabled={false}
-                            style={
-                              {
-                                //   gap: normalize(6),
-                                //   maxWidth: normalize(250),
-                                //   marginLeft: normalize(10),
-                                //   marginRight: normalize(5),
-                              }
-                            }
+                            style={{
+                              marginHorizontal: normalize(10),
+                              //   gap: normalize(6),
+                              //   maxWidth: normalize(250),
+                              //   marginLeft: normalize(10),
+                              //   marginRight: normalize(5),
+                            }}
                             ItemSeparatorComponent={() => (
                               <View
                                 style={{
@@ -593,7 +599,7 @@ export default function UserPreviewCard({
                                   // moodText
                                   style={{
                                     fontSize: normalize(16),
-                                    fontWeight: 500,
+                                    fontWeight: "500",
                                     color: getMoodTextColor(
                                       DOMAINPOSTTYPE.get(2)
                                     ),

@@ -392,6 +392,7 @@ export default function PostCard({ post }: PostCardProps) {
           />
         )}
         horizontal
+        showsHorizontalScrollIndicator={false}
         renderItem={({ item: mood }) => (
           // Mood
           <View

@@ -119,7 +119,7 @@ export default function ExploreScreen() {
         }}
       >
         <StatusBar
-          backgroundColor="rgba(105, 51, 172, 1)"
+          backgroundColor="rgba(1, 4, 43, 1)"
           barStyle="light-content"
         />
         <SafeAreaView
@@ -151,7 +151,7 @@ export default function ExploreScreen() {
               <Text
                 style={{
                   fontSize: normalize(28),
-                  fontWeight: 700,
+                  fontWeight: "700",
                   color: "rgba(194, 144, 255, 1)",
                 }}
               >
@@ -207,7 +207,7 @@ export default function ExploreScreen() {
               <Text
                 style={{
                   fontSize: normalize(28),
-                  fontWeight: 700,
+                  fontWeight: "700",
                   color: "rgba(194, 144, 255, 1)",
                 }}
               >

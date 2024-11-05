@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Dimensions,
   Alert,
+  Platform,
 } from "react-native";
 
 import {
@@ -41,21 +42,7 @@ import {
 } from "../types";
 
 import { DOMAINPOSTTYPE } from "../constants";
-import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import {
-  DEFAULT_PLAYLIST,
-  DEFAULT_USER,
-  decreaseUserPlaylistsCount,
-  deletePlaylistAndRelatedData,
-  fetchAllUsers,
-  getPlaylistsPostsData,
-  updatePlaylistReview,
-} from "../utilsFirebase";
-import { useCurrentUser } from "../CurrentUserContext";
-import { doc, onSnapshot } from "firebase/firestore";
-import { FIRESTORE_DB } from "../firebaseConfig";
-import { createSpotifyPlaylist } from "../SpotifyUtils";
 import { openSpotifyLink } from "../utilsData";
 const { width } = Dimensions.get("window"); // screen width constant
 // const normalize = (value) => width * (value / 390);
@@ -150,7 +137,7 @@ export default function PlaylistPreviewCard({
           <Text
             style={{
               fontSize: normalize(23),
-              fontWeight: 800,
+              fontWeight: "800",
               color: getMoodTextColor(DOMAINPOSTTYPE.get(playlist.domainId)),
             }}
             numberOfLines={1}
@@ -160,7 +147,7 @@ export default function PlaylistPreviewCard({
           <Text
             style={{
               fontSize: normalize(18),
-              fontWeight: 500,
+              fontWeight: "500",
               color: "white",
               marginTop: normalize(3),
             }}
@@ -190,7 +177,7 @@ export default function PlaylistPreviewCard({
             numberOfLines={1}
             style={{
               fontSize: normalize(28),
-              fontWeight: 600,
+              fontWeight: "600",
               color: "white",
             }}
           >
@@ -277,7 +264,7 @@ export default function PlaylistPreviewCard({
                   numberOfLines={1}
                   style={{
                     fontSize: normalize(18),
-                    fontWeight: 700,
+                    fontWeight: "700",
                     color: "white",
                   }}
                 >
@@ -292,7 +279,14 @@ export default function PlaylistPreviewCard({
                     marginTop: normalize(-5),
                   }}
                 > */}
-                {getItemSubTitle(post.mediaItem, post.domainId, styles)}
+                <View
+                  style={{
+                    marginTop:
+                      Platform.OS == "android" ? normalize(-4) : normalize(0),
+                  }}
+                >
+                  {getItemSubTitle(post.mediaItem, post.domainId, styles)}
+                </View>
                 {/* </Text> */}
               </View>
             </View>
@@ -352,7 +346,7 @@ const styles = StyleSheet.create({
   },
   itemSubtitle: {
     fontSize: normalize(12),
-    fontWeight: 400,
+    fontWeight: "400",
     color: "white",
     // marginTop: normalize(-5),
   },
